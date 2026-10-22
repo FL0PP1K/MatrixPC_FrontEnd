@@ -946,3 +946,124 @@ body {
         font-size: 20px;
     }
 }
+/* --- ЧОМУ ОБИРАЮТЬ MATRIXPC --- */
+.why-section {
+    background-color: #0e1318;
+    padding: 80px 20px 110px;
+}
+.why-container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+/* Заголовок секції */
+.why-header {
+    margin-bottom: 40px;
+}
+.why-title {
+    color: #f5f7fa;
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 14px;
+}
+.why-subtitle {
+    color: #8b949e;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+/* Сітка карток */
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+/* Картка */
+.why-card {
+    background-color: #111820;
+    border: 1px solid #28323c;
+    border-radius: 12px;
+    padding: 24px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s ease,
+                transform 0.3s ease;
+}
+/* Ефект наведення */
+.why-card:hover {
+    border-color: #00FF66;
+    transform: translateY(-4px);
+}
+/* Блок іконки */
+.why-icon {
+    width: 56px;
+    height: 56px;
+    background-color: #090e14;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+/* PNG іконки */
+.why-icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}
+/* Назва картки */
+.why-card-title {
+    color: #f5f7fa;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 18px;
+}
+/* Опис картки */
+.why-card-description {
+    color: #8b949e;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+/* --- АДАПТИВНІСТЬ --- */
+/* Планшети */
+@media (max-width: 1100px) {
+    .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .why-card {
+        min-height: 260px;
+    }
+}
+/* Телефони */
+@media (max-width: 600px) {
+    .why-section {
+        padding: 60px 15px 80px;
+    }
+    .why-title {
+        font-size: 30px;
+    }
+    .why-subtitle {
+        font-size: 14px;
+    }
+    .why-header {
+        margin-bottom: 30px;
+    }
+    .why-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .why-card {
+        min-height: 220px;
+        padding: 22px;
+    }
+    .why-card-title {
+        font-size: 18px;
+    }
+    .why-card-description {
+        font-size: 14px;
+    }
+}
