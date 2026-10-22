@@ -781,3 +781,168 @@ body {
         width: 100%;
     }
 }
+/* --- ГОТОВІ ЗБІРКИ ПК --- */
+
+.builds-section {
+    background-color: #0b1015;
+    padding: 70px 20px 90px;
+}
+
+.builds-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.builds-header {
+    margin-bottom: 40px;
+}
+
+.builds-title {
+    color: #f5f7fa;
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 14px;
+}
+
+.builds-subtitle {
+    color: #8b949e;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Сітка */
+.builds-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* Картка */
+.build-card {
+    background-color: #111820;
+    border: 1px solid #27323c;
+    border-radius: 16px;
+    padding: 22px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.build-card:hover {
+    transform: translateY(-4px);
+    border-color: #2ee679;
+}
+
+/* Блок картинки */
+.build-card-image {
+    height: 280px;
+    background-color: #091119;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 18px;
+}
+
+.build-card-image img {
+    max-width: 92%;
+    max-height: 92%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Контент */
+.build-card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.build-card-title {
+    color: #f5f7fa;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.build-card-desc {
+    color: #8b949e;
+    font-size: 16px;
+    line-height: 1.45;
+    margin-bottom: 20px;
+}
+
+.build-card-specs {
+    color: #9aa4ae;
+    font-size: 15px;
+    line-height: 1.45;
+    margin-bottom: 10px;
+}
+
+.build-card-price {
+    color: #ffffff;
+    font-size: 23px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 16px;
+}
+
+/* Кнопка */
+.build-card-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 52px;
+    background-color: #40e276;
+    color: #04110a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 800;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.build-card-button:hover {
+    background-color: #2fd866;
+}
+
+/* Адаптив */
+@media (max-width: 1100px) {
+    .builds-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .build-card-image {
+        height: 260px;
+    }
+}
+
+@media (max-width: 600px) {
+    .builds-section {
+        padding: 55px 15px 70px;
+    }
+
+    .builds-title {
+        font-size: 30px;
+    }
+    .builds-subtitle {
+        font-size: 14px;
+    }
+    .build-card {
+        padding: 16px;
+    }
+    .build-card-image {
+        height: 220px;
+    }
+    .build-card-title {
+        font-size: 22px;
+    }
+    .build-card-desc,
+    .build-card-specs {
+        font-size: 14px;
+    }
+    .build-card-price {
+        font-size: 20px;
+    }
+}
