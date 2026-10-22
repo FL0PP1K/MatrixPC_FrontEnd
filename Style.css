@@ -21,75 +21,151 @@ body {
     overflow-x: hidden;
     padding-top: 88px;
 }
-/* плавний прокрут */
-html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 88px;
-}
-/* фікосваний хедер */
+/* --- HEADER MATRIXPC --- */
 .header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 88px;
+    background-color: #070A0D;
+    border-bottom: 1px solid #28323c;
     z-index: 1000;
-
-    background-color: rgba(10, 13, 20, 0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border-color);
 }
+/* Контейнер */
 .header-container {
+    max-width: 1440px;
+    width: calc(100% - 40px);
+    height: 100%;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1400px;
-    height: 100%;
-    margin: 0 auto;
-    padding: 0 40px;
 }
-/* логотип */
+
+/* Логотип */
 .logo {
+    display: flex;
+    align-items: center;
     text-decoration: none;
     font-size: 24px;
     font-weight: 900;
-    letter-spacing: 0.5px;
-}
-.logo-green {
-    color: var(--primary-color);
+    letter-spacing: 0;
+    white-space: nowrap;
 }
 .logo-white {
     color: #F5F7FA;
 }
-/* навігація */
+.logo-green {
+    color: #00FF66;
+}
+/* Навігація */
 .nav-menu {
     display: flex;
+    align-items: center;
     gap: 32px;
 }
 .nav-link {
-    text-decoration: none;
-    color: var(--text-main);
+    color: #F5F7FA;
     font-size: 15px;
     font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
     transition: color 0.3s ease;
 }
-.nav-link:hover,
-.nav-link.active {
-    color: var(--primary-color);
+.nav-link.active,
+.nav-link:hover {
+    color: #00FF66;
 }
-/* кнопка зібрати пк */
-.btn-primary {
-    background-color: var(--primary-color);
-    color: #000000;
+/* Права частина */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+/* Кнопки іконок */
+.header-icon-btn {
+    width: 44px;
+    height: 44px;
+    background-color: #111820;
+    border: 1px solid #28323c;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
-    padding: 12px 32px;
-    border-radius: 6px;
-    font-weight: 700;
+    transition: border-color 0.3s ease;
+}
+.header-icon-btn:hover {
+    border-color: #00FF66;
+}
+/* PNG іконки */
+.header-icon-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: block;
+}
+/* Зелена кнопка */
+.header-build-btn {
+    height: 44px;
+    padding: 0 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2EE679;
+    color: #000000;
+    border-radius: 8px;
+    text-decoration: none;
     font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+
     transition: background-color 0.3s ease;
 }
-.btn-primary:hover {
-    background-color: var(--primary-hover);
+.header-build-btn:hover {
+    background-color: #00cc52;
+}
+/* Плавна прокрутка */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+}
+/* Адаптивність */
+@media (max-width: 1100px) {
+    .header-container {
+        gap: 20px;
+    }
+    .nav-menu {
+        gap: 16px;
+    }
+    .nav-link {
+        font-size: 13px;
+    }
+    .header-build-btn {
+        padding: 0 15px;
+    }
+}
+@media (max-width: 800px) {
+    .header {
+        height: auto;
+        min-height: 88px;
+    }
+    .header-container {
+        flex-wrap: wrap;
+        padding: 15px 0;
+        gap: 15px;
+    }
+    .nav-menu {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+    body {
+        padding-top: 140px;
+    }
 }
 /* головна секція */
 .hero {
@@ -131,7 +207,25 @@ html {
     display: flex;
     gap: 20px;
 }
-
+/* Кнопка ЗІБРАТИ ПК */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #00FF66;
+    color: #000000;
+    text-decoration: none;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+}
+/* Ефект наведення */
+.btn-primary:hover {
+    background-color: #00cc52;
+}
 /* Каталог кнопка */
 .btn-secondary {
     background-color: transparent;
@@ -139,7 +233,7 @@ html {
     text-decoration: none;
     padding: 12px 32px;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 700;
     font-size: 14px;
     transition: border-color 0.3s ease, background-color 0.3s ease;
