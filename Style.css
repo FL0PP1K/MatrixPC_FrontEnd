@@ -1,0 +1,242 @@
+
+:root {
+    --primary-color: #00FF66;
+    --primary-hover: #00cc52;
+    --bg-color: #0a0d14;
+    --card-bg: rgba(15, 20, 29, 0.9);
+    --text-main: #ffffff;
+    --text-muted: #8b949e;
+    --border-color: #2a2e37;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* хедер */
+.header {
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+}
+
+/* Вирівняти елементи */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 40px;
+}
+
+/* логотип */
+.logo {
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+
+.logo-green {
+    color: var(--primary-color);
+}
+
+.logo-white {
+    color: #F5F7FA;
+}
+
+/* навігація */
+.nav-menu {
+    display: flex;
+    gap: 32px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-main);
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary-color);
+}
+
+/* кнопка зібрати пк */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #000000;
+    text-decoration: none;
+    padding: 12px 32px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* головна секція */
+.hero {
+    padding: 80px 20px;
+}
+
+.hero-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+/* ліва колонка */
+.hero-content {
+    flex: 1;
+    max-width: 600px;
+}
+
+.hero-subtitle {
+    color: var(--primary-color);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.hero-title {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+
+.hero-description {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+/* Каталог кнопка */
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-main);
+    text-decoration: none;
+    padding: 12px 32px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    border-color: var(--text-muted);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* права колонка */
+.hero-visuals {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    z-index: 1;
+}
+
+/* Зображення ПК */
+.hero-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    min-height: 400px;
+    min-width: 300px;
+    object-fit: contain;
+}
+
+/* зелена тінь */
+.hero-visuals::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    background-color: var(--primary-color);
+    opacity: 0.25;
+    filter: blur(100px);
+    border-radius: 50%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* картка характеристик */
+.spec-card {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 20px 24px;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.spec-header {
+    color: var(--primary-color);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+/* зелена крапка */
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--primary-color);
+}
+
+.spec-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.spec-details {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.spec-price {
+    font-size: 20px;
+    font-weight: 700;
+}
