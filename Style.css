@@ -430,3 +430,354 @@ body {
         font-size: 30px;
     }
 }
+/* --- КОНФІГУРАТОР ПК --- */
+.assembly-section {
+    background-color: #0e1318;
+    padding: 40px 20px 80px;
+}
+.assembly-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+/* Заголовок */
+.assembly-header {
+    text-align: center;
+    margin-bottom: 110px;
+}
+.assembly-subtitle {
+    color: #00FF66;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.assembly-title {
+    color: #f5f7fa;
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+.assembly-description {
+    color: #8b949e;
+    font-size: 16px;
+}
+/* Основна частина */
+.builder-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 328px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 20px;
+    margin-bottom: 105px;
+}
+/* Ліва та права колонки */
+.builder-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 430px;
+    position: relative;
+    min-width: 0;
+}
+.builder-left {
+    align-items: flex-end;
+    padding-right: 70px;
+}
+.builder-right {
+    align-items: flex-start;
+    padding-left: 70px;
+}
+/* Картки комплектуючих */
+.builder-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    min-height: 62px;
+    padding: 12px;
+    background-color: #111820;
+    border: 1px solid #27323c;
+    border-radius: 11px;
+    flex-shrink: 0;
+}
+/* Темна іконка */
+.item-icon {
+    width: 39px;
+    height: 39px;
+    background-color: #090e14;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+/* Назва комплектуючої */
+.item-name {
+    color: #f5f7fa;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+/* Посилання + Обрати */
+.item-select {
+    color: #00FF66;
+    text-decoration: none;
+    font-size: 12px;
+    white-space: nowrap;
+    margin-left: auto;
+}
+.item-select:hover {
+    color: #00cc52;
+}
+/* --- РОЗТАШУВАННЯ КАРТОК --- */
+/* Ліва сторона */
+.builder-left .builder-item:nth-child(1) {
+    width: 235px;
+    margin-right: 10px;
+}
+.builder-left .builder-item:nth-child(2) {
+    width: 205px;
+    margin-right: 45px;
+}
+.builder-left .builder-item:nth-child(3) {
+    width: 255px;
+    margin-right: 0;
+}
+.builder-left .builder-item:nth-child(4) {
+    width: 225px;
+    margin-right: 55px;
+}
+/* Права сторона */
+.builder-right .builder-item:nth-child(1) {
+    width: 260px;
+    margin-left: 0;
+}
+.builder-right .builder-item:nth-child(2) {
+    width: 245px;
+    margin-left: 35px;
+}
+.builder-right .builder-item:nth-child(3) {
+    width: 232px;
+    margin-left: 12px;
+}
+.builder-right .builder-item:nth-child(4) {
+    width: 218px;
+    margin-left: 48px;
+}
+/* --- ЛІНІЇ ТА ЗЕЛЕНІ ТОЧКИ --- */
+/* Сама лінія */
+.item-line {
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    width: 70px;
+    background: linear-gradient(
+    to right,
+    transparent 10px,
+    #2b353d 10px,
+    #2b353d calc(100% - 3px),
+    transparent calc(100% - 3px)
+);
+}
+/* Лінії лівих карток */
+.builder-left .item-line {
+    left: calc(100% + 5px);
+}
+/* Лінії правих карток */
+.builder-right .item-line {
+    right: calc(100% + 20px);
+}
+/* Зелені точки з розмиттям */
+.item-line::before,
+.item-line::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    background-color: #39ff88;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    /* Розмиття */
+    filter: blur(3px);
+    /* Зелене світіння */
+    box-shadow:
+        0 0 8px #39ff88,
+        0 0 16px rgba(57, 255, 136, 0.7),
+        0 0 24px rgba(57, 255, 136, 0.4);
+}
+/* Перша точка */
+.item-line::before {
+    left: 5px;
+}
+/* Друга точка */
+.item-line::after {
+    right: -5px;
+}
+/* Довжина ліній зліва */
+.builder-left .builder-item:nth-child(1) .item-line {
+    width: 80px;
+}
+.builder-left .builder-item:nth-child(2) .item-line {
+    width: 115px;
+}
+.builder-left .builder-item:nth-child(3) .item-line {
+    width: 70px;
+}
+.builder-left .builder-item:nth-child(4) .item-line {
+    width: 125px;
+}
+/* Довжина ліній справа */
+.builder-right .builder-item:nth-child(1) .item-line {
+    width: 70px;
+}
+.builder-right .builder-item:nth-child(2) .item-line {
+    width: 105px;
+}
+.builder-right .builder-item:nth-child(3) .item-line {
+    width: 80px;
+}
+.builder-right .builder-item:nth-child(4) .item-line {
+    width: 115px;
+}
+/* --- ЦЕНТРАЛЬНА КАРТКА --- */
+.builder-center {
+    background-color: #111820;
+    border: 1px solid #27323c;
+    border-radius: 18px;
+    padding: 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+/* Зображення корпусу */
+.case-image {
+    width: 100%;
+    height: 290px;
+    background-color: #0a1215;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.case-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+/* Підпис корпусу */
+.case-status {
+    color: #8b949e;
+    font-size: 13px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+/* Кнопка обрати корпус */
+.case-button {
+    background-color: #2ee679;
+    color: #000;
+    border: none;
+    border-radius: 7px;
+    padding: 15px 25px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.case-button:hover {
+    background-color: #00cc52;
+}
+/* --- НИЖНЯ ПАНЕЛЬ --- */
+.builder-summary {
+    background-color: #111820;
+    border: 1px solid #27323c;
+    border-radius: 11px;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+}
+.summary-count,
+.summary-price {
+    color: #f5f7fa;
+    font-size: 16px;
+    font-weight: 600;
+}
+.summary-count strong,
+.summary-price strong {
+    font-weight: 700;
+}
+.summary-button {
+    background-color: #26323c;
+    border: none;
+    border-radius: 7px;
+    padding: 15px 30px;
+    color: #8b949e;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: not-allowed;
+}
+/* --- АДАПТИВНІСТЬ --- */
+/* Планшети та невеликі екрани */
+@media (max-width: 1200px) {
+    .assembly-header {
+        margin-bottom: 60px;
+    }
+    .builder-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        justify-items: center;
+        margin-bottom: 50px;
+    }
+    .builder-center {
+        grid-row: 1;
+        width: 328px;
+        max-width: 100%;
+    }
+    .builder-side {
+        width: 100%;
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 15px;
+    }
+    .builder-left,
+    .builder-right {
+        padding: 0;
+        align-items: stretch;
+    }
+    .builder-left .builder-item,
+    .builder-right .builder-item {
+        width: 100%;
+        margin: 0;
+    }
+    .item-line {
+        display: none;
+    }
+}
+/* Телефони */
+@media (max-width: 600px) {
+    .assembly-section {
+        padding: 40px 15px 60px;
+    }
+    .assembly-header {
+        margin-bottom: 40px;
+    }
+    .assembly-title {
+        font-size: 30px;
+    }
+    .assembly-description {
+        font-size: 14px;
+    }
+    .builder-side {
+        grid-template-columns: 1fr;
+    }
+    .builder-summary {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .summary-button {
+        width: 100%;
+    }
+}
