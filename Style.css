@@ -19,20 +19,34 @@ body {
     color: var(--text-main);
     line-height: 1.5;
     overflow-x: hidden;
+    padding-top: 88px;
 }
-/* хедер */
+/* плавний прокрут */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+}
+/* фікосваний хедер */
 .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 88px;
+    z-index: 1000;
+
+    background-color: rgba(10, 13, 20, 0.95);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-color);
-    background-color: var(--bg-color);
 }
-/* Вирівняти елементи */
 .header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     max-width: 1400px;
+    height: 100%;
     margin: 0 auto;
-    padding: 20px 40px;
+    padding: 0 40px;
 }
 /* логотип */
 .logo {
@@ -44,7 +58,6 @@ body {
 .logo-green {
     color: var(--primary-color);
 }
-
 .logo-white {
     color: #F5F7FA;
 }
@@ -1064,6 +1077,117 @@ body {
         font-size: 18px;
     }
     .why-card-description {
+        font-size: 14px;
+    }
+}
+/* --- ВІДГУКИ КЛІЄНТІВ --- */
+.reviews-section {
+    background-color: #070A0D;
+    padding: 85px 20px 132px;
+}
+.reviews-container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+/* Заголовок */
+.reviews-header {
+    margin-bottom: 40px;
+}
+.reviews-title {
+    color: #F5F7FA;
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 14px;
+}
+.reviews-subtitle {
+    color: #8b949e;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+/* Сітка */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+/* Картка відгуку */
+.review-card {
+    background-color: #111820;
+    border: 1px solid #25313A;
+    border-radius: 12px;
+    min-height: 280px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s ease,
+                transform 0.3s ease;
+}
+/* Ефект наведення */
+.review-card:hover {
+    border-color: #00FF66;
+    transform: translateY(-4px);
+}
+/* П'ять зірок */
+.review-stars {
+    color: #00FF88;
+    font-size: 22px;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 22px;
+}
+/* Текст відгуку */
+.review-text {
+    color: #F5F7FA;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+/* Ім'я покупця */
+.review-author {
+    color: #F5F7FA;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+/* Підтверджена покупка */
+.review-verified {
+    color: #8b949e;
+    font-size: 13px;
+    font-weight: 400;
+}
+/* --- АДАПТИВНІСТЬ --- */
+/* Планшети */
+@media (max-width: 1100px) {
+    .reviews-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+/* Телефони */
+@media (max-width: 650px) {
+    .reviews-section {
+        padding: 60px 15px 80px;
+    }
+    .reviews-title {
+        font-size: 30px;
+    }
+    .reviews-subtitle {
+        font-size: 14px;
+    }
+    .reviews-header {
+        margin-bottom: 30px;
+    }
+    .reviews-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .review-card {
+        min-height: 230px;
+        padding: 22px;
+    }
+    .review-text {
         font-size: 14px;
     }
 }
