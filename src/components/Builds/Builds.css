@@ -1,0 +1,211 @@
+/* MATRIXPC PREBUILT PCs */
+.builds-section {
+    background: #080B0E;
+    padding: 90px 20px;
+}
+.builds-container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+.builds-header {
+    margin-bottom: 36px;
+}
+.builds-title {
+    color: #F5F7FA;
+    font-size: 36px;
+    font-weight: 900;
+    margin: 0 0 10px;
+}
+.builds-subtitle {
+    color: #8B98A7;
+    font-size: 16px;
+    line-height: 1.6;
+}
+/* Grid */
+.builds-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+/* Card */
+.build-card {
+    min-width: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background: #111820;
+    border: 1px solid #28323C;
+    border-radius: 12px;
+    transition: transform .2s, border-color .2s;
+}
+    .build-card:hover {
+        border-color: #2EE679;
+        transform: translateY(-4px);
+    }
+.build-card-image {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0B1117;
+    border-radius: 10px;
+    overflow: hidden;
+}
+    .build-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+.build-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-top: 20px;
+}
+.build-card-title {
+    color: #F5F7FA;
+    font-size: 21px;
+    font-weight: 900;
+    margin: 0 0 8px;
+}
+.build-card-desc {
+    color: #8B98A7;
+    font-size: 14px;
+    margin: 0 0 16px;
+}
+.build-card-specs {
+    color: #A7B1BD;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0 0 18px;
+}
+.build-card-price {
+    color: #F5F7FA;
+    font-size: 24px;
+    font-weight: 900;
+    margin: auto 0 16px;
+    padding-top: 10px;
+}
+.build-card-button,
+.build-modal-button {
+    min-height: 46px;
+    padding: 12px 20px;
+    background: #2EE679;
+    color: #07100A;
+    border: 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+    .build-card-button:hover,
+    .build-modal-button:hover {
+        background: #00CC52;
+    }
+/* Modal */
+.build-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, .8);
+}
+.build-modal {
+    width: min(580px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 30px;
+    background: #111820;
+    border: 1px solid #28323C;
+    border-radius: 16px;
+    color: #F5F7FA;
+}
+.build-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+    .build-modal-header h2 {
+        margin: 0;
+    }
+.build-modal-close {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background: #0B1117;
+    border: 1px solid #28323C;
+    border-radius: 8px;
+    color: #F5F7FA;
+    cursor: pointer;
+}
+.build-modal-image {
+    width: 100%;
+    height: 240px;
+    margin: 16px 0;
+    object-fit: contain;
+    background: #0B1117;
+    border-radius: 10px;
+}
+.build-modal-description,
+.build-modal-note {
+    color: #8B98A7;
+    line-height: 1.6;
+}
+.build-modal-specs {
+    padding: 16px 0;
+    border-bottom: 1px solid #28323C;
+}
+    .build-modal-specs p {
+        margin: 10px 0;
+    }
+.build-modal-price {
+    margin: 20px 0;
+    font-size: 28px;
+    font-weight: 900;
+}
+.build-modal-note {
+    font-size: 12px;
+}
+.build-modal-button {
+    width: 100%;
+    margin-top: 12px;
+}
+.builds-section button:focus-visible {
+    outline: 2px solid #00FF66;
+    outline-offset: 3px;
+}
+/* Tablet */
+@media (max-width: 1000px) {
+    .builds-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .build-card-image {
+        height: 260px;
+    }
+}
+/* Mobile */
+@media (max-width: 650px) {
+    .builds-section {
+        padding: 60px 16px;
+    }
+    .builds-title {
+        font-size: 28px;
+    }
+    .builds-subtitle {
+        font-size: 14px;
+    }
+    .builds-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .build-card-image {
+        height: 240px;
+    }
+    .build-modal {
+        padding: 20px;
+    }
+}
