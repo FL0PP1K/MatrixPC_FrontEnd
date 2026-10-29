@@ -1,0 +1,190 @@
+/* MATRIXPC HEADER */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 88px;
+    background: #070A0D;
+    border-bottom: 1px solid #28323c;
+}
+.header-container {
+    max-width: 1440px;
+    width: calc(100% - 40px);
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+.logo-white {
+    color: #F5F7FA;
+}
+.logo-green {
+    color: #00FF66;
+}
+/* Navigation */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+.nav-link {
+    color: #F5F7FA;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+    .nav-link:hover,
+    .nav-link.active {
+        color: #00FF66;
+    }
+/* Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.header-icon-btn,
+.mobile-menu-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #111820;
+    color: #F5F7FA;
+    border: 1px solid #28323c;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+    .header-icon-btn:hover,
+    .mobile-menu-btn:hover {
+        border-color: #00FF66;
+    }
+    .header-icon-btn svg {
+        width: 22px;
+        height: 22px;
+    }
+.header-build-btn {
+    height: 44px;
+    padding: 0 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2EE679;
+    color: #000;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+    .header-build-btn:hover {
+        background: #00cc52;
+    }
+.header :focus-visible {
+    outline: 2px solid #00FF66;
+    outline-offset: 3px;
+}
+/* Search panel */
+.header-search-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: max(20px, calc((100vw - 1440px) / 2));
+    width: min(450px, calc(100vw - 40px));
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    background: #111820;
+    border: 1px solid #28323c;
+    border-radius: 12px;
+}
+    .header-search-panel input {
+        flex: 1;
+        min-width: 0;
+        padding: 12px;
+        background: #0B1117;
+        color: #F5F7FA;
+        border: 1px solid #28323c;
+        border-radius: 8px;
+        font: inherit;
+    }
+    .header-search-panel button {
+        padding: 0 12px;
+        background: transparent;
+        color: #F5F7FA;
+        border: 0;
+        cursor: pointer;
+    }
+.mobile-menu-btn {
+    display: none;
+    font-size: 24px;
+}
+/* Tablet and mobile */
+@media (max-width: 1100px) {
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 88px;
+        left: 0;
+        width: 100%;
+        padding: 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        background: #111820;
+        border-bottom: 1px solid #28323c;
+    }
+        .nav-menu.is-open {
+            display: flex;
+        }
+    .mobile-menu-btn {
+        display: flex;
+    }
+}
+@media (max-width: 650px) {
+    .header {
+        height: 72px;
+    }
+    .header-container {
+        width: calc(100% - 24px);
+        gap: 8px;
+    }
+    .logo {
+        font-size: 20px;
+    }
+    .header-actions {
+        gap: 8px;
+    }
+    .header-icon-btn,
+    .mobile-menu-btn {
+        width: 38px;
+        height: 38px;
+    }
+    .header-build-btn {
+        display: none;
+    }
+    .nav-menu {
+        top: 72px;
+    }
+}
+@media (max-width: 370px) {
+    .profile-action {
+        display: none;
+    }
+}

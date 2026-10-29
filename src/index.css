@@ -2,20 +2,21 @@
 :root {
     font-family: 'Inter', sans-serif;
     color: #F5F7FA;
-    background-color: #070A0D;
+    background: #070A0D;
+    font-synthesis: none;
 }
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
 body {
+    margin: 0;
     min-width: 320px;
 }
 button,
 input {
     font: inherit;
-}
-a {
-    text-decoration: none;
 }
