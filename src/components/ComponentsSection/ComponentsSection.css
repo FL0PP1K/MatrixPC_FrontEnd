@@ -1,0 +1,120 @@
+.components-section {
+    background-color: #0E1318;
+    padding: 80px 20px;
+}
+.components-container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+.components-section .section-header {
+    margin-bottom: 36px;
+}
+.components-section .section-title {
+    color: #F5F7FA;
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin: 0 0 10px;
+}
+.components-section .section-subtitle {
+    color: #8B98A7;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+}
+/* Category grid */
+.components-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 20px;
+}
+/* Category cards */
+.component-card {
+    min-width: 0;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: #111820;
+    border: 1px solid #28323C;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+    .component-card:hover {
+        border-color: #00FF66;
+        transform: translateY(-4px);
+    }
+    .component-card:focus-visible {
+        outline: 2px solid #00FF66;
+        outline-offset: 3px;
+    }
+/* Images */
+.card-img-wrapper {
+    width: 100%;
+    height: 145px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0B1117;
+    border-radius: 10px;
+    margin-bottom: 18px;
+}
+.component-img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+/* Text */
+.component-name {
+    color: #F5F7FA;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0 0 12px;
+}
+.component-link {
+    color: #00FF66;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: auto;
+}
+.component-card:hover .component-link {
+    color: #2EE679;
+}
+/* Tablet */
+@media (max-width: 1200px) {
+    .components-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+/* Mobile */
+@media (max-width: 650px) {
+    .components-section {
+        padding: 60px 16px;
+    }
+        .components-section .section-title {
+            font-size: 28px;
+        }
+        .components-section .section-subtitle {
+            font-size: 14px;
+        }
+    .components-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+    .component-card {
+        padding: 14px 10px;
+    }
+    .card-img-wrapper {
+        height: 110px;
+        padding: 8px;
+    }
+    .component-name {
+        font-size: 11px;
+    }
+}
