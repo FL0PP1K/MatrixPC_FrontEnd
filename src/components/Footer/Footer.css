@@ -1,0 +1,96 @@
+.footer {
+    background: #0D1217;
+    border-top: 1px solid #28323C;
+    padding: 65px 20px 24px;
+}
+.footer-container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 65px;
+}
+.footer-logo {
+    display: inline-flex;
+    font-size: 28px;
+    font-weight: 900;
+    color: #F5F7FA;
+    text-decoration: none;
+}
+.footer-logo-green {
+    color: #00FF66;
+}
+.footer-brand p {
+    color: #8B98A7;
+    font-size: 14px;
+    margin-top: 14px;
+}
+.footer-column {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+    .footer-column h3 {
+        color: #F5F7FA;
+        font-size: 15px;
+        font-weight: 700;
+        margin: 0 0 8px;
+    }
+    .footer-column a,
+    .footer-column span,
+    .footer-column p {
+        color: #8B98A7;
+        font-size: 14px;
+        line-height: 1.5;
+        text-decoration: none;
+        margin: 0;
+    }
+        .footer-column a:hover {
+            color: #00FF66;
+        }
+.footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 24px;
+    border-top: 1px solid #28323C;
+}
+    .footer-bottom p,
+    .footer-bottom a {
+        color: #8B98A7;
+        font-size: 13px;
+        text-decoration: none;
+    }
+        .footer-bottom a:hover {
+            color: #00FF66;
+        }
+.footer a:focus-visible {
+    outline: 2px solid #00FF66;
+    outline-offset: 4px;
+}
+@media (max-width: 900px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 36px;
+    }
+}
+@media (max-width: 600px) {
+    .footer {
+        padding: 50px 16px 24px;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        margin-bottom: 40px;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
