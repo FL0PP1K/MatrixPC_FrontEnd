@@ -1,4 +1,4 @@
-Simport './Footer.css';
+import './Footer.css';
 
 const navigation = [
   { name: 'Головна', href: '#home' },
