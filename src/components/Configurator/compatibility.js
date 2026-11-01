@@ -7,6 +7,7 @@ export function checkCompatibility(selected) {
     const pcCase = selected.case;
     const gpu = selected.gpu;
     const psu = selected.psu;
+    const cooler = selected.cooler;
     // 1. Перевірка сокета CPU і материнської плати
     if (cpu && motherboard) {
         if (
@@ -80,6 +81,20 @@ if (cpu && gpu && psu) {
                 `але обраний блок живлення має ${psu.wattage} Вт.`
             );
         }
+    }
+}
+    
+// 6. Перевірка сумісності охолодження із сокетом CPU
+if (cpu && cooler) {
+    if (
+        cpu.socket &&
+        Array.isArray(cooler.supportedSockets) &&
+        !cooler.supportedSockets.includes(cpu.socket)
+    ) {
+        errors.push(
+            `Охолодження ${cooler.name} не підтримує ` +
+            `сокет ${cpu.socket} процесора ${cpu.name}.`
+        );
     }
 }
 

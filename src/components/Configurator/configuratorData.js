@@ -117,10 +117,20 @@ motherboard: [
   },
 ],
 
-  cooler: [
-    { id: 'cool1', name: 'Повітряне охолодження Tower', price: 2299 },
-    { id: 'cool2', name: 'Рідинне охолодження 360 мм', price: 4999 },
-  ],
+cooler: [
+  {
+      id: 'cool1',
+      name: 'Повітряне охолодження Tower',
+      price: 2299,
+      supportedSockets: ['AM4', 'AM5']
+  },
+  {
+      id: 'cool2',
+      name: 'Рідинне охолодження 360 мм',
+      price: 4999,
+      supportedSockets: ['AM5']
+  },
+],
 
   case: [
     {
