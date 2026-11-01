@@ -30,20 +30,75 @@ cpu: [
       socket: 'AM5'
   },
 ], 
+
+motherboard: [
+    {
+        id: 'mb1',
+        name: 'Материнська плата B650 ATX',
+        price: 7999,
+        socket: 'AM5',
+        memoryType: 'DDR5'
+    },
+    {
+        id: 'mb2',
+        name: 'Материнська плата B650M',
+        price: 5999,
+        socket: 'AM5',
+        memoryType: 'DDR5'
+    },
+],
+
+motherboard: [
+    {
+        id: 'mb1',
+        name: 'Материнська плата B650 ATX',
+        price: 7999,
+        socket: 'AM5',
+        memoryType: 'DDR5'
+    },
+    {
+        id: 'mb2',
+        name: 'Материнська плата B650M',
+        price: 5999,
+        socket: 'AM5',
+        memoryType: 'DDR5'
+    },
+],
+
+motherboard: [
+    {
+        id: 'mb1',
+        name: 'Материнська плата B650 ATX',
+        price: 7999,
+        socket: 'AM5',
+        memoryType: 'DDR5'
+    },
+    {
+        id: 'mb2',
+        name: 'Материнська плата B650M',
+        price: 5999,
+        socket: 'AM5',
+        memoryType: 'DDR5'
+    },
+],
+
 motherboard: [
   {
       id: 'mb1',
       name: 'Материнська плата B650 ATX',
       price: 7999,
-      socket: 'AM5'
+      socket: 'AM5',
+      memoryType: 'DDR5'
   },
   {
       id: 'mb2',
       name: 'Материнська плата B650M',
       price: 5999,
-      socket: 'AM5'
+      socket: 'AM5',
+      memoryType: 'DDR5'
   },
 ],
+
   cooler: [
     { id: 'cool1', name: 'Повітряне охолодження Tower', price: 2299 },
     { id: 'cool2', name: 'Рідинне охолодження 360 мм', price: 4999 },
@@ -52,10 +107,21 @@ motherboard: [
     { id: 'case1', name: 'Корпус Mid Tower A', price: 3499 },
     { id: 'case2', name: 'Корпус Mid Tower B', price: 4499 },
   ],
-  ram: [
-    { id: 'ram1', name: '32GB DDR5 6000 MHz', price: 4999 },
-    { id: 'ram2', name: '16GB DDR5 5200 MHz', price: 2499 },
-  ],
+ram: [
+  {
+      id: 'ram1',
+      name: '32GB DDR5 6000 MHz',
+      price: 4999,
+      memoryType: 'DDR5'
+  },
+  {
+      id: 'ram2',
+      name: '16GB DDR5 5200 MHz',
+      price: 2499,
+      memoryType: 'DDR5'
+  },
+],
+
   ssd: [
     { id: 'ssd1', name: 'SSD NVMe 1TB', price: 3999 },
     { id: 'ssd2', name: 'SSD NVMe 2TB', price: 6999 },
