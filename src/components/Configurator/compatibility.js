@@ -6,6 +6,7 @@ export function checkCompatibility(selected) {
     const ram = selected.ram;
     const pcCase = selected.case;
     const gpu = selected.gpu;
+    const psu = selected.psu;
     // 1. Перевірка сокета CPU і материнської плати
     if (cpu && motherboard) {
         if (
@@ -56,6 +57,29 @@ if (gpu && pcCase) {
             `але корпус ${pcCase.name} підтримує максимум ` +
             `${pcCase.maxGpuLengthMm} мм.`
         );
+    }
+}
+
+// 5. Перевірка потужності блока живлення
+if (cpu && gpu && psu) {
+    if (
+        typeof cpu.powerW === 'number' &&
+        typeof gpu.powerW === 'number' &&
+        typeof psu.wattage === 'number'
+    ) {
+        // 100 Вт — приблизний резерв для інших комплектуючих
+        const systemPower = cpu.powerW + gpu.powerW + 100;
+
+        // Додаємо 25% запасу потужності
+        const recommendedPower = Math.ceil(systemPower * 1.25);
+
+        if (psu.wattage < recommendedPower) {
+            errors.push(
+                `Недостатня потужність блока живлення! ` +
+                `Для цієї збірки орієнтовно потрібно ${recommendedPower} Вт, ` +
+                `але обраний блок живлення має ${psu.wattage} Вт.`
+            );
+        }
     }
 }
 
