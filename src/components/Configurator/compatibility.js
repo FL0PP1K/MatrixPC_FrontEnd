@@ -98,5 +98,33 @@ if (cpu && cooler) {
     }
 }
 
+// 7. Перевірка охолодження та корпусу
+if (cooler && pcCase) {
+    // Повітряне охолодження: перевірка висоти
+    if (
+        cooler.type === 'air' &&
+        typeof cooler.heightMm === 'number' &&
+        typeof pcCase.maxCoolerHeightMm === 'number' &&
+        cooler.heightMm > pcCase.maxCoolerHeightMm
+    ) {
+        errors.push(
+            `Охолодження ${cooler.name} має висоту ${cooler.heightMm} мм, ` +
+            `але корпус ${pcCase.name} підтримує максимум ` +
+            `${pcCase.maxCoolerHeightMm} мм.`
+        );
+    }
+    // Рідинне охолодження: перевірка радіатора
+    if (
+        cooler.type === 'liquid' &&
+        typeof cooler.radiatorMm === 'number' &&
+        Array.isArray(pcCase.supportedRadiatorsMm) &&
+        !pcCase.supportedRadiatorsMm.includes(cooler.radiatorMm)
+    ) {
+        errors.push(
+            `Радіатор охолодження ${cooler.radiatorMm} мм ` +
+            `не підтримується корпусом ${pcCase.name}.`
+        );
+    }
+}
     return errors;
 }

@@ -117,37 +117,47 @@ motherboard: [
   },
 ],
 
+
 cooler: [
   {
       id: 'cool1',
       name: 'Повітряне охолодження Tower',
       price: 2299,
-      supportedSockets: ['AM4', 'AM5']
+      supportedSockets: ['AM4', 'AM5'],
+      type: 'air',
+      heightMm: 160
   },
   {
       id: 'cool2',
       name: 'Рідинне охолодження 360 мм',
       price: 4999,
-      supportedSockets: ['AM5']
+      supportedSockets: ['AM5'],
+      type: 'liquid',
+      radiatorMm: 360
+  },
+],
+  
+case: [
+  {
+      id: 'case1',
+      name: 'Корпус Mid Tower A',
+      price: 3499,
+      supportedFormFactors: ['ATX', 'Micro-ATX'],
+      maxGpuLengthMm: 370,
+      maxCoolerHeightMm: 170,
+      supportedRadiatorsMm: [120, 240, 280, 360]
+  },
+  {
+      id: 'case2',
+      name: 'Корпус Mid Tower B',
+      price: 4499,
+      supportedFormFactors: ['Micro-ATX'],
+      maxGpuLengthMm: 310,
+      maxCoolerHeightMm: 155,
+      supportedRadiatorsMm: [120, 240]
   },
 ],
 
-  case: [
-    {
-        id: 'case1',
-        name: 'Корпус Mid Tower A',
-        price: 3499,
-        supportedFormFactors: ['ATX', 'Micro-ATX'],
-        maxGpuLengthMm: 370
-    },
-    {
-        id: 'case2',
-        name: 'Корпус Mid Tower B',
-        price: 4499,
-        supportedFormFactors: ['Micro-ATX'],
-        maxGpuLengthMm: 310
-    },
-],
 
 ram: [
   {
