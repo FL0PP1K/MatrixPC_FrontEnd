@@ -105,7 +105,11 @@ motherboard: [
       price: 7999,
       socket: 'AM5',
       memoryType: 'DDR5',
-      formFactor: 'ATX'
+      formFactor: 'ATX',
+      supportedStorage: [
+          { connector: 'M.2', interface: 'NVMe' },
+          { connector: 'SATA', interface: 'SATA' }
+      ]
   },
   {
       id: 'mb2',
@@ -113,10 +117,13 @@ motherboard: [
       price: 5999,
       socket: 'AM5',
       memoryType: 'DDR5',
-      formFactor: 'Micro-ATX'
+      formFactor: 'Micro-ATX',
+      supportedStorage: [
+          { connector: 'M.2', interface: 'NVMe' },
+          { connector: 'SATA', interface: 'SATA' }
+      ]
   },
 ],
-
 
 cooler: [
   {
@@ -174,10 +181,22 @@ ram: [
   },
 ],
 
-  ssd: [
-    { id: 'ssd1', name: 'SSD NVMe 1TB', price: 3999 },
-    { id: 'ssd2', name: 'SSD NVMe 2TB', price: 6999 },
-  ],
+ssd: [
+  {
+      id: 'ssd1',
+      name: 'SSD NVMe 1TB',
+      price: 3999,
+      interface: 'NVMe',
+      connector: 'M.2'
+  },
+  {
+      id: 'ssd2',
+      name: 'SSD NVMe 2TB',
+      price: 6999,
+      interface: 'NVMe',
+      connector: 'M.2'
+  },
+],
   
 psu: [
   {

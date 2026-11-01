@@ -8,6 +8,7 @@ export function checkCompatibility(selected) {
     const gpu = selected.gpu;
     const psu = selected.psu;
     const cooler = selected.cooler;
+    const ssd = selected.ssd;
     // 1. Перевірка сокета CPU і материнської плати
     if (cpu && motherboard) {
         if (
@@ -126,5 +127,28 @@ if (cooler && pcCase) {
         );
     }
 }
+
+// 8. Перевірка SSD і материнської плати
+if (ssd && motherboard) {
+    if (
+        ssd.connector &&
+        ssd.interface &&
+        Array.isArray(motherboard.supportedStorage)
+    ) {
+        const isSupported = motherboard.supportedStorage.some(
+            storage =>
+                storage.connector === ssd.connector &&
+                storage.interface === ssd.interface
+        );
+
+        if (!isSupported) {
+            errors.push(
+                `SSD ${ssd.name} (${ssd.connector} ${ssd.interface}) ` +
+                `несумісний із материнською платою ${motherboard.name}.`
+            );
+        }
+    }
+}
+
     return errors;
 }
