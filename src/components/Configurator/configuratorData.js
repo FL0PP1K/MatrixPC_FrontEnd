@@ -13,9 +13,20 @@ export const categories = [
 // Демонстраційний асортимент і ціни.
 export const options = {
   gpu: [
-    { id: 'gpu1', name: 'GeForce RTX 5070 12GB', price: 47999 },
-    { id: 'gpu2', name: 'GeForce RTX 5060 8GB', price: 19999 },
-  ],
+    {
+        id: 'gpu1',
+        name: 'GeForce RTX 5070 12GB',
+        price: 47999,
+        lengthMm: 340
+    },
+    {
+        id: 'gpu2',
+        name: 'GeForce RTX 5060 8GB',
+        price: 19999,
+        lengthMm: 250
+    },
+],
+
 cpu: [
   {
       id: 'cpu1',
@@ -106,20 +117,23 @@ motherboard: [
     { id: 'cool2', name: 'Рідинне охолодження 360 мм', price: 4999 },
   ],
   
-case: [
-  {
-      id: 'case1',
-      name: 'Корпус Mid Tower A',
-      price: 3499,
-      supportedFormFactors: ['ATX', 'Micro-ATX']
-  },
-  {
-      id: 'case2',
-      name: 'Корпус Mid Tower B',
-      price: 4499,
-      supportedFormFactors: ['Micro-ATX']
-  },
+  case: [
+    {
+        id: 'case1',
+        name: 'Корпус Mid Tower A',
+        price: 3499,
+        supportedFormFactors: ['ATX', 'Micro-ATX'],
+        maxGpuLengthMm: 370
+    },
+    {
+        id: 'case2',
+        name: 'Корпус Mid Tower B',
+        price: 4499,
+        supportedFormFactors: ['Micro-ATX'],
+        maxGpuLengthMm: 310
+    },
 ],
+
 ram: [
   {
       id: 'ram1',

@@ -5,6 +5,7 @@ export function checkCompatibility(selected) {
     const motherboard = selected.motherboard;
     const ram = selected.ram;
     const pcCase = selected.case;
+    const gpu = selected.gpu;
     // 1. Перевірка сокета CPU і материнської плати
     if (cpu && motherboard) {
         if (
@@ -42,6 +43,21 @@ if (motherboard && pcCase) {
             `не підтримується корпусом ${pcCase.name}.`
         );
     }
+}  
+// 4. Перевірка довжини відеокарти та корпусу
+if (gpu && pcCase) {
+    if (
+        typeof gpu.lengthMm === 'number' &&
+        typeof pcCase.maxGpuLengthMm === 'number' &&
+        gpu.lengthMm > pcCase.maxGpuLengthMm
+    ) {
+        errors.push(
+            `Відеокарта ${gpu.name} має довжину ${gpu.lengthMm} мм, ` +
+            `але корпус ${pcCase.name} підтримує максимум ` +
+            `${pcCase.maxGpuLengthMm} мм.`
+        );
+    }
 }
+
     return errors;
 }
