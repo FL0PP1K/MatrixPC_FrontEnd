@@ -6,7 +6,7 @@ import {
 } from './configuratorData';
 
 import './Configurator.css';
-
+import { checkCompatibility } from './compatibility';
 export default function Configurator() {
   const [selected, setSelected] = useState({});
   const [activeCategory, setActiveCategory] = useState(null);
@@ -20,9 +20,10 @@ export default function Configurator() {
     (sum, item) => sum + item.price,
     0
   );
-
-  const isComplete = selectedCount === categories.length;
-
+const compatibilityErrors = checkCompatibility(selected);
+const isComplete =
+    selectedCount === categories.length &&
+    compatibilityErrors.length === 0;
   const openPicker = (id) => {
     setActiveCategory(id);
     setPendingId(selected[id]?.id ?? null);
@@ -33,14 +34,31 @@ export default function Configurator() {
     setActiveCategory(null);
     setPendingId(null);
   };
+  // Ця функція видаляє один вибраний компонент Ціна і кількість комплектуючих перерахуються автоматично.
+  const removeComponent = (categoryId) => {
+    setSelected((current) => {
+      const updated = { ...current };
+      delete updated[categoryId];
+      return updated;
+    });
+  };
+  
+  const getProductErrors = (categoryId, product) => {
+    const testSelected = {
+      ...selected,
+      [categoryId]: product
+    };
+
+    return checkCompatibility(testSelected);
+  };
 
   const confirmSelection = () => {
     const item = options[activeCategory]?.find(
       (product) => product.id === pendingId
     );
-
     if (!item) return;
-
+    const errors = getProductErrors(activeCategory, item);
+    if (errors.length > 0) return;
     setSelected((current) => ({
       ...current,
       [activeCategory]: item,
@@ -48,7 +66,6 @@ export default function Configurator() {
 
     closePicker();
   };
-
   useEffect(() => {
     if (!activeCategory && !showSummary) return;
 
@@ -66,38 +83,56 @@ export default function Configurator() {
     };
   }, [activeCategory, showSummary]);
 
+  
   const renderChoice = (category) => {
     const item = selected[category.id];
 
     return (
-      <button
-        type="button"
+      <div
         key={category.id}
-        className={`config-choice ${item ? 'chosen' : ''}`}
-        onClick={() => openPicker(category.id)}
+        className={`config-choice-wrapper ${item ? 'has-item' : ''}`}
       >
-        <span className="config-choice-icon">
-          {item ? '✓' : '+'}
-        </span>
-
-        <span className="config-choice-content">
-          <span className="config-choice-label">
-            {category.name}
+        <button
+          type="button"
+          className={`config-choice ${item ? 'chosen' : ''}`}
+          onClick={() => openPicker(category.id)}
+        >
+          <span className="config-choice-icon">
+            {item ? '✓' : '+'}
           </span>
 
-          {item && (
-            <span className="config-choice-selected">
-              {item.name}
+          <span className="config-choice-content">
+            <span className="config-choice-label">
+              {category.name}
             </span>
-          )}
-        </span>
 
-        <span className="config-choice-action">
-          {item ? 'Змінити' : 'Обрати'}
-        </span>
-      </button>
+            {item && (
+              <span className="config-choice-selected">
+                {item.name}
+              </span>
+            )}
+          </span>
+
+          <span className="config-choice-action">
+            {item ? 'Змінити' : 'Обрати'}
+          </span>
+        </button>
+
+        {item && (
+          <button
+            type="button"
+            className="config-choice-remove"
+            onClick={() => removeComponent(category.id)}
+            aria-label={`Видалити ${category.name}`}
+            title="Видалити комплектуючий"
+          >
+            ✕
+          </button>
+        )}
+      </div>
     );
   };
+
 
   const currentCategory = categories.find(
     (category) => category.id === activeCategory
@@ -152,6 +187,17 @@ export default function Configurator() {
                 ? 'ЗМІНИТИ КОРПУС'
                 : '+ ОБРАТИ КОРПУС'}
             </button>
+            
+            {selected.case && (
+                <button
+                  type="button"
+                  className="configurator-case-remove"
+                  onClick={() => removeComponent('case')}
+                >
+                  ✕ ВИДАЛИТИ КОРПУС
+                </button>
+              )}
+
           </div>
 
           <div className="configurator-side">
@@ -160,7 +206,15 @@ export default function Configurator() {
               .map(renderChoice)}
           </div>
         </div>
+        {compatibilityErrors.length > 0 && (
+    <div className="compatibility-warning">
+        <strong>Увага! Несумісні комплектуючі:</strong>
 
+        {compatibilityErrors.map((error, index) => (
+            <p key={index}>{error}</p>
+        ))}
+    </div>
+    )}
         <div className="configurator-summary">
           <div>
             <span>Обрано комплектуючих</span>
@@ -231,37 +285,53 @@ export default function Configurator() {
               Доступні комплектуючі
             </h4>
 
+           
             <div className="config-product-list">
-              {filteredOptions.map((item) => (
-                <div
-                  key={item.id}
-                  className={`config-product ${
-                    pendingId === item.id
-                      ? 'config-product-active'
-                      : ''
-                  }`}
-                >
-                  <div className="config-product-placeholder">
-                    PC
-                  </div>
+              {filteredOptions.map((item) => {
+                const productErrors = getProductErrors(activeCategory, item);
+                const isIncompatible = productErrors.length > 0;
 
-                  <div className="config-product-info">
-                    <strong>{item.name}</strong>
-                    <span>{formatPrice(item.price)}</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="config-select-button"
-                    onClick={() => setPendingId(item.id)}
+                return (
+                  <div
+                    key={item.id}
+                    className={`config-product ${
+                      pendingId === item.id
+                        ? 'config-product-active'
+                        : ''
+                    } ${isIncompatible ? 'config-product-incompatible' : ''}`}
                   >
-                    {pendingId === item.id
-                      ? 'ОБРАНО'
-                      : 'ОБРАТИ'}
-                  </button>
-                </div>
-              ))}
+                    <div className="config-product-placeholder">
+                      PC
+                    </div>
 
+                    <div className="config-product-info">
+                      <strong>{item.name}</strong>
+                      <span>{formatPrice(item.price)}</span>
+
+                      {isIncompatible && (
+                        <div className="config-product-error">
+                          {productErrors.map((error, index) => (
+                            <p key={index}>⚠ {error}</p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      className="config-select-button"
+                      disabled={isIncompatible}
+                      onClick={() => setPendingId(item.id)}
+                    >
+                      {isIncompatible
+                        ? 'НЕСУМІСНО'
+                        : pendingId === item.id
+                          ? 'ОБРАНО'
+                          : 'ОБРАТИ'}
+                    </button>
+                  </div>
+                );
+              })}
               {filteredOptions.length === 0 && (
                 <p className="config-no-results">
                   Комплектуючих не знайдено.
@@ -281,7 +351,10 @@ export default function Configurator() {
 
               <button
                 type="button"
-                disabled={!pendingId}
+                disabled={!pendingId || getProductErrors(
+                  activeCategory,
+                  options[activeCategory].find((item) => item.id === pendingId)
+                ).length > 0}
                 onClick={confirmSelection}
               >
                 ПІДТВЕРДИТИ
