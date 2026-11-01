@@ -35,13 +35,23 @@ const isComplete =
     setPendingId(null);
   };
 
+  
+  const getProductErrors = (categoryId, product) => {
+    const testSelected = {
+      ...selected,
+      [categoryId]: product
+    };
+
+    return checkCompatibility(testSelected);
+  };
+
   const confirmSelection = () => {
     const item = options[activeCategory]?.find(
       (product) => product.id === pendingId
     );
-
     if (!item) return;
-
+    const errors = getProductErrors(activeCategory, item);
+    if (errors.length > 0) return;
     setSelected((current) => ({
       ...current,
       [activeCategory]: item,
@@ -49,7 +59,6 @@ const isComplete =
 
     closePicker();
   };
-
   useEffect(() => {
     if (!activeCategory && !showSummary) return;
 
@@ -240,37 +249,53 @@ const isComplete =
               Доступні комплектуючі
             </h4>
 
+           
             <div className="config-product-list">
-              {filteredOptions.map((item) => (
-                <div
-                  key={item.id}
-                  className={`config-product ${
-                    pendingId === item.id
-                      ? 'config-product-active'
-                      : ''
-                  }`}
-                >
-                  <div className="config-product-placeholder">
-                    PC
-                  </div>
+              {filteredOptions.map((item) => {
+                const productErrors = getProductErrors(activeCategory, item);
+                const isIncompatible = productErrors.length > 0;
 
-                  <div className="config-product-info">
-                    <strong>{item.name}</strong>
-                    <span>{formatPrice(item.price)}</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="config-select-button"
-                    onClick={() => setPendingId(item.id)}
+                return (
+                  <div
+                    key={item.id}
+                    className={`config-product ${
+                      pendingId === item.id
+                        ? 'config-product-active'
+                        : ''
+                    } ${isIncompatible ? 'config-product-incompatible' : ''}`}
                   >
-                    {pendingId === item.id
-                      ? 'ОБРАНО'
-                      : 'ОБРАТИ'}
-                  </button>
-                </div>
-              ))}
+                    <div className="config-product-placeholder">
+                      PC
+                    </div>
 
+                    <div className="config-product-info">
+                      <strong>{item.name}</strong>
+                      <span>{formatPrice(item.price)}</span>
+
+                      {isIncompatible && (
+                        <div className="config-product-error">
+                          {productErrors.map((error, index) => (
+                            <p key={index}>⚠ {error}</p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      className="config-select-button"
+                      disabled={isIncompatible}
+                      onClick={() => setPendingId(item.id)}
+                    >
+                      {isIncompatible
+                        ? 'НЕСУМІСНО'
+                        : pendingId === item.id
+                          ? 'ОБРАНО'
+                          : 'ОБРАТИ'}
+                    </button>
+                  </div>
+                );
+              })}
               {filteredOptions.length === 0 && (
                 <p className="config-no-results">
                   Комплектуючих не знайдено.
@@ -290,7 +315,10 @@ const isComplete =
 
               <button
                 type="button"
-                disabled={!pendingId}
+                disabled={!pendingId || getProductErrors(
+                  activeCategory,
+                  options[activeCategory].find((item) => item.id === pendingId)
+                ).length > 0}
                 onClick={confirmSelection}
               >
                 ПІДТВЕРДИТИ

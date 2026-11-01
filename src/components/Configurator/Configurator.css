@@ -413,3 +413,26 @@
     font-size: 14px;
     margin-top: 5px;
 }
+/* Несумісні комплектуючі */
+.config-product-incompatible {
+    border: 1px solid #ff4646;
+    background: rgba(255, 70, 70, 0.06);
+  }
+  
+  .config-product-error {
+    margin-top: 10px;
+  }
+  
+  .config-product-error p {
+    color: #ff7777;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 4px 0;
+  }
+  
+  .config-product-incompatible .config-select-button:disabled {
+    background: #45292e;
+    color: #ff9999;
+    cursor: not-allowed;
+  }
+  
