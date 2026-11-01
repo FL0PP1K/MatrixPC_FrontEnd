@@ -9,6 +9,7 @@ export function checkCompatibility(selected) {
     const psu = selected.psu;
     const cooler = selected.cooler;
     const ssd = selected.ssd;
+    const fans = selected.fans;
     // 1. Перевірка сокета CPU і материнської плати
     if (cpu && motherboard) {
         if (
@@ -145,6 +146,25 @@ if (ssd && motherboard) {
             errors.push(
                 `SSD ${ssd.name} (${ssd.connector} ${ssd.interface}) ` +
                 `несумісний із материнською платою ${motherboard.name}.`
+            );
+        }
+    }
+}
+
+// 9. Перевірка вентиляторів та корпусу
+if (fans && pcCase) {
+    if (
+        typeof fans.sizeMm === 'number' &&
+        typeof fans.count === 'number' &&
+        pcCase.fanMounts
+    ) {
+        const availableMounts = pcCase.fanMounts[fans.sizeMm] ?? 0;
+
+        if (availableMounts < fans.count) {
+            errors.push(
+                `Корпус ${pcCase.name} підтримує лише ` +
+                `${availableMounts} вентилятор(и) розміром ${fans.sizeMm} мм, ` +
+                `але обраний комплект містить ${fans.count} шт.`
             );
         }
     }

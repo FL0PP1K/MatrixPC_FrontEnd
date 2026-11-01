@@ -144,6 +144,7 @@ cooler: [
   },
 ],
   
+
 case: [
   {
       id: 'case1',
@@ -152,7 +153,11 @@ case: [
       supportedFormFactors: ['ATX', 'Micro-ATX'],
       maxGpuLengthMm: 370,
       maxCoolerHeightMm: 170,
-      supportedRadiatorsMm: [120, 240, 280, 360]
+      supportedRadiatorsMm: [120, 240, 280, 360],
+      fanMounts: {
+          120: 6,
+          140: 4
+      }
   },
   {
       id: 'case2',
@@ -161,10 +166,13 @@ case: [
       supportedFormFactors: ['Micro-ATX'],
       maxGpuLengthMm: 310,
       maxCoolerHeightMm: 155,
-      supportedRadiatorsMm: [120, 240]
+      supportedRadiatorsMm: [120, 240],
+      fanMounts: {
+          120: 3,
+          140: 1
+      }
   },
 ],
-
 
 ram: [
   {
@@ -213,10 +221,24 @@ psu: [
   },
 ],
 
-  fans: [
-    { id: 'fan1', name: 'Комплект 3 × 120 мм', price: 1599 },
-    { id: 'fan2', name: 'Комплект 2 × 140 мм', price: 1299 },
-  ],
+  
+fans: [
+  {
+      id: 'fan1',
+      name: 'Комплект 3 × 120 мм',
+      price: 1599,
+      sizeMm: 120,
+      count: 3
+  },
+  {
+      id: 'fan2',
+      name: 'Комплект 2 × 140 мм',
+      price: 1299,
+      sizeMm: 140,
+      count: 2
+  },
+],
+
 };
 
 export const formatPrice = (price) =>
