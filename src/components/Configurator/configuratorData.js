@@ -88,14 +88,16 @@ motherboard: [
       name: 'Материнська плата B650 ATX',
       price: 7999,
       socket: 'AM5',
-      memoryType: 'DDR5'
+      memoryType: 'DDR5',
+      formFactor: 'ATX'
   },
   {
       id: 'mb2',
       name: 'Материнська плата B650M',
       price: 5999,
       socket: 'AM5',
-      memoryType: 'DDR5'
+      memoryType: 'DDR5',
+      formFactor: 'Micro-ATX'
   },
 ],
 
@@ -103,10 +105,21 @@ motherboard: [
     { id: 'cool1', name: 'Повітряне охолодження Tower', price: 2299 },
     { id: 'cool2', name: 'Рідинне охолодження 360 мм', price: 4999 },
   ],
-  case: [
-    { id: 'case1', name: 'Корпус Mid Tower A', price: 3499 },
-    { id: 'case2', name: 'Корпус Mid Tower B', price: 4499 },
-  ],
+  
+case: [
+  {
+      id: 'case1',
+      name: 'Корпус Mid Tower A',
+      price: 3499,
+      supportedFormFactors: ['ATX', 'Micro-ATX']
+  },
+  {
+      id: 'case2',
+      name: 'Корпус Mid Tower B',
+      price: 4499,
+      supportedFormFactors: ['Micro-ATX']
+  },
+],
 ram: [
   {
       id: 'ram1',
