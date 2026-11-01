@@ -395,3 +395,21 @@
         text-align: left;
     }
 }
+/* Попередження про несумісність */
+.compatibility-warning {
+    background-color: rgba(255, 70, 70, 0.08);
+    border: 1px solid #ff4646;
+    border-radius: 10px;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    color: #ff7777;
+}
+.compatibility-warning strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+.compatibility-warning p {
+    font-size: 14px;
+    margin-top: 5px;
+}

@@ -16,14 +16,34 @@ export const options = {
     { id: 'gpu1', name: 'GeForce RTX 5070 12GB', price: 47999 },
     { id: 'gpu2', name: 'GeForce RTX 5060 8GB', price: 19999 },
   ],
-  cpu: [
-    { id: 'cpu1', name: 'AMD Ryzen 7 9700X', price: 14499 },
-    { id: 'cpu2', name: 'AMD Ryzen 5 7600', price: 8499 },
-  ],
-  motherboard: [
-    { id: 'mb1', name: 'Материнська плата B650 ATX', price: 7999 },
-    { id: 'mb2', name: 'Материнська плата B650M', price: 5999 },
-  ],
+cpu: [
+  {
+      id: 'cpu1',
+      name: 'AMD Ryzen 7 9700X',
+      price: 14499,
+      socket: 'AM5'
+  },
+  {
+      id: 'cpu2',
+      name: 'AMD Ryzen 5 7600',
+      price: 8499,
+      socket: 'AM5'
+  },
+], 
+motherboard: [
+  {
+      id: 'mb1',
+      name: 'Материнська плата B650 ATX',
+      price: 7999,
+      socket: 'AM5'
+  },
+  {
+      id: 'mb2',
+      name: 'Материнська плата B650M',
+      price: 5999,
+      socket: 'AM5'
+  },
+],
   cooler: [
     { id: 'cool1', name: 'Повітряне охолодження Tower', price: 2299 },
     { id: 'cool2', name: 'Рідинне охолодження 360 мм', price: 4999 },

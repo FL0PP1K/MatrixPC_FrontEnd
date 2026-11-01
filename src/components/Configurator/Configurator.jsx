@@ -6,7 +6,7 @@ import {
 } from './configuratorData';
 
 import './Configurator.css';
-
+import { checkCompatibility } from './compatibility';
 export default function Configurator() {
   const [selected, setSelected] = useState({});
   const [activeCategory, setActiveCategory] = useState(null);
@@ -20,9 +20,10 @@ export default function Configurator() {
     (sum, item) => sum + item.price,
     0
   );
-
-  const isComplete = selectedCount === categories.length;
-
+const compatibilityErrors = checkCompatibility(selected);
+const isComplete =
+    selectedCount === categories.length &&
+    compatibilityErrors.length === 0;
   const openPicker = (id) => {
     setActiveCategory(id);
     setPendingId(selected[id]?.id ?? null);
@@ -160,7 +161,15 @@ export default function Configurator() {
               .map(renderChoice)}
           </div>
         </div>
+        {compatibilityErrors.length > 0 && (
+    <div className="compatibility-warning">
+        <strong>Увага! Несумісні комплектуючі:</strong>
 
+        {compatibilityErrors.map((error, index) => (
+            <p key={index}>{error}</p>
+        ))}
+    </div>
+    )}
         <div className="configurator-summary">
           <div>
             <span>Обрано комплектуючих</span>
