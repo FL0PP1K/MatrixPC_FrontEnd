@@ -436,3 +436,53 @@
     cursor: not-allowed;
   }
   
+/* Видалення комплектуючих */
+
+.config-choice-wrapper {
+    position: relative;
+    min-width: 0;
+  }
+  
+  .config-choice-wrapper .config-choice {
+    width: 100%;
+  }
+  
+  .config-choice-wrapper.has-item .config-choice {
+    padding-right: 90px;
+  }
+  
+  .config-choice-remove {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ff4646;
+    border-radius: 6px;
+    background: rgba(255, 70, 70, 0.1);
+    color: #ff7777;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .config-choice-remove:hover {
+    background: #ff4646;
+    color: #fff;
+  }
+  
+  .configurator-case-remove {
+    display: block;
+    margin: 12px auto 0;
+    padding: 10px 18px;
+    background: transparent;
+    border: 1px solid #ff4646;
+    border-radius: 6px;
+    color: #ff7777;
+    cursor: pointer;
+  }
+  
+  .configurator-case-remove:hover {
+    background: rgba(255, 70, 70, 0.12);
+  }
+  

@@ -34,7 +34,14 @@ const isComplete =
     setActiveCategory(null);
     setPendingId(null);
   };
-
+  // Ця функція видаляє один вибраний компонент Ціна і кількість комплектуючих перерахуються автоматично.
+  const removeComponent = (categoryId) => {
+    setSelected((current) => {
+      const updated = { ...current };
+      delete updated[categoryId];
+      return updated;
+    });
+  };
   
   const getProductErrors = (categoryId, product) => {
     const testSelected = {
@@ -76,38 +83,56 @@ const isComplete =
     };
   }, [activeCategory, showSummary]);
 
+  
   const renderChoice = (category) => {
     const item = selected[category.id];
 
     return (
-      <button
-        type="button"
+      <div
         key={category.id}
-        className={`config-choice ${item ? 'chosen' : ''}`}
-        onClick={() => openPicker(category.id)}
+        className={`config-choice-wrapper ${item ? 'has-item' : ''}`}
       >
-        <span className="config-choice-icon">
-          {item ? '✓' : '+'}
-        </span>
-
-        <span className="config-choice-content">
-          <span className="config-choice-label">
-            {category.name}
+        <button
+          type="button"
+          className={`config-choice ${item ? 'chosen' : ''}`}
+          onClick={() => openPicker(category.id)}
+        >
+          <span className="config-choice-icon">
+            {item ? '✓' : '+'}
           </span>
 
-          {item && (
-            <span className="config-choice-selected">
-              {item.name}
+          <span className="config-choice-content">
+            <span className="config-choice-label">
+              {category.name}
             </span>
-          )}
-        </span>
 
-        <span className="config-choice-action">
-          {item ? 'Змінити' : 'Обрати'}
-        </span>
-      </button>
+            {item && (
+              <span className="config-choice-selected">
+                {item.name}
+              </span>
+            )}
+          </span>
+
+          <span className="config-choice-action">
+            {item ? 'Змінити' : 'Обрати'}
+          </span>
+        </button>
+
+        {item && (
+          <button
+            type="button"
+            className="config-choice-remove"
+            onClick={() => removeComponent(category.id)}
+            aria-label={`Видалити ${category.name}`}
+            title="Видалити комплектуючий"
+          >
+            ✕
+          </button>
+        )}
+      </div>
     );
   };
+
 
   const currentCategory = categories.find(
     (category) => category.id === activeCategory
@@ -162,6 +187,17 @@ const isComplete =
                 ? 'ЗМІНИТИ КОРПУС'
                 : '+ ОБРАТИ КОРПУС'}
             </button>
+            
+            {selected.case && (
+                <button
+                  type="button"
+                  className="configurator-case-remove"
+                  onClick={() => removeComponent('case')}
+                >
+                  ✕ ВИДАЛИТИ КОРПУС
+                </button>
+              )}
+
           </div>
 
           <div className="configurator-side">
