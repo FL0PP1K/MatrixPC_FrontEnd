@@ -89,6 +89,58 @@ const compatibilityErrors = checkCompatibility(selected);
 const isComplete =
     selectedCount === categories.length &&
     compatibilityErrors.length === 0;
+    // ДОДАЄ КОМПЛЕКТУЮЧІ ДО КОШИКУ
+  const addToCart = () => {
+    if (!isComplete) {
+      setSavedMessage('Спочатку заверши сумісну збірку.');
+      return;
+    }
+
+    const components = categories.map(category => ({
+      category: category.name,
+      id: selected[category.id].id,
+      name: selected[category.id].name,
+      price: selected[category.id].price
+    }));
+
+    const buildId = 'custom-' + categories
+      .map(category => `${category.id}:${selected[category.id].id}`)
+      .join('|');
+
+    const cartItem = {
+      id: buildId,
+      name: 'ВЛАСНА ЗБІРКА ПК',
+      specs: components.slice(0, 3).map(item => item.name).join(' • ') +
+        ` • ще ${components.length - 3} комплектуючих`,
+      price: total,
+      quantity: 1,
+      image: '/image/PC_Case 1.png',
+      components
+    };
+
+    try {
+      const savedCart = JSON.parse(
+        localStorage.getItem('matrixpc-cart') || '[]'
+      );
+
+      const cart = Array.isArray(savedCart) ? savedCart : [];
+
+      const existingItem = cart.find(item => item.id === buildId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push(cartItem);
+      }
+
+      localStorage.setItem('matrixpc-cart', JSON.stringify(cart));
+      setSavedMessage('Збірку додано до кошика!');
+    } catch (error) {
+      console.error('Помилка додавання збірки:', error);
+      setSavedMessage('Не вдалося додати збірку до кошика.');
+    }
+  };
+
   const openPicker = (id) => {
     setActiveCategory(id);
     setPendingId(selected[id]?.id ?? null);
@@ -486,6 +538,16 @@ const isComplete =
               >
                 ЗБЕРЕГТИ ЗБІРКУ
               </button>
+              // в кошик нашу збірку 
+              <button
+                type="button"
+                className="config-save-button"
+                onClick={addToCart}
+                disabled={!isComplete}
+              >
+                ДОДАТИ В КОШИК
+              </button>
+
             <button
               type="button"
               className="config-result-close"
@@ -501,7 +563,8 @@ const isComplete =
         <div
           className={`config-toast ${
             savedMessage.includes('збережено') ||
-            savedMessage.includes('відновлено')
+            savedMessage.includes('відновлено') ||
+            savedMessage.includes('додано')
               ? 'config-toast-success'
               : 'config-toast-error'
           }`}
@@ -509,7 +572,8 @@ const isComplete =
         >
           <span>
             {savedMessage.includes('збережено') ||
-            savedMessage.includes('відновлено') ? '✓' : '!'}
+            savedMessage.includes('відновлено') ||
+            savedMessage.includes('додано') ? '✓' : '!'}
           </span>
           <span>{savedMessage}</span>
         </div>
