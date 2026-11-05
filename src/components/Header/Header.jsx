@@ -1,20 +1,55 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Header.css';
 const navigation = [
-  { label: 'Головна', href: '#home' },
-  { label: 'Комплектуючі', href: '#components' },
-  { label: 'Конфігуратор', href: '#assembly' },
-  { label: 'Збірки ПК', href: '#builds' },
-  { label: 'Про нас', href: '#why-us' },
+  { label: 'Головна', href: '/#home' },
+  { label: 'Комплектуючі', href: '/#components' },
+  { label: 'Конфігуратор', href: '/#assembly' },
+  { label: 'Збірки ПК', href: '/#builds' },
+  { label: 'Про нас', href: '/#why-us' },
 ];
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+// відстежування на які ми секціїї 
+
+const [activeSection, setActiveSection] = useState(
+  window.location.pathname === '/cart' ? '' : '#home'
+);
+
+useEffect(() => {
+  if (window.location.pathname === '/cart') {
+    setActiveSection('');
+    return;
+  }
+
+  const updateActiveSection = () => {
+    const sections = navigation
+      .map(link => document.querySelector(link.href.slice(1)))
+      .filter(Boolean);
+
+    let currentSection = '#home';
+
+    sections.forEach(section => {
+      if (section.getBoundingClientRect().top <= 150) {
+        currentSection = `#${section.id}`;
+      }
+    });
+
+    setActiveSection(currentSection);
+  };
+
+  window.addEventListener('scroll', updateActiveSection, { passive: true });
+  updateActiveSection();
+
+  return () => {
+    window.removeEventListener('scroll', updateActiveSection);
+  };
+}, []);
 
   return (
     <header className="header">
       <div className="header-container">
-        <a href="#home" className="logo">
+      <a href="/#home" className="logo">
           <span className="logo-white">MATRIX</span>
           <span className="logo-green">PC</span>
         </a>
@@ -24,16 +59,16 @@ export default function Header() {
           className={`nav-menu ${menuOpen ? 'is-open' : ''}`}
           aria-label="Головна навігація"
         >
-          {navigation.map((link, index) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={`nav-link ${index === 0 ? 'active' : ''}`}
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.label}
-            </a>
-          ))}
+          {navigation.map(link => (
+          <a
+            key={link.href}
+            href={link.href}
+            className={`nav-link ${activeSection === link.href.slice(1) ? 'active' : ''}`}
+            onClick={() => setMenuOpen(false)}
+          >
+            {link.label}
+          </a>
+))}
         </nav>
 
         <div className="header-actions">
@@ -68,7 +103,8 @@ export default function Header() {
             type="button"
             className="header-icon-btn"
             aria-label="Кошик"
-            title="Підключимо на наступному етапі"
+            title="Відкрити кошик"
+            onClick={() => window.location.assign('/cart')}
           >
             <svg viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2">
@@ -78,7 +114,7 @@ export default function Header() {
             </svg>
           </button>
 
-          <a href="#assembly" className="header-build-btn">
+          <a href="/#assembly" className="header-build-btn">
             ЗІБРАТИ ПК
           </a>
 

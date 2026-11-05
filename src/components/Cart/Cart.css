@@ -1,0 +1,206 @@
+
+/* Сторінка кошика */
+
+.cart-page {
+    min-height: 700px;
+    padding: 32px 20px 80px;
+    background: #070A0D;
+    color: #F5F7FA;
+}
+
+.cart-container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.cart-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    color: #8B98A7;
+    font-size: 13px;
+}
+
+.cart-breadcrumb a {
+    color: #8B98A7;
+    text-decoration: none;
+}
+
+.cart-breadcrumb a:hover {
+    color: #2EE679;
+}
+
+.cart-title {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 900;
+}
+
+/* Порожній стан */
+
+.cart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 85px 20px 65px;
+}
+
+.cart-empty-icon {
+    width: 112px;
+    height: 112px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+    background: #0D1A15;
+    color: #2EE679;
+    border: 1px solid #25313A;
+    border-radius: 16px;
+}
+
+.cart-empty h2 {
+    margin: 0 0 20px;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.cart-empty p {
+    max-width: 610px;
+    margin: 0;
+    color: #8B98A7;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.cart-empty-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 30px;
+}
+
+.cart-primary-button,
+.cart-secondary-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 12px 26px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.cart-primary-button {
+    background: #2EE679;
+    color: #07100A;
+    border: 1px solid #2EE679;
+}
+
+.cart-primary-button:hover {
+    background: #00FF66;
+}
+
+.cart-secondary-button {
+    background: #111820;
+    color: #F5F7FA;
+    border: 1px solid #25313A;
+}
+
+.cart-secondary-button:hover {
+    border-color: #2EE679;
+    color: #2EE679;
+}
+
+/* Три картки з Figma */
+
+.cart-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.cart-link-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 195px;
+    padding: 26px;
+    background: #111820;
+    border: 1px solid #25313A;
+    border-radius: 12px;
+    color: #F5F7FA;
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+}
+
+.cart-link-card:hover {
+    border-color: #2EE679;
+}
+
+.cart-link-card h3 {
+    margin: 0 0 14px;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.cart-link-card p {
+    flex: 1;
+    margin: 0 0 20px;
+    color: #8B98A7;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.cart-link-card span {
+    color: #2EE679;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Адаптивність */
+
+@media (max-width: 900px) {
+    .cart-links {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-link-card {
+        min-height: 150px;
+    }
+}
+
+@media (max-width: 650px) {
+    .cart-page {
+        padding: 24px 16px 60px;
+    }
+
+    .cart-title {
+        font-size: 28px;
+    }
+
+    .cart-empty {
+        padding: 65px 0 45px;
+    }
+
+    .cart-empty h2 {
+        font-size: 23px;
+    }
+
+    .cart-empty-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .cart-primary-button,
+    .cart-secondary-button {
+        width: 100%;
+    }
+
+    .cart-link-card {
+        padding: 20px;
+    }
+}
