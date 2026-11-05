@@ -257,15 +257,54 @@
 }
 
 /* Додавання готової збірки в кошик */
+/* Сповіщення про додавання в кошик */
 
-.build-cart-message {
-    margin: 14px 0;
-    color: #2EE679;
+.build-toast {
+    position: fixed;
+    top: 100px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 360px;
+    padding: 16px 22px;
+    background: #111820;
+    border: 1px solid #25313A;
+    border-left: 5px solid #2EE679;
+    border-radius: 10px;
+    color: #F5F7FA;
     font-size: 14px;
     font-weight: 600;
-    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    animation: buildToast 3s ease-in-out forwards;
 }
 
+.build-toast-success {
+    border-left-color: #2EE679;
+}
+
+.build-toast-success > span:first-child {
+    color: #2EE679;
+    font-size: 18px;
+}
+
+.build-toast-error {
+    border-left-color: #FF4646;
+}
+
+.build-toast-error > span:first-child {
+    color: #FF4646;
+    font-size: 18px;
+}
+
+@media (max-width: 600px) {
+    .build-toast {
+        left: 16px;
+        right: 16px;
+        max-width: none;
+    }
+}
 .build-modal-close-button {
     display: block;
     width: 100%;
@@ -283,4 +322,26 @@
 
 .build-modal-close-button:hover {
     border-color: #2EE679;
+}
+/* Плавна поява та зникнення повідомлення */
+@keyframes buildToast {
+    0% {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+
+    13% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    87% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(60px);
+    }
 }
