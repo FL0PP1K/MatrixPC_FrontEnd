@@ -13,9 +13,74 @@ export default function Configurator() {
   const [pendingId, setPendingId] = useState(null);
   const [search, setSearch] = useState('');
   const [showSummary, setShowSummary] = useState(false);
+  const [savedMessage, setSavedMessage] = useState('');
+  const saveBuild = () => {
+    const buildData = {
+      components: Object.fromEntries(
+        Object.entries(selected).map(([categoryId, item]) => [
+          categoryId,
+          item.id
+        ])
+      ),
+      savedAt: new Date().toISOString()
+    };
+
+    try {
+      localStorage.setItem('matrixpc-saved-build', JSON.stringify(buildData));
+      setSavedMessage('Збірку успішно збережено!');
+    } catch {
+      setSavedMessage('Не вдалося зберегти збірку.');
+    }
+  };
+  
+  const restoreBuild = () => {
+    try {
+      const saved = localStorage.getItem('matrixpc-saved-build');
+
+      if (!saved) {
+        setSavedMessage('Збереженої збірки немає.');
+        return;
+      }
+
+      const buildData = JSON.parse(saved);
+      const restored = {};
+
+      for (const category of categories) {
+        const productId = buildData.components?.[category.id];
+
+        const product = options[category.id]?.find(
+          (item) => item.id === productId
+        );
+
+        if (product) {
+          restored[category.id] = product;
+        }
+      }
+
+      if (Object.keys(restored).length === 0) {
+        setSavedMessage('Не вдалося відновити комплектуючі.');
+        return;
+      }
+
+      setSelected(restored);
+      setSavedMessage('Збірку відновлено!');
+      setShowSummary(false);
+    } catch {
+      setSavedMessage('Помилка під час відновлення збірки.');
+    }
+  };
+  // втПливабче повідомлення
+  useEffect(() => {
+    if (!savedMessage) return;
+
+    const timer = setTimeout(() => {
+      setSavedMessage('');
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [savedMessage]);
 
   const selectedCount = Object.keys(selected).length;
-
   const total = Object.values(selected).reduce(
     (sum, item) => sum + item.price,
     0
@@ -191,7 +256,7 @@ const isComplete =
             {selected.case && (
                 <button
                   type="button"
-                  className="configurator-case-remove"
+                  className="configurator-case-button configurator-case-remove"
                   onClick={() => removeComponent('case')}
                 >
                   ✕ ВИДАЛИТИ КОРПУС
@@ -215,6 +280,7 @@ const isComplete =
         ))}
     </div>
     )}
+         
         <div className="configurator-summary">
           <div>
             <span>Обрано комплектуючих</span>
@@ -226,20 +292,29 @@ const isComplete =
             <strong>{formatPrice(total)}</strong>
           </div>
 
-          <button
-            type="button"
-            disabled={!isComplete}
-            onClick={() => setShowSummary(true)}
-          >
-            ПРОДОВЖИТИ ЗБІРКУ
-          </button>
+          <div className="config-summary-actions">
+            <button
+              type="button"
+              className="config-restore-button"
+              onClick={restoreBuild}
+            >
+              ВІДНОВИТИ ЗБІРКУ
+            </button>
+
+            <button
+              type="button"
+              disabled={!isComplete}
+              onClick={() => setShowSummary(true)}
+            >
+              ПРОДОВЖИТИ ЗБІРКУ
+            </button>
+          </div>
         </div>
 
         <p className="configurator-demo-note">
           Демонстраційні товари та ціни.
         </p>
       </div>
-
       {activeCategory && (
         <div
           className="config-modal-overlay"
@@ -404,7 +479,13 @@ const isComplete =
             <p className="config-result-note">
               Збірка сформована в деморежимі.
             </p>
-
+            <button
+                type="button"
+                className="config-save-button"
+                onClick={saveBuild}
+              >
+                ЗБЕРЕГТИ ЗБІРКУ
+              </button>
             <button
               type="button"
               className="config-result-close"
@@ -415,6 +496,25 @@ const isComplete =
           </div>
         </div>
       )}
+      
+      {savedMessage && (
+        <div
+          className={`config-toast ${
+            savedMessage.includes('збережено') ||
+            savedMessage.includes('відновлено')
+              ? 'config-toast-success'
+              : 'config-toast-error'
+          }`}
+          role="status"
+        >
+          <span>
+            {savedMessage.includes('збережено') ||
+            savedMessage.includes('відновлено') ? '✓' : '!'}
+          </span>
+          <span>{savedMessage}</span>
+        </div>
+      )}
+
     </section>
   );
 }
