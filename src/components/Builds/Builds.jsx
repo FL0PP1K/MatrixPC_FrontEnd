@@ -101,6 +101,17 @@ export default function Builds() {
   const [activeBuild, setActiveBuild] = useState(null);
   
   const [cartMessage, setCartMessage] = useState('');
+  // чи додали пк в кошик
+  const [addedBuildId, setAddedBuildId] = useState(null);
+  useEffect(() => {
+    if (!cartMessage) return;
+
+    const timer = setTimeout(() => {
+      setCartMessage('');
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [cartMessage]);
 
   const addToCart = (build) => {
     const cartItem = {
@@ -131,6 +142,7 @@ export default function Builds() {
       // Оновлення лічильника зразу
       window.dispatchEvent(new Event('matrixpc-cart-updated'));
       setCartMessage(`${build.name} додано до кошика`);
+      setAddedBuildId(build.id);
     } catch (error) {
       console.error('Помилка додавання в кошик:', error);
       setCartMessage('Не вдалося додати товар до кошика');
@@ -172,7 +184,10 @@ export default function Builds() {
             <BuildCard
               key={build.id}
               build={build}
-              onDetails={setActiveBuild}
+              onDetails={(build) => {
+              setActiveBuild(build);
+              setAddedBuildId(null);
+            }}
             />
           ))}
         </div>
@@ -207,21 +222,21 @@ export default function Builds() {
               ДОДАТИ В КОШИК
             </button>
 
-            {cartMessage && (
-              <p className="build-cart-message">
-                {cartMessage}
-              </p>
-            )}
-
             <button
               type="button"
               className="build-modal-close-button"
               onClick={() => {
-                setActiveBuild(null);
-                setCartMessage('');
+                if (addedBuildId === activeBuild.id) {
+                  window.location.assign('/cart');
+                } else {
+                  setActiveBuild(null);
+                  setCartMessage('');
+                }
               }}
             >
-              ЗАКРИТИ
+              {addedBuildId === activeBuild.id
+                ? 'ПЕРЕЙТИ В КОШИК'
+                : 'ЗАКРИТИ'}
             </button>
 
             </div>
@@ -276,6 +291,23 @@ export default function Builds() {
           </div>
         </div>
       )}
+      {cartMessage && (
+        <div
+          className={`build-toast ${
+            cartMessage.includes('додано')
+              ? 'build-toast-success'
+              : 'build-toast-error'
+          }`}
+          role="status"
+        >
+          <span>
+            {cartMessage.includes('додано') ? '✓' : '!'}
+          </span>
+
+          <span>{cartMessage}</span>
+        </div>
+      )}
+
     </section>
   );
 }
