@@ -191,7 +191,7 @@ const isComplete =
             {selected.case && (
                 <button
                   type="button"
-                  className="configurator-case-remove"
+                  className="configurator-case-button configurator-case-remove"
                   onClick={() => removeComponent('case')}
                 >
                   ✕ ВИДАЛИТИ КОРПУС
