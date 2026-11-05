@@ -255,3 +255,32 @@
 .build-spec-row:last-child {
     border-bottom: none;
 }
+
+/* Додавання готової збірки в кошик */
+
+.build-cart-message {
+    margin: 14px 0;
+    color: #2EE679;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.build-modal-close-button {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px;
+    background: #111820;
+    border: 1px solid #25313A;
+    border-radius: 8px;
+    color: #F5F7FA;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.build-modal-close-button:hover {
+    border-color: #2EE679;
+}

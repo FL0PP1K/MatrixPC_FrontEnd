@@ -1,6 +1,63 @@
+import { useEffect, useState } from 'react';
 import './Cart.css';
+const formatPrice = price => `${price.toLocaleString('uk-UA')} ₴`;
 
 export default function Cart() {
+  const [items, setItems] = useState(() => {
+    try {
+      const savedCart = localStorage.getItem('matrixpc-cart');
+
+      if (savedCart !== null) {
+        const parsed = JSON.parse(savedCart);
+
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      }
+    } catch {
+      console.error('Не вдалося завантажити кошик');
+    }
+
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('matrixpc-cart', JSON.stringify(items));
+  }, [items]);
+
+  const increaseQuantity = id => {
+    setItems(prev =>
+      prev.map(item =>
+        item.id === id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  };
+
+  const decreaseQuantity = id => {
+    setItems(prev =>
+      prev.map(item =>
+        item.id === id
+          ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+          : item
+      )
+    );
+  };
+  const removeItem = id => {
+    setItems(prev => prev.filter(item => item.id !== id));
+  };
+  const clearCart = () => {
+    setItems([]);
+  };
+  const totalQuantity = items.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+  const totalPrice = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   return (
     <section className="cart-page">
       <div className="cart-container">
@@ -9,8 +66,111 @@ export default function Cart() {
           <span>/</span>
           <span>Кошик</span>
         </div>
-
         <h1 className="cart-title">КОШИК</h1>
+        {items.length > 0 && (
+          <div className="cart-content">
+            <div className="cart-items">
+            <div className="cart-items-header">
+            <h2>ТОВАРИ У КОШИКУ ({totalQuantity})</h2>
+
+            <button
+              type="button"
+              className="cart-clear-button"
+              onClick={clearCart}
+            >
+              ОЧИСТИТИ КОШИК
+            </button>
+          </div>
+              {items.map(item => (
+                <div className="cart-item" key={item.id}>
+                  <img
+                    className="cart-item-image"
+                    src={item.image}
+                    alt={item.name}
+                  />
+
+                  <div className="cart-item-info">
+                    <h3>{item.name}</h3>
+                    <p>{item.specs}</p>
+
+                    
+                <div className="cart-item-bottom">
+                  <span className="cart-item-price">
+                    {formatPrice(item.price * item.quantity)}
+                  </span>
+
+                  <div className="cart-quantity">
+                    <button
+                      type="button"
+                      onClick={() => decreaseQuantity(item.id)}
+                      disabled={item.quantity === 1}
+                      aria-label={`Зменшити кількість ${item.name}`}
+                    >
+                      −
+                    </button>
+
+                    <span>{item.quantity}</span>
+
+                    <button
+                      type="button"
+                      onClick={() => increaseQuantity(item.id)}
+                      aria-label={`Збільшити кількість ${item.name}`}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="cart-remove-button"
+                  onClick={() => removeItem(item.id)}
+                >
+                  ✕ Видалити
+                </button>
+
+                  </div>
+                </div>
+              ))}
+            </div>
+            <aside className="cart-summary">
+              <h2>ВАШЕ ЗАМОВЛЕННЯ</h2>
+              <div className="cart-summary-row">
+                <span>Товари</span>
+                <span>{formatPrice(totalPrice)}</span>
+              </div>
+              <div className="cart-summary-row">
+                <span>Доставка</span>
+                <span>Розраховується при оформленні</span>
+              </div>
+              <div className="cart-summary-total">
+                <span>Разом</span>
+                <strong>{formatPrice(totalPrice)}</strong>
+              </div>
+              <button
+                type="button"
+                className="cart-checkout-button"
+                disabled
+              >
+                ОФОРМИТИ ЗАМОВЛЕННЯ
+              </button>
+              <p className="cart-summary-note">
+                Оформлення замовлення підключимо пізніше.
+              </p>
+              <div className="cart-promo">
+                <label htmlFor="cart-promo-input">ПРОМОКОД</label>
+                <input
+                  id="cart-promo-input"
+                  type="text"
+                  placeholder="Введіть промокод"
+                  disabled
+                />
+              </div>
+            </aside>
+          </div>
+        )}
+        {items.length === 0 && (
+        <>
         <div className="cart-empty">
           <div className="cart-empty-icon">
             <svg
@@ -76,6 +236,8 @@ export default function Cart() {
             <span>Перейти до конфігуратора →</span>
           </a>
         </div>
+        </>
+      )}
       </div>
     </section>
   );

@@ -99,6 +99,42 @@ function BuildCard({ build, onDetails }) {
 
 export default function Builds() {
   const [activeBuild, setActiveBuild] = useState(null);
+  
+  const [cartMessage, setCartMessage] = useState('');
+
+  const addToCart = (build) => {
+    const cartItem = {
+      id: build.id,
+      name: build.name,
+      specs: `${build.cpu} • ${build.gpu} • ${build.ram} • ${build.ssd}`,
+      price: build.price,
+      quantity: 1,
+      image: build.image
+    };
+
+    try {
+      const savedCart = JSON.parse(
+        localStorage.getItem('matrixpc-cart') || '[]'
+      );
+
+      const cart = Array.isArray(savedCart) ? savedCart : [];
+
+      const existingItem = cart.find(item => item.id === build.id);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push(cartItem);
+      }
+
+      localStorage.setItem('matrixpc-cart', JSON.stringify(cart));
+
+      setCartMessage(`${build.name} додано до кошика`);
+    } catch (error) {
+      console.error('Помилка додавання в кошик:', error);
+      setCartMessage('Не вдалося додати товар до кошика');
+    }
+  };
 
   useEffect(() => {
     if (!activeBuild) return;
@@ -161,15 +197,32 @@ export default function Builds() {
                 {activeBuild.name}
               </h2>
 
-              <button
-                type="button"
-                className="build-modal-close"
-                onClick={() => setActiveBuild(null)}
-                aria-label="Закрити"
-                autoFocus
-              >
-                ✕
-              </button>
+              
+            <button
+              type="button"
+              className="build-modal-button"
+              onClick={() => addToCart(activeBuild)}
+            >
+              ДОДАТИ В КОШИК
+            </button>
+
+            {cartMessage && (
+              <p className="build-cart-message">
+                {cartMessage}
+              </p>
+            )}
+
+            <button
+              type="button"
+              className="build-modal-close-button"
+              onClick={() => {
+                setActiveBuild(null);
+                setCartMessage('');
+              }}
+            >
+              ЗАКРИТИ
+            </button>
+
             </div>
 
             <img
