@@ -128,7 +128,8 @@ export default function Builds() {
       }
 
       localStorage.setItem('matrixpc-cart', JSON.stringify(cart));
-
+      // Оновлення лічильника зразу
+      window.dispatchEvent(new Event('matrixpc-cart-updated'));
       setCartMessage(`${build.name} додано до кошика`);
     } catch (error) {
       console.error('Помилка додавання в кошик:', error);

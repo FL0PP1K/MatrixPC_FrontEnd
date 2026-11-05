@@ -134,6 +134,8 @@ const isComplete =
       }
 
       localStorage.setItem('matrixpc-cart', JSON.stringify(cart));
+      // Оновлення лічильника зразу
+      window.dispatchEvent(new Event('matrixpc-cart-updated'));
       setSavedMessage('Збірку додано до кошика!');
     } catch (error) {
       console.error('Помилка додавання збірки:', error);
@@ -574,7 +576,7 @@ const isComplete =
             {savedMessage.includes('збережено') ||
             savedMessage.includes('відновлено') ||
             savedMessage.includes('додано') ? '✓' : '!'}
-          </span>
+          </span> 
           <span>{savedMessage}</span>
         </div>
       )}

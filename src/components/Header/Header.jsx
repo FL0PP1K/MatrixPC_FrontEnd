@@ -10,6 +10,40 @@ const navigation = [
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  // число над кошиком 
+  
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const updateCartCount = () => {
+      try {
+        const cart = JSON.parse(
+          localStorage.getItem('matrixpc-cart') || '[]'
+        );
+
+        const count = Array.isArray(cart)
+          ? cart.reduce((sum, item) => sum + item.quantity, 0)
+          : 0;
+
+        setCartCount(count);
+      } catch {
+        setCartCount(0);
+      }
+    };
+
+    updateCartCount();
+
+    window.addEventListener('storage', updateCartCount);
+    window.addEventListener('focus', updateCartCount);
+    window.addEventListener('matrixpc-cart-updated', updateCartCount);
+
+    return () => {
+      window.removeEventListener('storage', updateCartCount);
+      window.removeEventListener('focus', updateCartCount);
+      window.removeEventListener('matrixpc-cart-updated', updateCartCount);
+    };
+  }, []);
+
 // відстежування на які ми секціїї 
 
 const [activeSection, setActiveSection] = useState(
@@ -98,11 +132,11 @@ useEffect(() => {
               <path d="M4 21v-2a8 8 0 0 1 16 0v2" />
             </svg>
           </button>
-
+          
           <button
             type="button"
-            className="header-icon-btn"
-            aria-label="Кошик"
+            className="header-icon-btn header-cart-btn"
+            aria-label={`Кошик: ${cartCount} товарів`}
             title="Відкрити кошик"
             onClick={() => window.location.assign('/cart')}
           >
@@ -112,6 +146,12 @@ useEffect(() => {
               <circle cx="9" cy="20" r="1" />
               <circle cx="18" cy="20" r="1" />
             </svg>
+
+            {cartCount > 0 && (
+              <span className="header-cart-count">
+                {cartCount > 99 ? '99+' : cartCount}
+              </span>
+            )}
           </button>
 
           <a href="/#assembly" className="header-build-btn">
