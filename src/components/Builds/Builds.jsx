@@ -10,6 +10,11 @@ const builds = [
     gpu: 'GeForce RTX 5060',
     ram: '16 GB RAM',
     ssd: '1 TB SSD',
+    motherboard: 'B650M Micro-ATX',
+    cooler: 'Повітряне охолодження Tower',
+    pcCase: 'Mid Tower',
+    psu: '650W',
+    fans: '3 × 120 мм',
     price: 39999,
     image: '/image/PC_1.png',
   },
@@ -21,6 +26,11 @@ const builds = [
     gpu: 'GeForce RTX 5070',
     ram: '32 GB RAM',
     ssd: '1 TB SSD',
+    motherboard: 'B650 ATX',
+    cooler: 'Рідинне охолодження 240 мм',
+    pcCase: 'Mid Tower',
+    psu: '750W Gold',
+    fans: '3 × 120 мм',
     price: 69999,
     image: '/image/PC_2.png',
   },
@@ -32,6 +42,11 @@ const builds = [
     gpu: 'GeForce RTX 5090',
     ram: '64 GB RAM',
     ssd: '2 TB SSD',
+    motherboard: 'X870E ATX',
+    cooler: 'Рідинне охолодження 360 мм',
+    pcCase: 'Full Tower',
+    psu: '1200W Gold',
+    fans: '6 × 120 мм',
     price: 129999,
     image: '/image/PC_3.png',
   },
@@ -170,10 +185,15 @@ export default function Builds() {
             <div className="build-modal-specs">
               <p>Процесор: {activeBuild.cpu}</p>
               <p>Відеокарта: {activeBuild.gpu}</p>
+              <p>Материнська плата: {activeBuild.motherboard}</p>
+              <p>Охолодження: {activeBuild.cooler}</p>
+              <p>Корпус: {activeBuild.pcCase}</p>
               <p>Оперативна пам'ять: {activeBuild.ram}</p>
               <p>Накопичувач: {activeBuild.ssd}</p>
+              <p>Блок живлення: {activeBuild.psu}</p>
+              <p>Вентилятори: {activeBuild.fans}</p>
             </div>
-
+            
             <div className="build-modal-price">
               від {formatPrice(activeBuild.price)}
             </div>
