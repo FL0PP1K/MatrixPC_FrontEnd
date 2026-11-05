@@ -134,11 +134,11 @@
     border: 1px solid #25313A;
     border-radius: 12px;
 }
-    .configurator-summary > div {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
+.configurator-summary > div:not(.config-summary-actions) {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
     .configurator-summary span {
         color: #8B98A7;
         font-size: 13px;
@@ -156,6 +156,54 @@
             color: #8B98A7;
             cursor: not-allowed;
         }
+        
+/* Розміщення кнопок збоку одна від одної */
+
+.configurator-summary {
+    grid-template-columns: 1fr 1fr minmax(0, 2fr);
+}
+
+.configurator-summary .config-summary-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: stretch;
+    min-width: 0;
+}
+.configurator-summary .config-summary-actions button {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    margin: 0;
+    padding: 12px 14px;
+    min-height: 48px;
+    white-space: normal;
+}
+
+/* Відновити — темна */
+.configurator-summary .config-summary-actions .config-restore-button {
+    background: #111820;
+    color: #F5F7FA;
+    border: 1px solid #25313A;
+}
+
+.configurator-summary .config-summary-actions .config-restore-button:hover {
+    background: #1D2A26;
+    border-color: #2EE679;
+    color: #2EE679;
+}
+
+/* Мобільна версія */
+@media (max-width: 800px) {
+    .configurator-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .configurator-summary .config-summary-actions {
+        flex-direction: row;
+    }
+}
+
 .configurator-demo-note {
     color: #8B98A7;
     font-size: 12px;
@@ -485,13 +533,143 @@
     border: 1px solid #25313A;
     transition: all 0.25s ease;
 }
-
 .configurator-case-button.configurator-case-remove:hover {
     background: #FF4646;
     border-color: #FF4646;
     color: #FFFFFF;
 }
-
 .configurator-case-button.configurator-case-remove:active {
     transform: scale(0.98);
+}
+/* Збереження та відновлення збірки */
+.config-save-button {
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 15px 24px;
+    background: #111820;
+    color: #2EE679;
+    border: 1px solid #2EE679;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.config-save-button:hover {
+    background: #2EE679;
+    color: #07100A;
+}
+
+
+/* Кнопки поруч */
+
+.config-summary-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.config-summary-actions button {
+    min-height: 48px;
+    padding: 12px 18px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* Відновити збірку — темна кнопка */
+.configurator-summary .config-restore-button {
+    background: #111820;
+    color: #F5F7FA;
+    border: 1px solid #25313A;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.configurator-summary .config-restore-button:hover {
+    background: #1D2A26;
+    border-color: #2EE679;
+    color: #2EE679;
+}
+
+@media (max-width: 650px) {
+    .config-summary-actions {
+        flex-direction: column;
+    }
+
+    .config-summary-actions button {
+        width: 100%;
+        white-space: normal;
+    }
+}
+.config-save-message {
+    margin: 12px 0;
+    color: #2EE679;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Toast-повідомлення справа вгорі */
+
+.config-toast {
+    position: fixed;
+    top: 100px;
+    right: 24px;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 16px 22px;
+    background: #111820;
+    color: #F5F7FA;
+    border: 1px solid #25313A;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    animation: toast-slide-in 0.3s ease;
+}
+
+.config-toast-success {
+    border-left: 4px solid #2EE679;
+}
+
+.config-toast-success span:first-child {
+    color: #2EE679;
+    font-size: 20px;
+}
+
+.config-toast-error {
+    border-left: 4px solid #FF4646;
+}
+
+.config-toast-error span:first-child {
+    color: #FF4646;
+    font-size: 20px;
+}
+
+@keyframes toast-slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 650px) {
+    .config-toast {
+        top: 80px;
+        right: 16px;
+        left: 16px;
+    }
 }
