@@ -209,3 +209,49 @@
         padding: 20px;
     }
 }
+
+/* Характеристики готових збірок */
+
+.build-modal-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 24px 0;
+}
+
+.build-spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 13px 0;
+    border-bottom: 1px solid #25313A;
+}
+
+.build-spec-label {
+    color: #8B98A7;
+    font-size: 14px;
+}
+
+.build-spec-value {
+    color: #F5F7FA;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+/* Адаптивність */
+@media (max-width: 650px) {
+    .build-spec-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .build-spec-value {
+        text-align: left;
+    }
+}
+.build-spec-row:last-child {
+    border-bottom: none;
+}

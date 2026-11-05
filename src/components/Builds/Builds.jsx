@@ -182,18 +182,26 @@ export default function Builds() {
               {activeBuild.description}
             </p>
 
-            <div className="build-modal-specs">
-              <p>Процесор: {activeBuild.cpu}</p>
-              <p>Відеокарта: {activeBuild.gpu}</p>
-              <p>Материнська плата: {activeBuild.motherboard}</p>
-              <p>Охолодження: {activeBuild.cooler}</p>
-              <p>Корпус: {activeBuild.pcCase}</p>
-              <p>Оперативна пам'ять: {activeBuild.ram}</p>
-              <p>Накопичувач: {activeBuild.ssd}</p>
-              <p>Блок живлення: {activeBuild.psu}</p>
-              <p>Вентилятори: {activeBuild.fans}</p>
-            </div>
             
+            <div className="build-modal-specs">
+              {[
+                ['Процесор', activeBuild.cpu],
+                ['Відеокарта', activeBuild.gpu],
+                ['Материнська плата', activeBuild.motherboard],
+                ['Охолодження', activeBuild.cooler],
+                ['Корпус', activeBuild.pcCase],
+                ["Оперативна пам'ять", activeBuild.ram],
+                ['Накопичувач', activeBuild.ssd],
+                ['Блок живлення', activeBuild.psu],
+                ['Вентилятори', activeBuild.fans],
+              ].map(([label, value]) => ( // map автоматично створює рядок 
+                <div className="build-spec-row" key={label}>
+                  <span className="build-spec-label">{label}</span>
+                  <strong className="build-spec-value">{value}</strong>
+                </div>
+              ))}
+            </div>
+
             <div className="build-modal-price">
               від {formatPrice(activeBuild.price)}
             </div>
