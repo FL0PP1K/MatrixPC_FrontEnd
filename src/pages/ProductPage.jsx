@@ -1,18 +1,21 @@
+import { Link, useParams } from "react-router-dom";
+import ProductCard from "../components/PopularProducts/ProductCard";
+import { productCategories } from "../data/catalogProducts";
+import { useShop } from "../context/ShopContext";
 
-import { Link, useParams } from 'react-router-dom';
+import "../components/PopularProducts/PopularProducts.css";
+import "./ProductPage.css";
 
-import ProductCard from '../components/PopularProducts/ProductCard';
-
-import { productCategories } from '../data/catalogProducts';
-
-import { useShop } from '../context/ShopContext';
-
-import '../components/PopularProducts/PopularProducts.css';
-import './ProductPage.css';
+// Компонент для відображення рядка характеристик, щоб уникнути дублювання
+const SpecRow = ({ label, value }) => (
+  <div className="product-specification-row">
+    <span>{label}</span>
+    <strong>{value}</strong>
+  </div>
+);
 
 export default function ProductPage() {
   const { id } = useParams();
-
   const {
     products,
     productsLoading,
@@ -23,19 +26,6 @@ export default function ProductPage() {
     addToCart,
   } = useShop();
 
-  // Знаходимо товар серед товарів, отриманих з API
-  const product = products.find(
-    (item) => item.id === id
-  );
-
-  // Визначаємо категорію товару
-  const category = product
-    ? productCategories.find(
-        (item) => item.id === product.category
-      )
-    : null;
-
-  // Стан завантаження
   if (productsLoading) {
     return (
       <main className="product-not-found">
@@ -44,7 +34,6 @@ export default function ProductPage() {
     );
   }
 
-  // Помилка завантаження
   if (productsError) {
     return (
       <main className="product-not-found">
@@ -55,67 +44,58 @@ export default function ProductPage() {
     );
   }
 
-  // Якщо товар не знайдено
+  const product = products.find((item) => item.id === id);
+
   if (!product) {
     return (
       <main className="product-not-found">
         <h1>Товар не знайдено</h1>
-        <p>
-          Можливо, товар був видалений або посилання неправильне.
-        </p>
+        <p>Можливо, товар був видалений або посилання неправильне.</p>
         <Link to="/catalog">Повернутися до каталогу</Link>
       </main>
     );
   }
 
+  const category = productCategories.find(
+    (item) => item.id === product.category,
+  );
   const favorite = isFavorite(product.id);
   const inCart = isInCart(product.id);
 
-  // Знаходимо товари тієї самої категорії
-  const sameCategoryProducts = products.filter(
-    (item) =>
-      item.category === product.category &&
-      item.id !== product.id
-  );
-
-  // Якщо товарів тієї самої категорії немає,
-  // показуємо інші доступні товари
-  const relatedProducts = (
-    sameCategoryProducts.length > 0
-      ? sameCategoryProducts
-      : products.filter(
-          (item) => item.id !== product.id
-        )
-  ).slice(0, 4);
+  // Оптимізований пошук схожих товарів: спочатку тієї ж категорії, якщо не вистачає - беремо інші
+  const relatedProducts = products
+    .filter((item) => item.id !== product.id)
+    .sort((a, b) => {
+      if (a.category === product.category && b.category !== product.category)
+        return -1;
+      if (a.category !== product.category && b.category === product.category)
+        return 1;
+      return 0;
+    })
+    .slice(0, 4);
 
   return (
     <main className="product-page">
-
       <div className="product-breadcrumbs">
         <Link to="/">Головна</Link>
         <span>/</span>
         <Link to={`/catalog?category=${product.category}`}>
-          {category?.name || 'Каталог'}
+          {category?.name || "Каталог"}
         </Link>
         <span>/</span>
         <span>{product.name}</span>
       </div>
 
       <section className="product-details">
-
         <div className="product-gallery">
           <div className="product-main-image">
-            <img
-              src={product.image}
-              alt={product.name}
-            />
+            <img src={product.image} alt={product.name} />
           </div>
         </div>
 
         <div className="product-information">
-
           <span className="product-category-label">
-            {category?.name || 'Комплектуючі'}
+            {category?.name || "Комплектуючі"}
           </span>
 
           <h1>{product.name}</h1>
@@ -134,21 +114,14 @@ export default function ProductPage() {
           <div className="product-detail-divider" />
 
           <div className="product-purchase">
-
             <div className="product-detail-price">
-              {product.price.toLocaleString('uk-UA')} ₴
+              {product.price.toLocaleString("uk-UA")} ₴
             </div>
 
             <p
-              className={
-                product.inStock
-                  ? 'product-availability available'
-                  : 'product-availability unavailable'
-              }
+              className={`product-availability ${product.inStock ? "available" : "unavailable"}`}
             >
-              {product.inStock
-                ? '✓ В наявності'
-                : 'Немає в наявності'}
+              {product.inStock ? "✓ В наявності" : "Немає в наявності"}
             </p>
 
             <button
@@ -157,93 +130,62 @@ export default function ProductPage() {
               disabled={!product.inStock || inCart}
               onClick={() => addToCart(product.id)}
             >
-              {inCart
-                ? '✓ ДОДАНО ДО КОШИКА'
-                : 'ДОДАТИ ДО КОШИКА'}
+              {inCart ? "✓ ДОДАНО ДО КОШИКА" : "ДОДАТИ ДО КОШИКА"}
             </button>
 
             <button
               type="button"
-              className={`product-favorite-button ${
-                favorite ? 'active' : ''
-              }`}
+              className={`product-favorite-button ${favorite ? "active" : ""}`}
               onClick={() => toggleFavorite(product.id)}
             >
-              {favorite
-                ? '♥ В ОБРАНОМУ'
-                : '♡ ДОДАТИ В ОБРАНЕ'}
+              {favorite ? "♥ В ОБРАНОМУ" : "♡ ДОДАТИ В ОБРАНЕ"}
             </button>
-
           </div>
 
           <div className="product-delivery">
             <h3>Інформація про товар</h3>
-
-            <div>
-              <span>Код товару</span>
-              <strong>{product.sku || product.id}</strong>
-            </div>
-
-            <div>
-              <span>Категорія</span>
-              <strong>{category?.name || 'Комплектуючі'}</strong>
-            </div>
-
-            <div>
-              <span>Виробник</span>
-              <strong>{product.manufacturer}</strong>
-            </div>
+            <SpecRow label="Код товару" value={product.sku || product.id} />
+            <SpecRow
+              label="Категорія"
+              value={category?.name || "Комплектуючі"}
+            />
+            <SpecRow label="Виробник" value={product.manufacturer} />
           </div>
-
         </div>
       </section>
 
       <section className="product-description">
         <h2>Характеристики товару</h2>
-
-        <div className="product-specification-row">
-          <span>Назва</span>
-          <strong>{product.name}</strong>
-        </div>
-
-        <div className="product-specification-row">
-          <span>Виробник</span>
-          <strong>{product.manufacturer}</strong>
-        </div>
-
-        <div className="product-specification-row">
-          <span>Основні характеристики</span>
-          <strong>{product.specs}</strong>
-        </div>
-
-        <div className="product-specification-row">
-          <span>Наявність</span>
-          <strong>
-            {product.inStock ? 'В наявності' : 'Немає в наявності'}
-          </strong>
-        </div>
+        <SpecRow label="Назва" value={product.name} />
+        <SpecRow label="Виробник" value={product.manufacturer} />
+        <SpecRow label="Основні характеристики" value={product.specs} />
+        <SpecRow
+          label="Наявність"
+          value={product.inStock ? "В наявності" : "Немає в наявності"}
+        />
       </section>
 
-      <section className="related-products">
-        <div className="related-products-heading">
-          <h2>СХОЖІ ТОВАРИ</h2>
-          <Link to="/catalog">Усі товари →</Link>
-        </div>
+      {relatedProducts.length > 0 && (
+        <section className="related-products">
+          <div className="related-products-heading">
+            <h2>СХОЖІ ТОВАРИ</h2>
+            <Link to="/catalog">Усі товари →</Link>
+          </div>
 
-        <div className="related-products-grid">
-          {relatedProducts.map((item) => (
-            <ProductCard
-              key={item.id}
-              product={item}
-              isFavorite={isFavorite(item.id)}
-              isInCart={isInCart(item.id)}
-              onToggleFavorite={toggleFavorite}
-              onAddToCart={addToCart}
-            />
-          ))}
-        </div>
-      </section>
-
+          <div className="related-products-grid">
+            {relatedProducts.map((item) => (
+              <ProductCard
+                key={item.id}
+                product={item}
+                isFavorite={isFavorite(item.id)}
+                isInCart={isInCart(item.id)}
+                onToggleFavorite={toggleFavorite}
+                onAddToCart={addToCart}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
