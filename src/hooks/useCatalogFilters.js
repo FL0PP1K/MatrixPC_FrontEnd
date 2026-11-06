@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { productCategories } from "../data/catalogProducts";
-
 export function useCatalogFilters(products) {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -17,15 +15,39 @@ export function useCatalogFilters(products) {
   const [maxPrice, setMaxPrice] = useState("");
   const [availability, setAvailability] = useState("all");
 
+  // Категорії формуються з товарів, отриманих із Backend
+  const categories = useMemo(() => {
+    const categoryMap = new Map();
+
+    products.forEach((product) => {
+      if (product.category && product.category !== "all") {
+        categoryMap.set(
+          product.category,
+          product.categoryName || product.category,
+        );
+      }
+    });
+
+    return [
+      { id: "all", name: "Усі категорії" },
+      ...Array.from(categoryMap, ([id, name]) => ({ id, name })),
+    ];
+  }, [products]);
+
   // Синхронізація фільтрів з адресою сторінки
   useEffect(() => {
-    const validCategory = productCategories.some(
-      (item) => item.id === categoryFromUrl,
-    );
+    if (products.length > 0) {
+      const validCategory =
+        categoryFromUrl === "all" ||
+        products.some((product) => product.category === categoryFromUrl);
 
-    setCategory(validCategory ? categoryFromUrl : "all");
+      setCategory(validCategory ? categoryFromUrl : "all");
+    } else {
+      setCategory(categoryFromUrl);
+    }
+
     setSearch(searchFromUrl);
-  }, [categoryFromUrl, searchFromUrl]);
+  }, [categoryFromUrl, searchFromUrl, products]);
 
   // Список виробників
   const manufacturers = useMemo(() => {
@@ -49,6 +71,7 @@ export function useCatalogFilters(products) {
 
     if (search.trim()) {
       const query = search.trim().toLowerCase();
+
       result = result.filter((product) =>
         `${product.name} ${product.specs} ${product.manufacturer}`
           .toLowerCase()
@@ -78,12 +101,15 @@ export function useCatalogFilters(products) {
       case "price-asc":
         result.sort((a, b) => a.price - b.price);
         break;
+
       case "price-desc":
         result.sort((a, b) => b.price - a.price);
         break;
+
       case "name":
         result.sort((a, b) => a.name.localeCompare(b.name, "uk"));
         break;
+
       default:
         result.sort((a, b) => a.popularity - b.popularity);
     }
@@ -100,20 +126,24 @@ export function useCatalogFilters(products) {
     sortBy,
   ]);
 
+  // Зміна категорії
   const handleCategoryChange = (categoryId) => {
     setCategory(categoryId);
 
     setSearchParams((current) => {
       const next = new URLSearchParams(current);
+
       if (categoryId === "all") {
         next.delete("category");
       } else {
         next.set("category", categoryId);
       }
+
       return next;
     });
   };
 
+  // Скидання всіх фільтрів
   const resetFilters = () => {
     setCategory("all");
     setSearch("");
@@ -126,6 +156,7 @@ export function useCatalogFilters(products) {
   };
 
   return {
+    categories,
     category,
     search,
     setSearch,

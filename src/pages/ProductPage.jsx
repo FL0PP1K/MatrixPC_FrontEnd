@@ -1,12 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import ProductCard from "../components/PopularProducts/ProductCard";
-import { productCategories } from "../data/catalogProducts";
 import { useShop } from "../context/ShopContext";
 
 import "../components/PopularProducts/PopularProducts.css";
 import "./ProductPage.css";
 
-// Компонент для відображення рядка характеристик, щоб уникнути дублювання
+// Компонент для відображення рядка характеристик
 const SpecRow = ({ label, value }) => (
   <div className="product-specification-row">
     <span>{label}</span>
@@ -16,6 +15,7 @@ const SpecRow = ({ label, value }) => (
 
 export default function ProductPage() {
   const { id } = useParams();
+
   const {
     products,
     productsLoading,
@@ -56,20 +56,24 @@ export default function ProductPage() {
     );
   }
 
-  const category = productCategories.find(
-    (item) => item.id === product.category,
-  );
+  // Назва категорії надходить із Backend
+  const categoryName = product.categoryName || "Комплектуючі";
+
   const favorite = isFavorite(product.id);
   const inCart = isInCart(product.id);
 
-  // Оптимізований пошук схожих товарів: спочатку тієї ж категорії, якщо не вистачає - беремо інші
+  // Схожі товари: спочатку з тієї ж категорії
   const relatedProducts = products
     .filter((item) => item.id !== product.id)
     .sort((a, b) => {
-      if (a.category === product.category && b.category !== product.category)
+      if (a.category === product.category && b.category !== product.category) {
         return -1;
-      if (a.category !== product.category && b.category === product.category)
+      }
+
+      if (a.category !== product.category && b.category === product.category) {
         return 1;
+      }
+
       return 0;
     })
     .slice(0, 4);
@@ -79,8 +83,14 @@ export default function ProductPage() {
       <div className="product-breadcrumbs">
         <Link to="/">Головна</Link>
         <span>/</span>
-        <Link to={`/catalog?category=${product.category}`}>
-          {category?.name || "Каталог"}
+        <Link
+          to={
+            product.category
+              ? `/catalog?category=${encodeURIComponent(product.category)}`
+              : "/catalog"
+          }
+        >
+          {categoryName}
         </Link>
         <span>/</span>
         <span>{product.name}</span>
@@ -94,9 +104,7 @@ export default function ProductPage() {
         </div>
 
         <div className="product-information">
-          <span className="product-category-label">
-            {category?.name || "Комплектуючі"}
-          </span>
+          <span className="product-category-label">{categoryName}</span>
 
           <h1>{product.name}</h1>
 
@@ -119,7 +127,9 @@ export default function ProductPage() {
             </div>
 
             <p
-              className={`product-availability ${product.inStock ? "available" : "unavailable"}`}
+              className={`product-availability ${
+                product.inStock ? "available" : "unavailable"
+              }`}
             >
               {product.inStock ? "✓ В наявності" : "Немає в наявності"}
             </p>
@@ -144,11 +154,9 @@ export default function ProductPage() {
 
           <div className="product-delivery">
             <h3>Інформація про товар</h3>
+
             <SpecRow label="Код товару" value={product.sku || product.id} />
-            <SpecRow
-              label="Категорія"
-              value={category?.name || "Комплектуючі"}
-            />
+            <SpecRow label="Категорія" value={categoryName} />
             <SpecRow label="Виробник" value={product.manufacturer} />
           </div>
         </div>
@@ -156,6 +164,7 @@ export default function ProductPage() {
 
       <section className="product-description">
         <h2>Характеристики товару</h2>
+
         <SpecRow label="Назва" value={product.name} />
         <SpecRow label="Виробник" value={product.manufacturer} />
         <SpecRow label="Основні характеристики" value={product.specs} />
