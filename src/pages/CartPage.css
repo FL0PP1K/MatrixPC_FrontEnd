@@ -212,25 +212,6 @@
   border-color: #2ee679;
   color: #2ee679;
 }
-.cart-demo-note {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 15px 18px;
-  background: #091e17;
-  border: 1px solid #174a34;
-  border-radius: 8px;
-  color: #c1d9cd;
-}
-.cart-demo-note > span {
-  color: #2ee679;
-  font-size: 22px;
-}
-.cart-demo-note p {
-  margin: 0;
-  font-size: 12px;
-}
-
 /* Підсумок і промокод */
 .cart-right {
   display: flex;
@@ -303,10 +284,6 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-.cart-promo label,
-.cart-promo-note {
-  font-size: 12px;
 }
 .cart-promo input {
   width: 100%;

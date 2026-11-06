@@ -180,14 +180,6 @@ export default function CartPage() {
                   ОЧИСТИТИ КОШИК
                 </button>
               </div>
-
-              <div className="cart-demo-note">
-                <span aria-hidden="true">ⓘ</span>
-                <p>
-                  ДЕМО · Ціни та наявність товарів потребують підтвердження
-                  перед оформленням.
-                </p>
-              </div>
             </div>
 
             <div className="cart-right">
@@ -245,9 +237,6 @@ export default function CartPage() {
                   )}
                   <button type="submit">ЗАСТОСУВАТИ</button>
                 </form>
-                <p className="cart-promo-note">
-                  Демонстраційний приклад поля промокоду, не чинна акція.
-                </p>
               </aside>
             </div>
           </div>
