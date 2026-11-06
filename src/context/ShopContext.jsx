@@ -7,7 +7,6 @@ import {
   useCallback,
 } from "react";
 
-import { catalogProducts } from "../data/catalogProducts";
 import { getProducts } from "../services/productApi";
 
 const ShopContext = createContext(null);
@@ -79,13 +78,7 @@ export function ShopProvider({ children }) {
   }, []);
 
   // Поєднання товарів із бд та тимчасових локальних товарів
-  const availableProducts = useMemo(() => {
-    const apiIds = new Set(products.map((product) => product.id));
-    const fallbackProducts = catalogProducts.filter(
-      (product) => !apiIds.has(product.id),
-    );
-    return [...products, ...fallbackProducts];
-  }, [products]);
+  const availableProducts = products;
 
   // Збереження кошика у localStorage
   useEffect(() => {
