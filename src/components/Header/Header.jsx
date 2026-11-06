@@ -1,42 +1,103 @@
 import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
 import './Header.css';
+
 const navigation = [
-  { label: 'Головна', href: '#home' },
-  { label: 'Комплектуючі', href: '#components' },
-  { label: 'Конфігуратор', href: '#assembly' },
-  { label: 'Збірки ПК', href: '#builds' },
-  { label: 'Про нас', href: '#why-us' },
+  { label: 'Головна', to: '/' },
+  { label: 'Комплектуючі', section: 'components' },
+  { label: 'Конфігуратор', section: 'assembly' },
+  { label: 'Збірки ПК', section: 'builds' },
+  { label: 'Про нас', section: 'why-us' },
 ];
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const closeMenu = () => setMenuOpen(false);
+
+  const handleSectionClick = (event, section) => {
+    event.preventDefault();
+    closeMenu();
+
+    const scrollToSection = () => {
+      document.getElementById(section)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    };
+
+    if (location.pathname !== '/') {
+      navigate('/');
+
+      window.setTimeout(scrollToSection, 150);
+    } else {
+      scrollToSection();
+    }
+  };
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+
+    const query = searchValue.trim();
+
+    if (!query) return;
+
+    navigate(`/catalog?search=${encodeURIComponent(query)}`);
+
+    setSearchOpen(false);
+    setSearchValue('');
+    closeMenu();
+  };
 
   return (
     <header className="header">
       <div className="header-container">
-        <a href="#home" className="logo">
+
+        <Link to="/" className="logo" onClick={closeMenu}>
           <span className="logo-white">MATRIX</span>
           <span className="logo-green">PC</span>
-        </a>
+        </Link>
 
         <nav
           id="main-navigation"
           className={`nav-menu ${menuOpen ? 'is-open' : ''}`}
           aria-label="Головна навігація"
         >
-          {navigation.map((link, index) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={`nav-link ${index === 0 ? 'active' : ''}`}
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.label}
-            </a>
+          {navigation.map((link) => (
+            link.to ? (
+              <Link
+                key={link.label}
+                to={link.to}
+                className={`nav-link ${
+                  location.pathname === link.to ? 'active' : ''
+                }`}
+                onClick={closeMenu}
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.label}
+                href={`/#${link.section}`}
+                className="nav-link"
+                onClick={(event) =>
+                  handleSectionClick(event, link.section)
+                }
+              >
+                {link.label}
+              </a>
+            )
           ))}
         </nav>
 
         <div className="header-actions">
+
           <button
             type="button"
             className="header-icon-btn"
@@ -51,24 +112,25 @@ export default function Header() {
             </svg>
           </button>
 
-          <button
-            type="button"
+          <Link
+            to="/account"
             className="header-icon-btn profile-action"
             aria-label="Особистий кабінет"
-            title="Підключимо на наступному етапі"
+            onClick={closeMenu}
           >
             <svg viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="8" r="4" />
               <path d="M4 21v-2a8 8 0 0 1 16 0v2" />
             </svg>
-          </button>
+          </Link>
 
           <button
             type="button"
             className="header-icon-btn"
             aria-label="Кошик"
-            title="Підключимо на наступному етапі"
+            title="Кошик буде підключено окремо"
+            disabled
           >
             <svg viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2">
@@ -78,7 +140,13 @@ export default function Header() {
             </svg>
           </button>
 
-          <a href="#assembly" className="header-build-btn">
+          <a
+            href="/#assembly"
+            className="header-build-btn"
+            onClick={(event) =>
+              handleSectionClick(event, 'assembly')
+            }
+          >
             ЗІБРАТИ ПК
           </a>
 
@@ -92,17 +160,28 @@ export default function Header() {
           >
             {menuOpen ? '✕' : '☰'}
           </button>
+
         </div>
       </div>
 
       {searchOpen && (
-        <div className="header-search-panel">
+        <form
+          className="header-search-panel"
+          onSubmit={handleSearch}
+        >
           <input
             type="search"
             aria-label="Пошук товарів"
-            placeholder="Пошук товарів..."
+            placeholder="Введіть назву товару..."
             autoFocus
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.target.value)}
           />
+
+          <button type="submit">
+            Знайти
+          </button>
+
           <button
             type="button"
             onClick={() => setSearchOpen(false)}
@@ -110,8 +189,9 @@ export default function Header() {
           >
             ✕
           </button>
-        </div>
+        </form>
       )}
+
     </header>
   );
 }

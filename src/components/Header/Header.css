@@ -188,3 +188,24 @@
         display: none;
     }
 }
+
+/* Disabled header actions */
+.header-icon-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Search submit button */
+.header-search-panel button[type="submit"] {
+    padding: 0 14px;
+    background: #2EE679;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+    .header-search-panel button[type="submit"]:hover {
+        background: #00CC52;
+    }
