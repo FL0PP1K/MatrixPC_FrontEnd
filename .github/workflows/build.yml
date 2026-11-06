@@ -28,7 +28,4 @@ jobs:
 
       - name: Build React application
         run: npm run build
-
-      - name: Deploy to Nginx
-        run: |
-          rsync -rltv --delete --no-perms --no-owner --no-group --chmod=D2775,F664 dist/ /var/www/matrixpc/
+          rsync -rlv --delete --no-perms --no-owner --no-group dist/ /var/www/matrixpc/
