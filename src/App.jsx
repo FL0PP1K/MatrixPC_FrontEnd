@@ -1,5 +1,13 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from 'react-router-dom';
+
 import { ShopProvider } from './context/ShopContext';
+import { useAuth } from './context/AuthContext';
 
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -15,6 +23,26 @@ import FavoritesPage from './pages/FavoritesPage';
 
 import './App.css';
 
+// Захищений маршрут
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, authLoading } = useAuth();
+
+  if (authLoading) {
+    return (
+      <main className="page-content">
+        <h1>Перевірка авторизації...</h1>
+      </main>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
+// Сторінка 404
 function NotFoundPage() {
   return (
     <main className="page-content">
@@ -27,24 +55,39 @@ function NotFoundPage() {
 
 export default function App() {
   return (
-  <ShopProvider>
-    <BrowserRouter>
-      <Header />
+    <ShopProvider>
+      <BrowserRouter>
+        <Header />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/catalog" element={<CatalogPage />} />
-        <Route path="/product/:id" element={<ProductPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/account" element={<AccountPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/favorites" element={<FavoritesPage />} />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
 
-      <Footer />
-    </BrowserRouter>
+          <Route path="/catalog" element={<CatalogPage />} />
+
+          <Route path="/product/:id" element={<ProductPage />} />
+
+          <Route path="/login" element={<LoginPage />} />
+
+          <Route path="/register" element={<RegisterPage />} />
+
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <AccountPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/cart" element={<CartPage />} />
+
+          <Route path="/favorites" element={<FavoritesPage />} />
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+
+        <Footer />
+      </BrowserRouter>
     </ShopProvider>
   );
 }

@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../context/AuthContext';
 
 import './RegisterPage.css';
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,6 +18,7 @@ export default function RegisterPage() {
 
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -26,8 +32,13 @@ export default function RegisterPage() {
     setNotice('');
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (formData.name.trim().length === 0) {
+      setError("Введи своє ім'я.");
+      return;
+    }
 
     if (formData.password.length < 8) {
       setError('Пароль повинен містити щонайменше 8 символів.');
@@ -39,10 +50,28 @@ export default function RegisterPage() {
       return;
     }
 
-    setError('');
-    setNotice(
-      'Форма заповнена правильно. Наступний крок — підключення сервера.'
-    );
+    try {
+      setIsSubmitting(true);
+      setError('');
+      setNotice('');
+
+      // Реєстрація через Backend API
+      await register({
+        firstName: formData.name.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+      });
+
+      setNotice('Реєстрація успішна!');
+
+      // Перехід до особистого кабінету
+      navigate('/account', { replace: true });
+
+    } catch (error) {
+      setError(error.message || 'Помилка під час реєстрації.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -65,7 +94,8 @@ export default function RegisterPage() {
               placeholder="Введи своє ім'я"
               value={formData.name}
               onChange={handleChange}
-              autoComplete="name"
+              autoComplete="given-name"
+              maxLength={50}
               required
             />
           </div>
@@ -127,8 +157,14 @@ export default function RegisterPage() {
             </p>
           )}
 
-          <button type="submit" className="auth-submit">
-            СТВОРИТИ АКАУНТ
+          <button
+            type="submit"
+            className="auth-submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? 'РЕЄСТРАЦІЯ...'
+              : 'СТВОРИТИ АКАУНТ'}
           </button>
         </form>
 
