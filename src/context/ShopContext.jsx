@@ -7,6 +7,7 @@ import {
 } from 'react';
 
 import { catalogProducts } from '../data/catalogProducts';
+import { getProducts } from '../services/productApi';
 
 const ShopContext = createContext(null);
 
@@ -23,6 +24,10 @@ function readStorage(key) {
 }
 
 export function ShopProvider({ children }) {
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [productsError, setProductsError] = useState('');
+
   const [cart, setCart] = useState(() => {
     const saved = readStorage(CART_STORAGE_KEY);
 
@@ -42,6 +47,50 @@ export function ShopProvider({ children }) {
     return Array.isArray(saved) ? saved : [];
   });
 
+  // Завантаження товарів із Backend
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadProducts() {
+      try {
+        setProductsLoading(true);
+        setProductsError('');
+
+        const data = await getProducts();
+
+        if (isMounted) {
+          setProducts(data);
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error('Products loading error:', error);
+          setProductsError(error.message);
+        }
+      } finally {
+        if (isMounted) {
+          setProductsLoading(false);
+        }
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Тимчасова сумісність зі старими демонстраційними товарами
+  const availableProducts = useMemo(() => {
+    const apiIds = new Set(products.map((product) => product.id));
+
+    const fallbackProducts = catalogProducts.filter(
+      (product) => !apiIds.has(product.id)
+    );
+
+    return [...products, ...fallbackProducts];
+  }, [products]);
+
   // Зберігаємо кошик
   useEffect(() => {
     localStorage.setItem(
@@ -60,7 +109,7 @@ export function ShopProvider({ children }) {
 
   // Додавання товару в кошик
   const addToCart = (productId) => {
-    const product = catalogProducts.find(
+    const product = availableProducts.find(
       (item) => item.id === productId
     );
 
@@ -130,7 +179,7 @@ export function ShopProvider({ children }) {
   const cartItems = useMemo(() => {
     return cart
       .map((item) => {
-        const product = catalogProducts.find(
+        const product = availableProducts.find(
           (product) => product.id === item.productId
         );
 
@@ -139,14 +188,14 @@ export function ShopProvider({ children }) {
           : null;
       })
       .filter(Boolean);
-  }, [cart]);
+  }, [cart, availableProducts]);
 
   // Товари обраного
   const favoriteItems = useMemo(() => {
-    return catalogProducts.filter((product) =>
+    return availableProducts.filter((product) =>
       favorites.includes(product.id)
     );
-  }, [favorites]);
+  }, [favorites, availableProducts]);
 
   // Загальна кількість товарів
   const cartCount = cart.reduce(
@@ -161,21 +210,27 @@ export function ShopProvider({ children }) {
   );
 
   const value = {
+    products,
+    productsLoading,
+    productsError,
+
     cart,
     cartItems,
     cartCount,
     cartTotal,
     favorites,
     favoriteItems,
+
     addToCart,
     removeFromCart,
     updateQuantity,
     clearCart,
     toggleFavorite,
+
     isFavorite: (id) => favorites.includes(id),
-    isInCart: (id) => cart.some(
-      (item) => item.productId === id
-    ),
+
+    isInCart: (id) =>
+      cart.some((item) => item.productId === id),
   };
 
   return (

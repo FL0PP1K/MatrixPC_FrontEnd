@@ -1,11 +1,9 @@
+
 import { Link, useParams } from 'react-router-dom';
 
 import ProductCard from '../components/PopularProducts/ProductCard';
 
-import {
-  catalogProducts,
-  productCategories,
-} from '../data/catalogProducts';
+import { productCategories } from '../data/catalogProducts';
 
 import { useShop } from '../context/ShopContext';
 
@@ -16,22 +14,48 @@ export default function ProductPage() {
   const { id } = useParams();
 
   const {
+    products,
+    productsLoading,
+    productsError,
     isFavorite,
     isInCart,
     toggleFavorite,
     addToCart,
   } = useShop();
 
-  const product = catalogProducts.find(
+  // Знаходимо товар серед товарів, отриманих з API
+  const product = products.find(
     (item) => item.id === id
   );
 
+  // Визначаємо категорію товару
   const category = product
     ? productCategories.find(
         (item) => item.id === product.category
       )
     : null;
 
+  // Стан завантаження
+  if (productsLoading) {
+    return (
+      <main className="product-not-found">
+        <h1>Завантаження товару...</h1>
+      </main>
+    );
+  }
+
+  // Помилка завантаження
+  if (productsError) {
+    return (
+      <main className="product-not-found">
+        <h1>Не вдалося завантажити товар</h1>
+        <p>{productsError}</p>
+        <Link to="/catalog">Повернутися до каталогу</Link>
+      </main>
+    );
+  }
+
+  // Якщо товар не знайдено
   if (!product) {
     return (
       <main className="product-not-found">
@@ -47,16 +71,19 @@ export default function ProductPage() {
   const favorite = isFavorite(product.id);
   const inCart = isInCart(product.id);
 
-  const sameCategoryProducts = catalogProducts.filter(
+  // Знаходимо товари тієї самої категорії
+  const sameCategoryProducts = products.filter(
     (item) =>
       item.category === product.category &&
       item.id !== product.id
   );
 
+  // Якщо товарів тієї самої категорії немає,
+  // показуємо інші доступні товари
   const relatedProducts = (
     sameCategoryProducts.length > 0
       ? sameCategoryProducts
-      : catalogProducts.filter(
+      : products.filter(
           (item) => item.id !== product.id
         )
   ).slice(0, 4);
@@ -112,11 +139,13 @@ export default function ProductPage() {
               {product.price.toLocaleString('uk-UA')} ₴
             </div>
 
-            <p className={
-              product.inStock
-                ? 'product-availability available'
-                : 'product-availability unavailable'
-            }>
+            <p
+              className={
+                product.inStock
+                  ? 'product-availability available'
+                  : 'product-availability unavailable'
+              }
+            >
               {product.inStock
                 ? '✓ В наявності'
                 : 'Немає в наявності'}
@@ -152,7 +181,7 @@ export default function ProductPage() {
 
             <div>
               <span>Код товару</span>
-              <strong>{product.id}</strong>
+              <strong>{product.sku || product.id}</strong>
             </div>
 
             <div>

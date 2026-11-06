@@ -2,10 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import ProductCard from '../components/PopularProducts/ProductCard';
-import {
-  catalogProducts,
-  productCategories,
-} from '../data/catalogProducts';
+import { productCategories } from '../data/catalogProducts';
 import { useShop } from '../context/ShopContext';
 
 import '../components/PopularProducts/PopularProducts.css';
@@ -15,11 +12,14 @@ export default function CatalogPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const {
-    cartCount,
-    isFavorite,
-    isInCart,
-    toggleFavorite,
-    addToCart,
+  products,
+  productsLoading,
+  productsError,
+  cartCount,
+  isFavorite,
+  isInCart,
+  toggleFavorite,
+  addToCart,
   } = useShop();
 
   const categoryFromUrl = searchParams.get('category') || 'all';
@@ -45,20 +45,20 @@ export default function CatalogPage() {
 
   // Список виробників
   const manufacturers = useMemo(() => {
-    const products = category === 'all'
-      ? catalogProducts
-      : catalogProducts.filter(
-          (product) => product.category === category
-        );
+  const filteredProducts = category === 'all'
+    ? products
+    : products.filter(
+        (product) => product.category === category
+      );
 
-    return [...new Set(
-      products.map((product) => product.manufacturer)
-    )].sort();
-  }, [category]);
+  return [...new Set(
+    filteredProducts.map((product) => product.manufacturer)
+  )].sort();
+}, [category, products]);
 
   // Фільтрація та сортування товарів
   const filteredProducts = useMemo(() => {
-    let result = [...catalogProducts];
+    let result = [...products];
 
     if (category !== 'all') {
       result = result.filter(
@@ -119,6 +119,7 @@ export default function CatalogPage() {
 
     return result;
   }, [
+    products,
     category,
     search,
     manufacturer,
@@ -304,36 +305,41 @@ export default function CatalogPage() {
             </select>
           </div>
 
-          {filteredProducts.length > 0 ? (
-            <div className="catalog-grid">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  isFavorite={isFavorite(product.id)}
-                  isInCart={isInCart(product.id)}
-                  onToggleFavorite={toggleFavorite}
-                  onAddToCart={addToCart}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="catalog-empty">
-              <h2>Товарів не знайдено</h2>
+          {productsLoading ? (
+              <div className="catalog-empty">
+                <h2>Завантаження товарів...</h2>
+              </div>
+            ) : productsError ? (
+              <div className="catalog-empty">
+                <h2>Не вдалося завантажити товари</h2>
+                <p>{productsError}</p>
+              </div>
+            ) : filteredProducts.length > 0 ? (
+              <div className="catalog-grid">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    isFavorite={isFavorite(product.id)}
+                    isInCart={isInCart(product.id)}
+                    onToggleFavorite={toggleFavorite}
+                    onAddToCart={addToCart}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="catalog-empty">
+                <h2>Товарів не знайдено</h2>
 
-              <p>
-                Спробуй змінити пошуковий запит або фільтри.
-              </p>
+                <p>
+                  Спробуй змінити пошуковий запит або фільтри.
+                </p>
 
-              <button type="button" onClick={resetFilters}>
-                Скинути фільтри
-              </button>
-            </div>
-          )}
-
-          <p className="catalog-demo-note">
-            Демонстраційні товари. Каталог буде підключено до бази даних.
-          </p>
+                <button type="button" onClick={resetFilters}>
+                  Скинути фільтри
+                </button>
+              </div>
+            )}
         </section>
       </div>
     </main>
