@@ -1,57 +1,21 @@
-import { useState } from 'react';
 import ProductCard from './ProductCard';
+import { useShop } from '../../context/ShopContext';
 import './PopularProducts.css';
 
-const products = [
-  {
-    id: 'gpu-5070',
-    name: 'MSI GeForce RTX 5070 12GB',
-    specs: '12 GB GDDR7 • PCIe 5.0',
-    price: 47999,
-    image: '/image/Vidiokarta 1.png',
-  },
-  {
-    id: 'cpu-9700x',
-    name: 'AMD Ryzen 7 9700X',
-    specs: '8 ядер • 16 потоків',
-    price: 14499,
-    image: '/image/Procesor (pop.item) 1.png',
-  },
-  {
-    id: 'ram-kingston',
-    name: 'Kingston Fury 32GB DDR5',
-    specs: '32 GB • DDR5 • 6000 MHz',
-    price: 24999,
-    image: '/image/Kingston RAM 1.png',
-  },
-  {
-    id: 'ssd-990pro',
-    name: 'Samsung 990 PRO 1TB',
-    specs: '1 TB • NVMe • PCIe 4.0',
-    price: 11499,
-    image: '/image/Samsung 990  PRO 1 TB 1.png',
-  },
-];
-
 export default function PopularProducts() {
-  const [favorites, setFavorites] = useState([]);
-  const [cart, setCart] = useState([]);
+  const {
+    products,
+    productsLoading,
+    productsError,
+    cartCount,
+    isFavorite,
+    isInCart,
+    toggleFavorite,
+    addToCart,
+  } = useShop();
 
-  const toggleFavorite = (id) => {
-    setFavorites((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
-  };
-
-  const addToCart = (id) => {
-    setCart((current) =>
-      current.includes(id)
-        ? current
-        : [...current, id]
-    );
-  };
+  // Показуємо перші 4 товари з API
+  const popularProducts = products.slice(0, 4);
 
   return (
     <section className="popular-section" id="popular">
@@ -67,22 +31,37 @@ export default function PopularProducts() {
           </p>
 
           <p className="popular-cart-count" role="status">
-            Товарів у кошику: {cart.length}
+            Товарів у кошику: {cartCount}
           </p>
         </div>
 
-        <div className="popular-grid">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              isFavorite={favorites.includes(product.id)}
-              isInCart={cart.includes(product.id)}
-              onToggleFavorite={toggleFavorite}
-              onAddToCart={addToCart}
-            />
-          ))}
-        </div>
+        {productsLoading ? (
+          <div className="catalog-empty">
+            <h2>Завантаження товарів...</h2>
+          </div>
+        ) : productsError ? (
+          <div className="catalog-empty">
+            <h2>Не вдалося завантажити товари</h2>
+            <p>{productsError}</p>
+          </div>
+        ) : popularProducts.length > 0 ? (
+          <div className="popular-grid">
+            {popularProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                isFavorite={isFavorite(product.id)}
+                isInCart={isInCart(product.id)}
+                onToggleFavorite={toggleFavorite}
+                onAddToCart={addToCart}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="catalog-empty">
+            <h2>Поки що немає товарів</h2>
+          </div>
+        )}
       </div>
     </section>
   );

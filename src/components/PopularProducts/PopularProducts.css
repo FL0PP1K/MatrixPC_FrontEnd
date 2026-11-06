@@ -162,3 +162,31 @@
         height: 220px;
     }
 }
+/* Product navigation links */
+.product-image-link {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.product-name a {
+    color: #F5F7FA;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+    .product-name a:hover {
+        color: #2EE679;
+    }
+.product-details-link {
+    display: inline-block;
+    width: fit-content;
+    margin-bottom: 12px;
+    color: #2EE679;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+    .product-details-link:hover {
+        color: #00FF66;
+    }
