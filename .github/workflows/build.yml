@@ -31,4 +31,4 @@ jobs:
 
       - name: Deploy to Nginx
         run: |
-          rsync -av --delete dist/ /var/www/matrixpc/
+          rsync -rltv --delete --no-perms --no-owner --no-group --chmod=D2775,F664 dist/ /var/www/matrixpc/
