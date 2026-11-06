@@ -1,3 +1,4 @@
+
 name: MATRIXPC React Build and Deploy
 
 on:
@@ -28,4 +29,6 @@ jobs:
 
       - name: Build React application
         run: npm run build
-          rsync -rlv --delete --no-perms --no-owner --no-group dist/ /var/www/matrixpc/
+
+      - name: Deploy to Nginx
+        run: rsync -rlv --delete --no-perms --no-owner --no-group dist/ /var/www/matrixpc/
