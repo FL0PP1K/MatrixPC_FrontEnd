@@ -19,7 +19,7 @@ export default function Header() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { cartCount } = useShop();
+  const { cartCount, favoriteItems } = useShop();
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -127,7 +127,31 @@ export default function Header() {
             </svg>
           </Link>
 
-          
+
+        <Link
+          to="/favorites"
+          className="header-icon-btn favorite-action"
+          aria-label={`Обране, товарів: ${favoriteItems.length}`}
+          title="Перейти до обраного"
+          onClick={closeMenu}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" />
+          </svg>
+
+          {favoriteItems.length > 0 && (
+            <span className="header-favorites-count">
+              {favoriteItems.length}
+            </span>
+          )}
+        </Link>
+ 
+
             <Link
               to="/cart"
               className="header-icon-btn cart-action"
