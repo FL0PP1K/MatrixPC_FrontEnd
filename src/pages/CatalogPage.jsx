@@ -1,171 +1,49 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import ProductCard from "../components/PopularProducts/ProductCard";
+import { useShop } from "../context/ShopContext";
+import { useCatalogFilters } from "../hooks/useCatalogFilters";
 
-import ProductCard from '../components/PopularProducts/ProductCard';
-import { productCategories } from '../data/catalogProducts';
-import { useShop } from '../context/ShopContext';
-
-import '../components/PopularProducts/PopularProducts.css';
-import './CatalogPage.css';
+import "../components/PopularProducts/PopularProducts.css";
+import "./CatalogPage.css";
 
 export default function CatalogPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
   const {
-  products,
-  productsLoading,
-  productsError,
-  cartCount,
-  isFavorite,
-  isInCart,
-  toggleFavorite,
-  addToCart,
+    products,
+    productsLoading,
+    productsError,
+    cartCount,
+    isFavorite,
+    isInCart,
+    toggleFavorite,
+    addToCart,
   } = useShop();
 
-  const categoryFromUrl = searchParams.get('category') || 'all';
-  const searchFromUrl = searchParams.get('search') || '';
-
-  const [category, setCategory] = useState(categoryFromUrl);
-  const [search, setSearch] = useState(searchFromUrl);
-  const [manufacturer, setManufacturer] = useState('all');
-  const [sortBy, setSortBy] = useState('popular');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [availability, setAvailability] = useState('all');
-
-  // Синхронізація фільтрів з адресою сторінки
-  useEffect(() => {
-    const validCategory = productCategories.some(
-      (item) => item.id === categoryFromUrl
-    );
-
-    setCategory(validCategory ? categoryFromUrl : 'all');
-    setSearch(searchFromUrl);
-  }, [categoryFromUrl, searchFromUrl]);
-
-  // Список виробників
-  const manufacturers = useMemo(() => {
-  const filteredProducts = category === 'all'
-    ? products
-    : products.filter(
-        (product) => product.category === category
-      );
-
-  return [...new Set(
-    filteredProducts.map((product) => product.manufacturer)
-  )].sort();
-}, [category, products]);
-
-  // Фільтрація та сортування товарів
-  const filteredProducts = useMemo(() => {
-    let result = [...products];
-
-    if (category !== 'all') {
-      result = result.filter(
-        (product) => product.category === category
-      );
-    }
-
-    if (search.trim()) {
-      const query = search.trim().toLowerCase();
-
-      result = result.filter((product) =>
-        `${product.name} ${product.specs} ${product.manufacturer}`
-          .toLowerCase()
-          .includes(query)
-      );
-    }
-
-    if (manufacturer !== 'all') {
-      result = result.filter(
-        (product) => product.manufacturer === manufacturer
-      );
-    }
-
-    if (minPrice !== '') {
-      result = result.filter(
-        (product) => product.price >= Number(minPrice)
-      );
-    }
-
-    if (maxPrice !== '') {
-      result = result.filter(
-        (product) => product.price <= Number(maxPrice)
-      );
-    }
-
-    if (availability === 'in-stock') {
-      result = result.filter((product) => product.inStock);
-    }
-
-    switch (sortBy) {
-      case 'price-asc':
-        result.sort((a, b) => a.price - b.price);
-        break;
-
-      case 'price-desc':
-        result.sort((a, b) => b.price - a.price);
-        break;
-
-      case 'name':
-        result.sort((a, b) =>
-          a.name.localeCompare(b.name, 'uk')
-        );
-        break;
-
-      default:
-        result.sort((a, b) => a.popularity - b.popularity);
-    }
-
-    return result;
-  }, [
-    products,
+  const {
+    categories,
     category,
     search,
+    setSearch,
     manufacturer,
-    minPrice,
-    maxPrice,
-    availability,
+    setManufacturer,
     sortBy,
-  ]);
-
-  const handleCategoryChange = (categoryId) => {
-    setCategory(categoryId);
-
-    setSearchParams((current) => {
-      const next = new URLSearchParams(current);
-
-      if (categoryId === 'all') {
-        next.delete('category');
-      } else {
-        next.set('category', categoryId);
-      }
-
-      return next;
-    });
-  };
-
-  const resetFilters = () => {
-    setCategory('all');
-    setSearch('');
-    setManufacturer('all');
-    setSortBy('popular');
-    setMinPrice('');
-    setMaxPrice('');
-    setAvailability('all');
-    setSearchParams({});
-  };
+    setSortBy,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    availability,
+    setAvailability,
+    manufacturers,
+    filteredProducts,
+    handleCategoryChange,
+    resetFilters,
+  } = useCatalogFilters(products);
 
   return (
     <main className="catalog-page">
       <div className="catalog-heading">
         <div>
-          <p className="catalog-breadcrumb">
-            Головна / Каталог
-          </p>
-
+          <p className="catalog-breadcrumb">Головна / Каталог</p>
           <h1>КАТАЛОГ КОМПЛЕКТУЮЧИХ</h1>
-
           <p className="catalog-description">
             Обирай комплектуючі для свого ідеального ПК.
           </p>
@@ -185,11 +63,7 @@ export default function CatalogPage() {
           aria-label="Пошук комплектуючих"
         />
 
-        <button
-          type="button"
-          onClick={() => setSearch('')}
-          disabled={!search}
-        >
+        <button type="button" onClick={() => setSearch("")} disabled={!search}>
           Очистити
         </button>
       </div>
@@ -198,7 +72,6 @@ export default function CatalogPage() {
         <aside className="catalog-sidebar">
           <div className="catalog-filter-heading">
             <h2>ФІЛЬТРИ</h2>
-
             <button type="button" onClick={resetFilters}>
               Скинути
             </button>
@@ -208,13 +81,11 @@ export default function CatalogPage() {
             <h3>Категорії</h3>
 
             <div className="catalog-category-list">
-              {productCategories.map((item) => (
+              {categories.map((item) => (
                 <button
                   type="button"
                   key={item.id}
-                  className={
-                    category === item.id ? 'active' : ''
-                  }
+                  className={category === item.id ? "active" : ""}
                   onClick={() => handleCategoryChange(item.id)}
                   aria-pressed={category === item.id}
                 >
@@ -233,9 +104,7 @@ export default function CatalogPage() {
                 min="0"
                 placeholder="Від"
                 value={minPrice}
-                onChange={(event) =>
-                  setMinPrice(event.target.value)
-                }
+                onChange={(event) => setMinPrice(event.target.value)}
                 aria-label="Мінімальна ціна"
               />
 
@@ -244,9 +113,7 @@ export default function CatalogPage() {
                 min="0"
                 placeholder="До"
                 value={maxPrice}
-                onChange={(event) =>
-                  setMaxPrice(event.target.value)
-                }
+                onChange={(event) => setMaxPrice(event.target.value)}
                 aria-label="Максимальна ціна"
               />
             </div>
@@ -257,9 +124,7 @@ export default function CatalogPage() {
 
             <select
               value={manufacturer}
-              onChange={(event) =>
-                setManufacturer(event.target.value)
-              }
+              onChange={(event) => setManufacturer(event.target.value)}
             >
               <option value="all">Усі виробники</option>
 
@@ -276,9 +141,7 @@ export default function CatalogPage() {
 
             <select
               value={availability}
-              onChange={(event) =>
-                setAvailability(event.target.value)
-              }
+              onChange={(event) => setAvailability(event.target.value)}
             >
               <option value="all">Усі товари</option>
               <option value="in-stock">В наявності</option>
@@ -289,8 +152,7 @@ export default function CatalogPage() {
         <section className="catalog-results">
           <div className="catalog-toolbar">
             <p>
-              Знайдено товарів:{' '}
-              <strong>{filteredProducts.length}</strong>
+              Знайдено товарів: <strong>{filteredProducts.length}</strong>
             </p>
 
             <select
@@ -306,40 +168,37 @@ export default function CatalogPage() {
           </div>
 
           {productsLoading ? (
-              <div className="catalog-empty">
-                <h2>Завантаження товарів...</h2>
-              </div>
-            ) : productsError ? (
-              <div className="catalog-empty">
-                <h2>Не вдалося завантажити товари</h2>
-                <p>{productsError}</p>
-              </div>
-            ) : filteredProducts.length > 0 ? (
-              <div className="catalog-grid">
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    isFavorite={isFavorite(product.id)}
-                    isInCart={isInCart(product.id)}
-                    onToggleFavorite={toggleFavorite}
-                    onAddToCart={addToCart}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="catalog-empty">
-                <h2>Товарів не знайдено</h2>
+            <div className="catalog-empty">
+              <h2>Завантаження товарів...</h2>
+            </div>
+          ) : productsError ? (
+            <div className="catalog-empty">
+              <h2>Не вдалося завантажити товари</h2>
+              <p>{productsError}</p>
+            </div>
+          ) : filteredProducts.length > 0 ? (
+            <div className="catalog-grid">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  isFavorite={isFavorite(product.id)}
+                  isInCart={isInCart(product.id)}
+                  onToggleFavorite={toggleFavorite}
+                  onAddToCart={addToCart}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="catalog-empty">
+              <h2>Товарів не знайдено</h2>
+              <p>Спробуй змінити пошуковий запит або фільтри.</p>
 
-                <p>
-                  Спробуй змінити пошуковий запит або фільтри.
-                </p>
-
-                <button type="button" onClick={resetFilters}>
-                  Скинути фільтри
-                </button>
-              </div>
-            )}
+              <button type="button" onClick={resetFilters}>
+                Скинути фільтри
+              </button>
+            </div>
+          )}
         </section>
       </div>
     </main>

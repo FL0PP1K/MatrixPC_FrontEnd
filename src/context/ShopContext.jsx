@@ -4,15 +4,15 @@ import {
   useEffect,
   useMemo,
   useState,
-} from 'react';
+  useCallback,
+} from "react";
 
-import { catalogProducts } from '../data/catalogProducts';
-import { getProducts } from '../services/productApi';
+import { getProducts } from "../services/productApi";
 
 const ShopContext = createContext(null);
 
-const CART_STORAGE_KEY = 'matrixpc-cart';
-const FAVORITES_STORAGE_KEY = 'matrixpc-favorites';
+const CART_STORAGE_KEY = "matrixpc-cart";
+const FAVORITES_STORAGE_KEY = "matrixpc-favorites";
 
 function readStorage(key) {
   try {
@@ -26,18 +26,17 @@ function readStorage(key) {
 export function ShopProvider({ children }) {
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
-  const [productsError, setProductsError] = useState('');
+  const [productsError, setProductsError] = useState("");
 
   const [cart, setCart] = useState(() => {
     const saved = readStorage(CART_STORAGE_KEY);
-
     return Array.isArray(saved)
       ? saved.filter(
           (item) =>
             item &&
-            typeof item.productId === 'string' &&
+            typeof item.productId === "string" &&
             Number.isInteger(item.quantity) &&
-            item.quantity > 0
+            item.quantity > 0,
         )
       : [];
   });
@@ -54,16 +53,14 @@ export function ShopProvider({ children }) {
     async function loadProducts() {
       try {
         setProductsLoading(true);
-        setProductsError('');
-
+        setProductsError("");
         const data = await getProducts();
-
         if (isMounted) {
           setProducts(data);
         }
       } catch (error) {
         if (isMounted) {
-          console.error('Products loading error:', error);
+          console.error("Products loading error:", error);
           setProductsError(error.message);
         }
       } finally {
@@ -80,112 +77,89 @@ export function ShopProvider({ children }) {
     };
   }, []);
 
-  // Тимчасова сумісність зі старими демонстраційними товарами
-  const availableProducts = useMemo(() => {
-    const apiIds = new Set(products.map((product) => product.id));
+  // Поєднання товарів із бд та тимчасових локальних товарів
+  const availableProducts = products;
 
-    const fallbackProducts = catalogProducts.filter(
-      (product) => !apiIds.has(product.id)
-    );
-
-    return [...products, ...fallbackProducts];
-  }, [products]);
-
-  // Зберігаємо кошик
+  // Збереження кошика у localStorage
   useEffect(() => {
-    localStorage.setItem(
-      CART_STORAGE_KEY,
-      JSON.stringify(cart)
-    );
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
   }, [cart]);
 
-  // Зберігаємо обране
+  // Збереження обраного у localStorage
   useEffect(() => {
-    localStorage.setItem(
-      FAVORITES_STORAGE_KEY,
-      JSON.stringify(favorites)
-    );
+    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
   }, [favorites]);
 
   // Додавання товару в кошик
-  const addToCart = (productId) => {
-    const product = availableProducts.find(
-      (item) => item.id === productId
-    );
+  const addToCart = useCallback(
+    (productId) => {
+      const product = availableProducts.find((item) => item.id === productId);
+      if (!product || !product.inStock) return;
 
-    if (!product || !product.inStock) return;
-
-    setCart((current) => {
-      const existing = current.find(
-        (item) => item.productId === productId
-      );
-
-      if (existing) {
-        return current.map((item) =>
-          item.productId === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-
-      return [
-        ...current,
-        { productId, quantity: 1 },
-      ];
-    });
-  };
+      setCart((current) => {
+        const existing = current.find((item) => item.productId === productId);
+        if (existing) {
+          return current.map((item) =>
+            item.productId === productId
+              ? { ...item, quantity: item.quantity + 1 }
+              : item,
+          );
+        }
+        return [...current, { productId, quantity: 1 }];
+      });
+    },
+    [availableProducts],
+  );
 
   // Видалення товару з кошика
-  const removeFromCart = (productId) => {
+  const removeFromCart = useCallback((productId) => {
     setCart((current) =>
-      current.filter(
-        (item) => item.productId !== productId
-      )
+      current.filter((item) => item.productId !== productId),
     );
-  };
+  }, []);
 
   // Зміна кількості товару
-  const updateQuantity = (productId, quantity) => {
+  const updateQuantity = useCallback((productId, quantity) => {
     const newQuantity = Math.floor(Number(quantity));
-
-    if (!Number.isFinite(newQuantity) || newQuantity < 1) {
-      return;
-    }
+    if (!Number.isFinite(newQuantity) || newQuantity < 1) return;
 
     setCart((current) =>
       current.map((item) =>
         item.productId === productId
           ? { ...item, quantity: newQuantity }
-          : item
-      )
+          : item,
+      ),
     );
-  };
+  }, []);
 
   // Очищення кошика
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
-  // Додавання та видалення з обраного
-  const toggleFavorite = (productId) => {
+  // Перемикання стану обраного
+  const toggleFavorite = useCallback((productId) => {
     setFavorites((current) =>
       current.includes(productId)
         ? current.filter((id) => id !== productId)
-        : [...current, productId]
+        : [...current, productId],
     );
-  };
+  }, []);
+
+  // Перевірки наявності у списку
+  const isFavorite = useCallback((id) => favorites.includes(id), [favorites]);
+
+  const isInCart = useCallback(
+    (id) => cart.some((item) => item.productId === id),
+    [cart],
+  );
 
   // Товари кошика з актуальними даними
   const cartItems = useMemo(() => {
     return cart
       .map((item) => {
-        const product = availableProducts.find(
-          (product) => product.id === item.productId
-        );
-
-        return product
-          ? { ...product, quantity: item.quantity }
-          : null;
+        const product = availableProducts.find((p) => p.id === item.productId);
+        return product ? { ...product, quantity: item.quantity } : null;
       })
       .filter(Boolean);
   }, [cart, availableProducts]);
@@ -193,61 +167,72 @@ export function ShopProvider({ children }) {
   // Товари обраного
   const favoriteItems = useMemo(() => {
     return availableProducts.filter((product) =>
-      favorites.includes(product.id)
+      favorites.includes(product.id),
     );
   }, [favorites, availableProducts]);
 
-  // Загальна кількість товарів
-  const cartCount = cart.reduce(
-    (total, item) => total + item.quantity,
-    0
+  // Загальна кількість товарів у кошику
+  const cartCount = useMemo(
+    () => cart.reduce((total, item) => total + item.quantity, 0),
+    [cart],
   );
 
-  // Загальна сума
-  const cartTotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
+  // Загальна сума кошика
+  const cartTotal = useMemo(
+    () =>
+      cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
+    [cartItems],
   );
 
-  const value = {
-    products,
-    productsLoading,
-    productsError,
+  const value = useMemo(
+    () => ({
+      products: availableProducts,
+      productsLoading,
+      productsError,
 
-    cart,
-    cartItems,
-    cartCount,
-    cartTotal,
-    favorites,
-    favoriteItems,
+      cart,
+      cartItems,
+      cartCount,
+      cartTotal,
 
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-    toggleFavorite,
+      favorites,
+      favoriteItems,
 
-    isFavorite: (id) => favorites.includes(id),
-
-    isInCart: (id) =>
-      cart.some((item) => item.productId === id),
-  };
-
-  return (
-    <ShopContext.Provider value={value}>
-      {children}
-    </ShopContext.Provider>
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      toggleFavorite,
+      isFavorite,
+      isInCart,
+    }),
+    [
+      availableProducts,
+      productsLoading,
+      productsError,
+      cart,
+      cartItems,
+      cartCount,
+      cartTotal,
+      favorites,
+      favoriteItems,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      toggleFavorite,
+      isFavorite,
+      isInCart,
+    ],
   );
+
+  return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 }
 
 export function useShop() {
   const context = useContext(ShopContext);
-
   if (!context) {
-    throw new Error(
-      'useShop must be used inside ShopProvider'
-    );
+    throw new Error("useShop must be used inside ShopProvider");
   }
-
   return context;
 }

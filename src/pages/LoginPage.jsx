@@ -1,53 +1,58 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-import { useAuth } from '../context/AuthContext';
+import "./RegisterPage.css";
 
-import './RegisterPage.css';
+// Конфігурація полів для форми входу
+const formFields = [
+  {
+    name: "email",
+    label: "Електронна пошта",
+    type: "email",
+    placeholder: "example@email.com",
+    autoComplete: "email",
+    required: true,
+  },
+  {
+    name: "password",
+    label: "Пароль",
+    type: "password",
+    placeholder: "Введи свій пароль",
+    autoComplete: "current-password",
+    required: true,
+  },
+];
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-
-    setFormData((current) => ({
-      ...current,
-      [name]: value,
+    setFormData((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
     }));
-
-    setError('');
+    setError("");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       setIsSubmitting(true);
-      setError('');
+      setError("");
 
-      // Авторизація через Backend API
       await login({
         email: formData.email.trim(),
         password: formData.password,
       });
-
-      // Перехід до особистого кабінету
-      navigate('/account', { replace: true });
-
-    } catch (error) {
-      setError(
-        error.message || 'Не вдалося увійти в акаунт.'
-      );
+      navigate("/account", { replace: true });
+    } catch (err) {
+      setError(err.message || "Не вдалося увійти в акаунт.");
     } finally {
       setIsSubmitting(false);
     }
@@ -58,45 +63,21 @@ export default function LoginPage() {
       <div className="auth-card">
         <div className="auth-heading">
           <h1>ВХІД ДО АКАУНТА</h1>
-          <p>
-            Раді знову бачити тебе в MATRIXPC.
-          </p>
+          <p>Раді знову бачити тебе в MATRIXPC.</p>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
-          <div className="auth-field">
-            <label htmlFor="login-email">
-              Електронна пошта
-            </label>
-
-            <input
-              id="login-email"
-              type="email"
-              name="email"
-              placeholder="example@email.com"
-              value={formData.email}
-              onChange={handleChange}
-              autoComplete="email"
-              required
-            />
-          </div>
-
-          <div className="auth-field">
-            <label htmlFor="login-password">
-              Пароль
-            </label>
-
-            <input
-              id="login-password"
-              type="password"
-              name="password"
-              placeholder="Введи свій пароль"
-              value={formData.password}
-              onChange={handleChange}
-              autoComplete="current-password"
-              required
-            />
-          </div>
+          {formFields.map((field) => (
+            <div className="auth-field" key={field.name}>
+              <label htmlFor={`login-${field.name}`}>{field.label}</label>
+              <input
+                id={`login-${field.name}`}
+                value={formData[field.name]}
+                onChange={handleChange}
+                {...field}
+              />
+            </div>
+          ))}
 
           {error && (
             <p className="auth-error" role="alert">
@@ -104,12 +85,8 @@ export default function LoginPage() {
             </p>
           )}
 
-          <button
-            type="submit"
-            className="auth-submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'ВХІД...' : 'УВІЙТИ'}
+          <button type="submit" className="auth-submit" disabled={isSubmitting}>
+            {isSubmitting ? "ВХІД..." : "УВІЙТИ"}
           </button>
         </form>
 
