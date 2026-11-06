@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import ProductCard from './ProductCard';
+import { useShop } from '../../context/ShopContext';
 import './PopularProducts.css';
 
 const products = [
@@ -34,24 +34,13 @@ const products = [
 ];
 
 export default function PopularProducts() {
-  const [favorites, setFavorites] = useState([]);
-  const [cart, setCart] = useState([]);
-
-  const toggleFavorite = (id) => {
-    setFavorites((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
-  };
-
-  const addToCart = (id) => {
-    setCart((current) =>
-      current.includes(id)
-        ? current
-        : [...current, id]
-    );
-  };
+  const {
+    cartCount,
+    isFavorite,
+    isInCart,
+    toggleFavorite,
+    addToCart,
+  } = useShop();
 
   return (
     <section className="popular-section" id="popular">
@@ -67,7 +56,7 @@ export default function PopularProducts() {
           </p>
 
           <p className="popular-cart-count" role="status">
-            Товарів у кошику: {cart.length}
+            Товарів у кошику: {cartCount}
           </p>
         </div>
 
@@ -76,8 +65,8 @@ export default function PopularProducts() {
             <ProductCard
               key={product.id}
               product={product}
-              isFavorite={favorites.includes(product.id)}
-              isInCart={cart.includes(product.id)}
+              isFavorite={isFavorite(product.id)}
+              isInCart={isInCart(product.id)}
               onToggleFavorite={toggleFavorite}
               onAddToCart={addToCart}
             />

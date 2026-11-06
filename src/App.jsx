@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { ShopProvider } from './context/ShopContext';
 
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -9,6 +10,8 @@ import ProductPage from './pages/ProductPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AccountPage from './pages/AccountPage';
+import CartPage from './pages/CartPage';
+import FavoritesPage from './pages/FavoritesPage';
 
 import './App.css';
 
@@ -24,6 +27,7 @@ function NotFoundPage() {
 
 export default function App() {
   return (
+  <ShopProvider>
     <BrowserRouter>
       <Header />
 
@@ -35,9 +39,12 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/account" element={<AccountPage />} />
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
       </Routes>
 
       <Footer />
     </BrowserRouter>
+    </ShopProvider>
   );
 }

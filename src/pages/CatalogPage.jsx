@@ -6,12 +6,21 @@ import {
   catalogProducts,
   productCategories,
 } from '../data/catalogProducts';
+import { useShop } from '../context/ShopContext';
 
 import '../components/PopularProducts/PopularProducts.css';
 import './CatalogPage.css';
 
 export default function CatalogPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const {
+    cartCount,
+    isFavorite,
+    isInCart,
+    toggleFavorite,
+    addToCart,
+  } = useShop();
 
   const categoryFromUrl = searchParams.get('category') || 'all';
   const searchFromUrl = searchParams.get('search') || '';
@@ -23,9 +32,6 @@ export default function CatalogPage() {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [availability, setAvailability] = useState('all');
-
-  const [favorites, setFavorites] = useState([]);
-  const [cart, setCart] = useState([]);
 
   // Синхронізація фільтрів з адресою сторінки
   useEffect(() => {
@@ -149,20 +155,6 @@ export default function CatalogPage() {
     setSearchParams({});
   };
 
-  const toggleFavorite = (id) => {
-    setFavorites((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
-  };
-
-  const addToCart = (id) => {
-    setCart((current) =>
-      current.includes(id) ? current : [...current, id]
-    );
-  };
-
   return (
     <main className="catalog-page">
       <div className="catalog-heading">
@@ -179,7 +171,7 @@ export default function CatalogPage() {
         </div>
 
         <div className="catalog-cart-count" role="status">
-          У кошику: {cart.length}
+          У кошику: {cartCount}
         </div>
       </div>
 
@@ -318,8 +310,8 @@ export default function CatalogPage() {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  isFavorite={favorites.includes(product.id)}
-                  isInCart={cart.includes(product.id)}
+                  isFavorite={isFavorite(product.id)}
+                  isInCart={isInCart(product.id)}
                   onToggleFavorite={toggleFavorite}
                   onAddToCart={addToCart}
                 />

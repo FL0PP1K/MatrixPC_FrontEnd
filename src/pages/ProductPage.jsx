@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import ProductCard from '../components/PopularProducts/ProductCard';
@@ -8,18 +7,24 @@ import {
   productCategories,
 } from '../data/catalogProducts';
 
+import { useShop } from '../context/ShopContext';
+
 import '../components/PopularProducts/PopularProducts.css';
 import './ProductPage.css';
 
 export default function ProductPage() {
   const { id } = useParams();
 
+  const {
+    isFavorite,
+    isInCart,
+    toggleFavorite,
+    addToCart,
+  } = useShop();
+
   const product = catalogProducts.find(
     (item) => item.id === id
   );
-
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
 
   const category = product
     ? productCategories.find(
@@ -31,11 +36,16 @@ export default function ProductPage() {
     return (
       <main className="product-not-found">
         <h1>Товар не знайдено</h1>
-        <p>Можливо, товар був видалений або посилання неправильне.</p>
+        <p>
+          Можливо, товар був видалений або посилання неправильне.
+        </p>
         <Link to="/catalog">Повернутися до каталогу</Link>
       </main>
     );
   }
+
+  const favorite = isFavorite(product.id);
+  const inCart = isInCart(product.id);
 
   const sameCategoryProducts = catalogProducts.filter(
     (item) =>
@@ -57,9 +67,7 @@ export default function ProductPage() {
       <div className="product-breadcrumbs">
         <Link to="/">Головна</Link>
         <span>/</span>
-        <Link
-          to={`/catalog?category=${product.category}`}
-        >
+        <Link to={`/catalog?category=${product.category}`}>
           {category?.name || 'Каталог'}
         </Link>
         <span>/</span>
@@ -93,7 +101,6 @@ export default function ProductPage() {
 
           <div className="product-detail-specs">
             <h2>Основні характеристики</h2>
-
             <p>{product.specs}</p>
           </div>
 
@@ -118,10 +125,10 @@ export default function ProductPage() {
             <button
               type="button"
               className="product-buy-button"
-              disabled={!product.inStock || isInCart}
-              onClick={() => setIsInCart(true)}
+              disabled={!product.inStock || inCart}
+              onClick={() => addToCart(product.id)}
             >
-              {isInCart
+              {inCart
                 ? '✓ ДОДАНО ДО КОШИКА'
                 : 'ДОДАТИ ДО КОШИКА'}
             </button>
@@ -129,11 +136,13 @@ export default function ProductPage() {
             <button
               type="button"
               className={`product-favorite-button ${
-                isFavorite ? 'active' : ''
+                favorite ? 'active' : ''
               }`}
-              onClick={() => setIsFavorite(!isFavorite)}
+              onClick={() => toggleFavorite(product.id)}
             >
-              {isFavorite ? '♥ В ОБРАНОМУ' : '♡ ДОДАТИ В ОБРАНЕ'}
+              {favorite
+                ? '♥ В ОБРАНОМУ'
+                : '♡ ДОДАТИ В ОБРАНЕ'}
             </button>
 
           </div>
@@ -197,10 +206,10 @@ export default function ProductPage() {
             <ProductCard
               key={item.id}
               product={item}
-              isFavorite={false}
-              isInCart={false}
-              onToggleFavorite={() => {}}
-              onAddToCart={() => {}}
+              isFavorite={isFavorite(item.id)}
+              isInCart={isInCart(item.id)}
+              onToggleFavorite={toggleFavorite}
+              onAddToCart={addToCart}
             />
           ))}
         </div>

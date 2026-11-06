@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useShop } from '../../context/ShopContext';
 
 import './Header.css';
 
@@ -18,6 +19,7 @@ export default function Header() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { cartCount } = useShop();
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -125,20 +127,28 @@ export default function Header() {
             </svg>
           </Link>
 
-          <button
-            type="button"
-            className="header-icon-btn"
-            aria-label="Кошик"
-            title="Кошик буде підключено окремо"
-            disabled
-          >
-            <svg viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2">
-              <path d="M3 4h2l2 12h12l2-9H6" />
-              <circle cx="9" cy="20" r="1" />
-              <circle cx="18" cy="20" r="1" />
-            </svg>
-          </button>
+          
+            <Link
+              to="/cart"
+              className="header-icon-btn cart-action"
+              aria-label={`Кошик, товарів: ${cartCount}`}
+              title="Перейти до кошика"
+              onClick={closeMenu}
+            >
+              <svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2">
+                <path d="M3 4h2l2 12h12l2-9H6" />
+                <circle cx="9" cy="20" r="1" />
+                <circle cx="18" cy="20" r="1" />
+              </svg>
+
+              {cartCount > 0 && (
+                <span className="header-cart-count">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
 
           <a
             href="/#assembly"
