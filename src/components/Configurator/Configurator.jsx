@@ -14,6 +14,13 @@ export default function Configurator() {
   const [search, setSearch] = useState('');
   const [showSummary, setShowSummary] = useState(false);
   const [savedMessage, setSavedMessage] = useState('');
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+
+  useEffect(() => {
+    setAddedToCart(false);
+  }, [selected]);
+
   const saveBuild = () => {
     const buildData = {
       components: Object.fromEntries(
@@ -89,6 +96,61 @@ const compatibilityErrors = checkCompatibility(selected);
 const isComplete =
     selectedCount === categories.length &&
     compatibilityErrors.length === 0;
+    // ДОДАЄ КОМПЛЕКТУЮЧІ ДО КОШИКУ
+  const addToCart = () => {
+    if (!isComplete) {
+      setSavedMessage('Спочатку заверши сумісну збірку.');
+      return;
+    }
+
+    const components = categories.map(category => ({
+      category: category.name,
+      id: selected[category.id].id,
+      name: selected[category.id].name,
+      price: selected[category.id].price
+    }));
+
+    const buildId = 'custom-' + categories
+      .map(category => `${category.id}:${selected[category.id].id}`)
+      .join('|');
+
+    const cartItem = {
+      id: buildId,
+      name: 'ВЛАСНА ЗБІРКА ПК',
+      specs: components.slice(0, 3).map(item => item.name).join(' • ') +
+        ` • ще ${components.length - 3} комплектуючих`,
+      price: total,
+      quantity: 1,
+      image: '/image/PC_Case 1.png',
+      components
+    };
+
+    try {
+      const savedCart = JSON.parse(
+        localStorage.getItem('matrixpc-cart') || '[]'
+      );
+
+      const cart = Array.isArray(savedCart) ? savedCart : [];
+
+      const existingItem = cart.find(item => item.id === buildId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push(cartItem);
+      }
+
+      localStorage.setItem('matrixpc-cart', JSON.stringify(cart));
+      // Оновлення лічильника зразу
+      window.dispatchEvent(new Event('matrixpc-cart-updated'));
+      setSavedMessage('Збірку додано до кошика!');
+      setAddedToCart(true);
+    } catch (error) {
+      console.error('Помилка додавання збірки:', error);
+      setSavedMessage('Не вдалося додати збірку до кошика.');
+    }
+  };
+
   const openPicker = (id) => {
     setActiveCategory(id);
     setPendingId(selected[id]?.id ?? null);
@@ -106,6 +168,25 @@ const isComplete =
       delete updated[categoryId];
       return updated;
     });
+  };
+  const clearBuild = () => {
+    if (Object.keys(selected).length === 0) {
+      setSavedMessage('Збірка вже порожня.');
+      return;
+    }
+
+    setShowClearConfirm(true);
+  };
+
+  const confirmClearBuild = () => {
+    setSelected({});
+    setActiveCategory(null);
+    setPendingId(null);
+    setSearch('');
+    setShowSummary(false);
+    setAddedToCart(false);
+    setShowClearConfirm(false);
+    setSavedMessage('Збірку очищено!');
   };
   
   const getProductErrors = (categoryId, product) => {
@@ -293,6 +374,14 @@ const isComplete =
           </div>
 
           <div className="config-summary-actions">
+          <button
+                type="button"
+                className="config-clear-button"
+                onClick={clearBuild}
+                disabled={selectedCount === 0}
+              >
+                ОЧИСТИТИ ЗБІРКУ
+              </button>
             <button
               type="button"
               className="config-restore-button"
@@ -486,6 +575,26 @@ const isComplete =
               >
                 ЗБЕРЕГТИ ЗБІРКУ
               </button>
+
+              <button
+                type="button"
+                className="config-save-button"
+                onClick={addToCart}
+                disabled={!isComplete}
+              >
+                ДОДАТИ В КОШИК
+              </button>
+              
+              {addedToCart && (
+                <button
+                  type="button"
+                  className="config-save-button"
+                  onClick={() => window.location.assign('/cart')}
+                >
+                  ПЕРЕЙТИ В КОШИК
+                </button>
+              )}
+
             <button
               type="button"
               className="config-result-close"
@@ -497,24 +606,76 @@ const isComplete =
         </div>
       )}
       
+      {showClearConfirm && (
+        <div className="config-modal-overlay">
+          <div
+            className="config-modal config-clear-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="config-clear-title"
+          >
+            <div className="config-modal-header">
+              <h3 id="config-clear-title">
+                ОЧИСТИТИ ЗБІРКУ?
+              </h3>
+
+              <button
+                type="button"
+                className="config-modal-close"
+                onClick={() => setShowClearConfirm(false)}
+                aria-label="Закрити"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="config-clear-description">
+              Усі вибрані комплектуючі будуть видалені
+              з поточного конфігуратора.
+            </p>
+
+            <div className="config-clear-actions">
+              <button
+                type="button"
+                className="config-clear-cancel"
+                onClick={() => setShowClearConfirm(false)}
+              >
+                СКАСУВАТИ
+              </button>
+
+              <button
+                type="button"
+                className="config-clear-confirm"
+                onClick={confirmClearBuild}
+              >
+                ТАК, ОЧИСТИТИ
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {savedMessage && (
         <div
           className={`config-toast ${
             savedMessage.includes('збережено') ||
-            savedMessage.includes('відновлено')
+            savedMessage.includes('відновлено') ||
+            savedMessage.includes('додано')||
+            savedMessage.includes('очищено')
               ? 'config-toast-success'
               : 'config-toast-error'
           }`}
           role="status"
         >
           <span>
-            {savedMessage.includes('збережено') ||
-            savedMessage.includes('відновлено') ? '✓' : '!'}
+          {savedMessage.includes('збережено') ||
+          savedMessage.includes('відновлено') ||
+          savedMessage.includes('додано') ||
+          savedMessage.includes('очищено') ? '✓' : '!'}
           </span>
           <span>{savedMessage}</span>
         </div>
       )}
-
     </section>
   );
 }

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -11,6 +12,7 @@ import { useAuth } from './context/AuthContext';
 
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
+import Cart from './components/Cart/Cart';
 
 import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
@@ -23,6 +25,38 @@ import FavoritesPage from './pages/FavoritesPage';
 
 import './App.css';
 
+export default function App() {
+  const isCartPage = window.location.pathname === '/cart';
+  useEffect(() => {
+    if (isCartPage || !window.location.hash) return;
+    const element = document.querySelector(window.location.hash);
+    if (element) {
+      requestAnimationFrame(() => {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      });
+    }
+  }, [isCartPage]);
+  return (
+    <>
+      <Header />
+
+      <main>
+        {isCartPage ? (
+          <Cart />
+        ) : (
+          <>
+            <Hero />
+            <ComponentsSection />
+            <PopularProducts />
+            <Configurator />
+            <Builds />
+            <WhyUs />
+            <Reviews />
+          </>
+        )}
 // Захищений маршрут
 function ProtectedRoute({ children }) {
   const { isAuthenticated, authLoading } = useAuth();

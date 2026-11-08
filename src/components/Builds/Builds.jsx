@@ -82,6 +82,58 @@ function BuildCard({ build, onDetails }) {
   );
 }
 
+export default function Builds() {
+  const [activeBuild, setActiveBuild] = useState(null);
+  
+  const [cartMessage, setCartMessage] = useState('');
+  // чи додали пк в кошик
+  const [addedBuildId, setAddedBuildId] = useState(null);
+  useEffect(() => {
+    if (!cartMessage) return;
+
+    const timer = setTimeout(() => {
+      setCartMessage('');
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [cartMessage]);
+
+  const addToCart = (build) => {
+    const cartItem = {
+      id: build.id,
+      name: build.name,
+      specs: `${build.cpu} • ${build.gpu} • ${build.ram} • ${build.ssd}`,
+      price: build.price,
+      quantity: 1,
+      image: build.image
+    };
+
+    try {
+      const savedCart = JSON.parse(
+        localStorage.getItem('matrixpc-cart') || '[]'
+      );
+
+      const cart = Array.isArray(savedCart) ? savedCart : [];
+
+      const existingItem = cart.find(item => item.id === build.id);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push(cartItem);
+      }
+
+      localStorage.setItem('matrixpc-cart', JSON.stringify(cart));
+      // Оновлення лічильника зразу
+      window.dispatchEvent(new Event('matrixpc-cart-updated'));
+      setCartMessage(`${build.name} додано до кошика`);
+      setAddedBuildId(build.id);
+    } catch (error) {
+      console.error('Помилка додавання в кошик:', error);
+      setCartMessage('Не вдалося додати товар до кошика');
+    }
+  };
+
 // Виокремлений компонент модального вікна
 function BuildModal({ build, onClose }) {
   useEffect(() => {
@@ -170,15 +222,131 @@ export default function Builds() {
             <BuildCard
               key={build.id}
               build={build}
-              onDetails={setActiveBuild}
+              onDetails={(build) => {
+              setActiveBuild(build);
+              setAddedBuildId(null);
+            }}
             />
           ))}
         </div>
       </div>
 
       {activeBuild && (
+        <div
+          className="build-modal-overlay"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setActiveBuild(null);
+            }
+          }}
+        >
+          <div
+            className="build-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="build-modal-title"
+          >
+            <div className="build-modal-header">
+              <h2 id="build-modal-title">
+                {activeBuild.name}
+              </h2>
+
+              
+            <button
+              type="button"
+              className="build-modal-button"
+              onClick={() => addToCart(activeBuild)}
+            >
+              ДОДАТИ В КОШИК
+            </button>
+
+            <button
+              type="button"
+              className="build-modal-close-button"
+              onClick={() => {
+                if (addedBuildId === activeBuild.id) {
+                  window.location.assign('/cart');
+                } else {
+                  setActiveBuild(null);
+                  setCartMessage('');
+                }
+              }}
+            >
+              {addedBuildId === activeBuild.id
+                ? 'ПЕРЕЙТИ В КОШИК'
+                : 'ЗАКРИТИ'}
+            </button>
+
+            </div>
+
+            <img
+              className="build-modal-image"
+              src={activeBuild.image}
+              alt={activeBuild.name}
+            />
+
+            <p className="build-modal-description">
+              {activeBuild.description}
+            </p>
+
+            
+            <div className="build-modal-specs">
+              {[
+                ['Процесор', activeBuild.cpu],
+                ['Відеокарта', activeBuild.gpu],
+                ['Материнська плата', activeBuild.motherboard],
+                ['Охолодження', activeBuild.cooler],
+                ['Корпус', activeBuild.pcCase],
+                ["Оперативна пам'ять", activeBuild.ram],
+                ['Накопичувач', activeBuild.ssd],
+                ['Блок живлення', activeBuild.psu],
+                ['Вентилятори', activeBuild.fans],
+              ].map(([label, value]) => ( // map автоматично створює рядок 
+                <div className="build-spec-row" key={label}>
+                  <span className="build-spec-label">{label}</span>
+                  <strong className="build-spec-value">{value}</strong>
+                </div>
+              ))}
+            </div>
+
+            <div className="build-modal-price">
+              від {formatPrice(activeBuild.price)}
+            </div>
+
+            <p className="build-modal-note">
+              Демонстраційна конфігурація.
+              Остаточні характеристики та ціну
+              потрібно уточнити.
+            </p>
+
+            <button
+              type="button"
+              className="build-modal-button"
+              onClick={() => setActiveBuild(null)}
+            >
+              ЗАКРИТИ
+            </button>
+          </div>
+        </div>
         <BuildModal build={activeBuild} onClose={() => setActiveBuild(null)} />
       )}
+      {cartMessage && (
+        <div
+          className={`build-toast ${
+            cartMessage.includes('додано')
+              ? 'build-toast-success'
+              : 'build-toast-error'
+          }`}
+          role="status"
+        >
+          <span>
+            {cartMessage.includes('додано') ? '✓' : '!'}
+          </span>
+
+          <span>{cartMessage}</span>
+        </div>
+      )}
+
     </section>
   );
 }

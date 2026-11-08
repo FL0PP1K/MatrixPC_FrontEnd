@@ -188,6 +188,28 @@
         display: none;
     }
 }
+/* Лічильник кошика */
+
+.header-cart-btn {
+    position: relative;
+}
+
+.header-cart-count {
+    position: absolute;
+    top: -5px;
+    right: -6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 4px;
+    background: #2EE679;
+    border: 2px solid #070A0D;
+    border-radius: 12px;
+    color: #07100A;
+    font-size: 10px;
+    font-weight: 800;
 /* Disabled header actions */
 .header-icon-btn:disabled {
     opacity: 0.45;
