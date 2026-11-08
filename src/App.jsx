@@ -1,14 +1,27 @@
 import { useEffect } from 'react';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from 'react-router-dom';
+
+import { ShopProvider } from './context/ShopContext';
+import { useAuth } from './context/AuthContext';
+
 import Header from './components/Header/Header';
-import Hero from './components/Hero/Hero';
-import ComponentsSection from './components/ComponentsSection/ComponentsSection';
-import PopularProducts from './components/PopularProducts/PopularProducts';
-import Configurator from './components/Configurator/Configurator';
-import Builds from './components/Builds/Builds';
-import WhyUs from './components/WhyUs/WhyUs';
-import Reviews from './components/Reviews/Reviews';
 import Footer from './components/Footer/Footer';
 import Cart from './components/Cart/Cart';
+
+import HomePage from './pages/HomePage';
+import CatalogPage from './pages/CatalogPage';
+import ProductPage from './pages/ProductPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import AccountPage from './pages/AccountPage';
+import CartPage from './pages/CartPage';
+import FavoritesPage from './pages/FavoritesPage';
 
 import './App.css';
 
@@ -44,9 +57,71 @@ export default function App() {
             <Reviews />
           </>
         )}
-      </main>
+// Захищений маршрут
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, authLoading } = useAuth();
 
-      <Footer />
-    </>
+  if (authLoading) {
+    return (
+      <main className="page-content">
+        <h1>Перевірка авторизації...</h1>
+      </main>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
+// Сторінка 404
+function NotFoundPage() {
+  return (
+    <main className="page-content">
+      <h1>404 — Сторінку не знайдено</h1>
+      <p>На жаль, такої сторінки не існує.</p>
+      <Link to="/">Повернутися на головну</Link>
+    </main>
+  );
+}
+
+export default function App() {
+  return (
+    <ShopProvider>
+      <BrowserRouter>
+        <Header />
+
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+
+          <Route path="/catalog" element={<CatalogPage />} />
+
+          <Route path="/product/:id" element={<ProductPage />} />
+
+          <Route path="/login" element={<LoginPage />} />
+
+          <Route path="/register" element={<RegisterPage />} />
+
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <AccountPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/cart" element={<CartPage />} />
+
+          <Route path="/favorites" element={<FavoritesPage />} />
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+
+        <Footer />
+      </BrowserRouter>
+    </ShopProvider>
   );
 }

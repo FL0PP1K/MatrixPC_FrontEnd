@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function ProductCard({
   product,
   isFavorite,
@@ -8,11 +10,17 @@ export default function ProductCard({
   return (
     <article className="product-card">
       <div className="product-image">
-        <img
-          src={product.image}
-          alt={product.name}
-          loading="lazy"
-        />
+        <Link
+          to={`/product/${product.id}`}
+          className="product-image-link"
+          aria-label={`Переглянути ${product.name}`}
+        >
+          <img
+            src={product.image}
+            alt={product.name}
+            loading="lazy"
+          />
+        </Link>
 
         <button
           type="button"
@@ -32,7 +40,9 @@ export default function ProductCard({
       </div>
 
       <h3 className="product-name">
-        {product.name}
+        <Link to={`/product/${product.id}`}>
+          {product.name}
+        </Link>
       </h3>
 
       <p className="product-specs">
@@ -40,8 +50,17 @@ export default function ProductCard({
       </p>
 
       <p className="product-stock">
-        В наявності
+        {product.inStock === false
+          ? 'Немає в наявності'
+          : 'В наявності'}
       </p>
+
+      <Link
+        to={`/product/${product.id}`}
+        className="product-details-link"
+      >
+        ДЕТАЛЬНІШЕ →
+      </Link>
 
       <div className="product-price">
         {product.price.toLocaleString('uk-UA')} ₴
@@ -51,8 +70,13 @@ export default function ProductCard({
         type="button"
         className={`cart-btn ${isInCart ? 'in-cart' : ''}`}
         onClick={() => onAddToCart(product.id)}
+        disabled={product.inStock === false || isInCart}
       >
-        {isInCart ? '✓ У КОШИКУ' : 'ДО КОШИКА'}
+        {product.inStock === false
+          ? 'НЕМАЄ В НАЯВНОСТІ'
+          : isInCart
+            ? '✓ У КОШИКУ'
+            : 'ДО КОШИКА'}
       </button>
     </article>
   );
