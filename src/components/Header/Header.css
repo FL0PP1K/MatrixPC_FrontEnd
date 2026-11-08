@@ -210,6 +210,8 @@
     color: #07100A;
     font-size: 10px;
     font-weight: 800;
+}
+
 /* Disabled header actions */
 .header-icon-btn:disabled {
     opacity: 0.45;
