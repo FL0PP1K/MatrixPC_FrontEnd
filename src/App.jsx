@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import {
   BrowserRouter,
@@ -5,6 +6,7 @@ import {
   Route,
   Link,
   Navigate,
+  useLocation,
 } from 'react-router-dom';
 
 import { ShopProvider } from './context/ShopContext';
@@ -12,7 +14,6 @@ import { useAuth } from './context/AuthContext';
 
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import Cart from './components/Cart/Cart';
 
 import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
@@ -25,38 +26,30 @@ import FavoritesPage from './pages/FavoritesPage';
 
 import './App.css';
 
-export default function App() {
-  const isCartPage = window.location.pathname === '/cart';
+// Прокручування до потрібної секції сторінки
+function ScrollToHash() {
+  const { pathname, hash } = useLocation();
+
   useEffect(() => {
-    if (isCartPage || !window.location.hash) return;
-    const element = document.querySelector(window.location.hash);
+    if (!hash || pathname === '/cart') return;
+
+    const element = document.getElementById(
+      decodeURIComponent(hash.slice(1))
+    );
+
     if (element) {
       requestAnimationFrame(() => {
         element.scrollIntoView({
           behavior: 'smooth',
-          block: 'start'
+          block: 'start',
         });
       });
     }
-  }, [isCartPage]);
-  return (
-    <>
-      <Header />
+  }, [pathname, hash]);
 
-      <main>
-        {isCartPage ? (
-          <Cart />
-        ) : (
-          <>
-            <Hero />
-            <ComponentsSection />
-            <PopularProducts />
-            <Configurator />
-            <Builds />
-            <WhyUs />
-            <Reviews />
-          </>
-        )}
+  return null;
+}
+
 // Захищений маршрут
 function ProtectedRoute({ children }) {
   const { isAuthenticated, authLoading } = useAuth();
@@ -87,10 +80,13 @@ function NotFoundPage() {
   );
 }
 
+// Головний компонент застосунку
 export default function App() {
   return (
     <ShopProvider>
       <BrowserRouter>
+        <ScrollToHash />
+
         <Header />
 
         <Routes>
