@@ -33,6 +33,14 @@ jobs:
       - name: Build React application
         run: npm run build
 
+      - name: Upload production build
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 1
+
   deploy:
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/frontend/React'
     needs: build
@@ -41,6 +49,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Download production build
+        uses: actions/download-artifact@v8
+        with:
+          name: frontend-dist
+          path: dist
+
+      - name: Verify production build
+        run: test -s dist/index.html
 
       - name: Deploy to Nginx
         run: rsync -rlv --delete --no-perms --no-owner --no-group dist/ /var/www/matrixpc/
