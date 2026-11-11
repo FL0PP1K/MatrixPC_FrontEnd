@@ -125,7 +125,7 @@ export default function ContactsPage() {
         <section className="info-card-grid info-card-grid-3 contact-topic-cards">
           <InfoCard title="ПІДБІР КОНФІГУРАЦІЇ"><p>Вкажи бюджет, основні ігри або програми й побажання до формату ПК.</p></InfoCard>
           <InfoCard title="ПИТАННЯ ЩОДО ЗАМОВЛЕННЯ"><p>Підготуй номер замовлення та назву товару. Не надсилай дані картки.</p></InfoCard>
-          <InfoCard title="ГАРАНТІЯ ТА ПОВЕРНЕННЯ"><p>Опиши проблему. Конкретний порядок звернення потребує підтвердження.</p></InfoCard>
+          <InfoCard title="ГАРАНТІЯ ТА ПОВЕРНЕННЯ"><p>Опиши проблему та звернись через форму контактів або email підтримки.</p></InfoCard>
         </section>
       </div>
     </main>
