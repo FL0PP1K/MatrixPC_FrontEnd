@@ -31,6 +31,7 @@ import ContactsPage from './pages/ContactsPage';
 
 import './App.css';
 import './design-system.css';
+import './page-design.css';
 
 // Прокручування до потрібної секції сторінки
 function ScrollToHash() {
