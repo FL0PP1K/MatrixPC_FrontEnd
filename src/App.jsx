@@ -22,6 +22,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AccountPage from './pages/AccountPage';
 import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
 import FavoritesPage from './pages/FavoritesPage';
 import AboutPage from './pages/AboutPage';
 import DeliveryPage from './pages/DeliveryPage';
@@ -35,7 +36,10 @@ function ScrollToHash() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (!hash || pathname === '/cart') return;
+    if (!hash || pathname === '/cart') {
+      window.scrollTo(0, 0);
+      return;
+    }
 
     const element = document.getElementById(
       decodeURIComponent(hash.slice(1))
@@ -48,6 +52,8 @@ function ScrollToHash() {
           block: 'start',
         });
       });
+    } else {
+      window.scrollTo(0, 0);
     }
   }, [pathname, hash]);
 
@@ -114,6 +120,7 @@ export default function App() {
           />
 
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
 
           <Route path="/favorites" element={<FavoritesPage />} />
 

@@ -11,6 +11,7 @@ import {
   registerUser as registerUserApi,
   loginUser as loginUserApi,
   getCurrentUser,
+  updateCurrentUser,
 } from "../services/authApi";
 
 const AuthContext = createContext(null);
@@ -78,6 +79,13 @@ export function AuthProvider({ children }) {
     return result.user;
   }, []);
 
+  const updateProfile = useCallback(async (data) => {
+    if (!token) throw new Error('Потрібно увійти в акаунт');
+    const result = await updateCurrentUser(token, data);
+    setUser(result.user);
+    return result.user;
+  }, [token]);
+
   // Вихід з акаунта
   const logout = useCallback(() => {
     localStorage.removeItem(AUTH_STORAGE_KEY);
@@ -94,9 +102,10 @@ export function AuthProvider({ children }) {
       isAuthenticated: Boolean(user && token),
       register,
       login,
+      updateProfile,
       logout,
     }),
-    [user, token, authLoading, register, login, logout],
+    [user, token, authLoading, register, login, updateProfile, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

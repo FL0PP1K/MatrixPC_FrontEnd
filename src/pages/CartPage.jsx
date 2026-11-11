@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { useShop } from "../context/ShopContext";
 
 import "./CartPage.css";
 
 export default function CartPage() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const {
     cartItems,
     cartCount,
@@ -210,8 +213,8 @@ export default function CartPage() {
                   Доставка розраховується при оформленні та не включена.
                   Остаточну суму ще не визначено.
                 </p>
-                <button type="button" className="cart-checkout-button" disabled>
-                  ОФОРМИТИ ЗАМОВЛЕННЯ
+                <button type="button" className="cart-checkout-button" onClick={() => navigate(isAuthenticated ? "/checkout" : "/login")}>
+                  {isAuthenticated ? "ОФОРМИТИ ЗАМОВЛЕННЯ" : "УВІЙТИ ДЛЯ ОФОРМЛЕННЯ"}
                 </button>
               </aside>
 

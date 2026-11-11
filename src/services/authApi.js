@@ -42,3 +42,6 @@ export async function getCurrentUser(token) {
   });
 }
 
+export async function updateCurrentUser(token, userData) {
+  return request('/auth/me', { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(userData) });
+}

@@ -61,4 +61,3 @@ export async function getProducts() {
     mapProduct(product, index)
   );
 }
-
