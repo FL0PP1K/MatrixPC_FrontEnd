@@ -596,12 +596,47 @@
 
 @media (max-width: 650px) {
     .config-summary-actions {
-        flex-direction: column;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        width: 100%;
+    }
+    
+    .config-summary-actions button {
+        flex: 1 1 140px;
+        min-width: 0;
+        padding: 12px 10px;
+        font-size: 13px;
+        text-align: center;
+        white-space: normal;
+        overflow-wrap: break-word;
     }
 
-    .config-summary-actions button {
+.config-summary-actions button {
+    flex: 1 1 140px;
+    min-width: 0;
+    padding: 12px 10px;
+    font-size: 13px;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+    .config-summary-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
         width: 100%;
+    }
+    
+    .config-summary-actions button {
+        flex: 1 1 140px;
+        min-width: 0;
+        padding: 12px 10px;
+        font-size: 13px;
+        text-align: center;
         white-space: normal;
+        overflow-wrap: break-word;
     }
 }
 .config-save-message {
@@ -672,4 +707,94 @@
         right: 16px;
         left: 16px;
     }
+}
+/* Кнопка очищення збірки */
+
+.config-clear-button {
+    background: #111820;
+    color: #F5F7FA;
+    border: 1px solid #25313A;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.config-clear-button:hover:not(:disabled) {
+    background: #FF4646;
+    color: #FFFFFF;
+    border-color: #FF4646;
+}
+
+.config-clear-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Підтвердження очищення */
+
+.config-clear-modal {
+    max-width: 460px;
+    width: calc(100% - 32px);
+}
+
+.config-clear-description {
+    padding: 20px 24px;
+    color: #8B98A7;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.config-clear-actions {
+    display: flex;
+    gap: 12px;
+    padding: 0 24px 24px;
+}
+
+.config-clear-cancel,
+.config-clear-confirm {
+    flex: 1;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.config-clear-cancel {
+    background: #111820;
+    border: 1px solid #25313A;
+    color: #F5F7FA;
+}
+
+.config-clear-cancel:hover {
+    border-color: #2EE679;
+}
+
+.config-clear-confirm {
+    background: #FF4646;
+    border: 1px solid #FF4646;
+    color: #FFFFFF;
+}
+
+.config-clear-confirm:hover {
+    background: #E23535;
+}
+
+@media (max-width: 650px) {
+    .config-clear-actions {
+        flex-direction: column;
+    }
+}
+.config-summary-actions .config-clear-button {
+    background: #111820;
+    color: #F5F7FA;
+    border: 1px solid #25313A;
+}
+
+.config-summary-actions .config-clear-button:hover:not(:disabled) {
+    background: #FF4646;
+    color: #FFFFFF;
+    border-color: #FF4646;
 }
