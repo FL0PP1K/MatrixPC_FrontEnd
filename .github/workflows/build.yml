@@ -1,8 +1,11 @@
-
 name: MATRIXPC React Build and Deploy
 
 on:
   push:
+    branches:
+      - frontend/React
+      - feature/catalog-auth
+  pull_request:
     branches:
       - frontend/React
   workflow_dispatch:
@@ -11,8 +14,8 @@ permissions:
   contents: read
 
 jobs:
-  build-and-deploy:
-    runs-on: [self-hosted, Linux, X64]
+  build:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -29,6 +32,15 @@ jobs:
 
       - name: Build React application
         run: npm run build
+
+  deploy:
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/frontend/React'
+    needs: build
+    runs-on: [self-hosted, Linux, X64]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Deploy to Nginx
         run: rsync -rlv --delete --no-perms --no-owner --no-group dist/ /var/www/matrixpc/

@@ -1,0 +1,472 @@
+/* Page layout refinements for the catalog, shopping flow and account */
+.page-content {
+  min-height: 60vh;
+  padding: clamp(36px, 5vw, 64px) 24px;
+}
+
+.page-content h1,
+.catalog-heading h1,
+.cart-title,
+.favorites-heading h1,
+.product-information h1,
+.checkout-wrap > h1,
+.account-head h1 {
+  color: var(--mpc-text);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.page-content h1 {
+  font-size: clamp(32px, 4vw, 48px);
+}
+
+.page-content p {
+  color: var(--mpc-muted);
+}
+
+.catalog-page,
+.product-page,
+.favorites-page {
+  width: min(calc(100% - 48px), 1440px);
+  padding-top: clamp(32px, 4vw, 52px);
+}
+
+.catalog-heading h1,
+.cart-title,
+.favorites-heading h1 {
+  font-size: clamp(32px, 3.5vw, 48px);
+  font-weight: 850;
+}
+
+.catalog-breadcrumb,
+.cart-breadcrumb,
+.favorites-breadcrumb,
+.account-crumb,
+.product-breadcrumbs {
+  color: var(--mpc-muted);
+  font-size: 14px;
+}
+
+.catalog-breadcrumb,
+.favorites-breadcrumb {
+  line-height: 1.5;
+}
+
+.catalog-breadcrumb a,
+.cart-breadcrumb a,
+.favorites-breadcrumb a,
+.account-crumb a,
+.product-breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.catalog-breadcrumb a:hover,
+.cart-breadcrumb a:hover,
+.favorites-breadcrumb a:hover,
+.account-crumb a:hover,
+.product-breadcrumbs a:hover {
+  color: var(--mpc-green);
+}
+
+.catalog-description,
+.cart-subtitle,
+.favorites-heading p,
+.checkout-sub {
+  color: var(--mpc-muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.catalog-search input,
+.catalog-price-inputs input,
+.catalog-filter-group select,
+.catalog-toolbar select,
+.account-form input,
+.checkout-box input,
+.checkout-box select {
+  color: var(--mpc-text);
+  background: var(--mpc-surface-deep);
+  border: 1px solid var(--mpc-border);
+  border-radius: 8px;
+}
+
+.catalog-search input:focus-visible,
+.catalog-price-inputs input:focus-visible,
+.catalog-filter-group select:focus-visible,
+.catalog-toolbar select:focus-visible,
+.account-form input:focus-visible,
+.checkout-box input:focus-visible,
+.checkout-box select:focus-visible {
+  border-color: var(--mpc-green);
+  outline: 2px solid rgba(46, 230, 121, 0.32);
+  outline-offset: 1px;
+}
+
+.catalog-sidebar,
+.catalog-empty,
+.cart-item,
+.cart-summary,
+.cart-promo,
+.cart-link-card,
+.cart-empty,
+.favorites-empty,
+.product-main-image,
+.product-delivery,
+.product-description,
+.auth-card,
+.account-menu,
+.account-panel,
+.account-welcome,
+.account-callout,
+.account-tiles > a,
+.account-tiles > button,
+.account-order,
+.checkout-box {
+  background: var(--mpc-surface);
+  border: 1px solid var(--mpc-border);
+  border-radius: 12px;
+}
+
+.catalog-filter-heading,
+.catalog-filter-group,
+.cart-detail-row,
+.cart-summary-row,
+.checkout-row,
+.account-line {
+  border-color: var(--mpc-border);
+}
+
+.catalog-filter-heading button,
+.catalog-category-list button,
+.cart-remove-button,
+.cart-clear-button,
+.account-head > button,
+.account-panel-title > button {
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.catalog-filter-heading button:hover,
+.catalog-category-list button:hover,
+.catalog-category-list button.active {
+  color: var(--mpc-green);
+}
+
+.catalog-category-list button.active {
+  background: rgba(46, 230, 121, 0.12);
+}
+
+.catalog-toolbar p,
+.catalog-description,
+.cart-item-specs,
+.cart-unit-price,
+.cart-link-card p,
+.favorites-empty p,
+.account-head p,
+.account-panel > p,
+.account-callout p,
+.account-welcome p,
+.account-panel-title p,
+.account-tiles span,
+.checkout-sub,
+.checkout-box > p {
+  color: var(--mpc-muted);
+}
+
+.catalog-cart-count,
+.catalog-toolbar strong,
+.favorites-count,
+.account-head small,
+.account-tiles small,
+.account-welcome small,
+.account-panel-title > b,
+.checkout-done small {
+  color: var(--mpc-green);
+}
+
+.catalog-empty button,
+.favorites-catalog-button,
+.account-welcome button,
+.account-callout > a,
+.account-empty > a,
+.account-form > button,
+.checkout-box button,
+.checkout-done > a,
+.checkout-box > a {
+  background: var(--mpc-green);
+  color: #06100a;
+  border-radius: 8px;
+  font-weight: 750;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.catalog-empty button:hover,
+.favorites-catalog-button:hover,
+.account-welcome button:hover,
+.account-callout > a:hover,
+.account-empty > a:hover,
+.account-form > button:hover:not(:disabled),
+.checkout-box button:hover:not(:disabled),
+.checkout-done > a:hover,
+.checkout-box > a:hover {
+  background: var(--mpc-green-hover);
+}
+
+.cart-item-image-wrap,
+.product-main-image {
+  background: var(--mpc-surface-deep);
+  border-color: var(--mpc-border);
+}
+
+.cart-item-image-wrap {
+  border-radius: 10px;
+}
+
+.cart-continue-button,
+.cart-quantity button,
+.cart-secondary-button,
+.account-head > button,
+.account-panel-title > button,
+.product-favorite-button {
+  color: var(--mpc-text);
+  background: var(--mpc-surface-deep);
+  border-color: var(--mpc-border);
+  border-radius: 8px;
+}
+
+.cart-continue-button:hover,
+.cart-quantity button:hover:not(:disabled),
+.cart-secondary-button:hover,
+.account-head > button:hover,
+.account-panel-title > button:hover,
+.product-favorite-button:hover,
+.product-favorite-button.active {
+  border-color: var(--mpc-green);
+  color: var(--mpc-green);
+}
+
+.product-main-image {
+  padding: clamp(20px, 3vw, 36px);
+  border-radius: 14px;
+}
+
+.product-information h1 {
+  font-size: clamp(28px, 3vw, 40px);
+}
+
+.product-detail-divider {
+  background: var(--mpc-border);
+}
+
+.product-detail-specs p,
+.product-description p {
+  color: var(--mpc-muted);
+  line-height: 1.65;
+}
+
+.product-buy-button {
+  background: var(--mpc-green);
+  color: #06100a;
+  border-radius: 8px;
+}
+
+.product-buy-button:hover:not(:disabled) {
+  background: var(--mpc-green-hover);
+}
+
+.product-delivery,
+.product-description {
+  border-color: var(--mpc-border);
+}
+
+.product-delivery div,
+.product-specification-row {
+  border-color: var(--mpc-border);
+}
+
+.auth-page {
+  min-height: calc(100svh - 88px);
+  padding: clamp(32px, 5vw, 64px) 20px 80px;
+  align-items: center;
+}
+
+.auth-card {
+  padding: clamp(26px, 4vw, 38px);
+  border-radius: 14px;
+}
+
+.auth-heading h1 {
+  color: var(--mpc-text);
+  font-size: clamp(24px, 3vw, 30px);
+  letter-spacing: -0.02em;
+}
+
+.auth-heading p,
+.auth-footer p {
+  color: var(--mpc-muted);
+}
+
+.auth-field input {
+  min-height: 50px;
+  height: auto;
+  color: var(--mpc-text);
+  background: var(--mpc-surface-deep);
+  border-color: var(--mpc-border);
+  border-radius: 8px;
+}
+
+.auth-field input:focus {
+  border-color: var(--mpc-green);
+}
+
+.auth-submit {
+  min-height: 50px;
+  color: #06100a;
+  background: var(--mpc-green);
+  border-radius: 8px;
+}
+
+.auth-submit:hover:not(:disabled) {
+  background: var(--mpc-green-hover);
+}
+
+.auth-notice,
+.auth-footer a {
+  color: var(--mpc-green);
+}
+
+.account-page {
+  min-height: 65vh;
+  padding: clamp(32px, 4vw, 52px) 24px 80px;
+  background: var(--mpc-bg);
+}
+
+.account-wrap {
+  max-width: 1440px;
+}
+
+.account-crumb {
+  margin-bottom: 28px;
+}
+
+.account-head h1 {
+  font-size: clamp(32px, 3.5vw, 46px);
+}
+
+.account-menu button,
+.account-menu a {
+  border-radius: 8px;
+}
+
+.account-menu button.selected,
+.account-menu button:hover,
+.account-menu a:hover {
+  color: var(--mpc-green);
+  background: rgba(46, 230, 121, 0.1);
+}
+
+.account-tiles > a:hover,
+.account-tiles > button:hover {
+  border-color: var(--mpc-green);
+}
+
+.account-form input {
+  min-height: 48px;
+}
+
+.account-line {
+  color: #d6dce2;
+}
+
+.checkout-page {
+  min-height: 65vh;
+  padding: clamp(32px, 4vw, 52px) 24px 80px;
+  background: var(--mpc-bg);
+}
+
+.checkout-wrap {
+  max-width: 1200px;
+}
+
+.checkout-wrap > h1 {
+  font-size: clamp(32px, 3.5vw, 46px);
+}
+
+.checkout-box {
+  padding: clamp(20px, 3vw, 28px);
+}
+
+.checkout-box input,
+.checkout-box select {
+  min-height: 48px;
+}
+
+.checkout-box label {
+  color: var(--mpc-text);
+}
+
+.checkout-done {
+  max-width: 640px;
+  margin: clamp(40px, 7vw, 84px) auto;
+}
+
+@media (max-width: 900px) {
+  .catalog-page,
+  .product-page,
+  .favorites-page {
+    width: calc(100% - 32px);
+  }
+
+  .cart-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .cart-page {
+    padding-top: 28px;
+  }
+
+  .cart-layout {
+    gap: 20px;
+  }
+
+  .auth-page {
+    min-height: auto;
+    padding: 36px 16px 64px;
+  }
+
+  .product-main-image {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 560px) {
+  .page-content {
+    padding: 32px 16px 56px;
+  }
+
+  .catalog-page,
+  .product-page,
+  .favorites-page {
+    width: calc(100% - 32px);
+  }
+
+  .account-page,
+  .checkout-page {
+    padding: 28px 16px 60px;
+  }
+
+  .checkout-box {
+    padding: 18px;
+  }
+
+  .account-line,
+  .checkout-row {
+    align-items: flex-start;
+  }
+
+  .favorites-page {
+    padding-top: 30px;
+  }
+}
