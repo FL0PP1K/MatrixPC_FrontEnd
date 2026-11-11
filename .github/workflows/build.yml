@@ -1,8 +1,11 @@
-
 name: MATRIXPC React Build and Deploy
 
 on:
   push:
+    branches:
+      - frontend/React
+      - feature/catalog-auth
+  pull_request:
     branches:
       - frontend/React
   workflow_dispatch:
@@ -31,4 +34,5 @@ jobs:
         run: npm run build
 
       - name: Deploy to Nginx
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/frontend/React'
         run: rsync -rlv --delete --no-perms --no-owner --no-group dist/ /var/www/matrixpc/
