@@ -40,7 +40,7 @@ export default function DeliveryPage() {
 
         <section className="info-section">
           <h2 className="info-subheading">ВАРІАНТИ ОПЛАТИ</h2>
-          <div className="info-card-grid info-card-grid-3">
+          <div className="info-card-grid info-card-grid-4">
             {payments.map(([title, text]) => (
               <InfoCard title={title} key={title}>
                 <p>{text}</p><p className="info-status">Потребує підтвердження</p>
