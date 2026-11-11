@@ -1,18 +1,18 @@
 import './Footer.css';
+import { Link } from 'react-router-dom';
 
 const navigation = [
-  { name: 'Головна', href: '#home' },
-  { name: 'Комплектуючі', href: '#components' },
-  { name: 'Популярні товари', href: '#popular' },
-  { name: 'Готові збірки', href: '#builds' },
-  { name: 'Конфігуратор ПК', href: '#assembly' },
+  { name: 'Головна', href: '/#home' },
+  { name: 'Комплектуючі', href: '/#components' },
+  { name: 'Готові збірки', href: '/#builds' },
+  { name: 'Конфігуратор ПК', href: '/#assembly' },
 ];
 
 const information = [
-  'Про нас',
-  'Доставка та оплата',
-  'Гарантія',
-  'Повернення товару',
+  { name: 'Про нас', href: '/about' },
+  { name: 'Доставка та оплата', href: '/delivery' },
+  { name: 'Гарантія та повернення', href: '/warranty' },
+  { name: 'Контакти', href: '/contacts' },
 ];
 
 export default function Footer() {
@@ -22,10 +22,10 @@ export default function Footer() {
         <div className="footer-grid">
 
           <div className="footer-brand">
-            <a href="#home" className="footer-logo">
+            <Link to="/" className="footer-logo">
               <span>MATRIX</span>
               <span className="footer-logo-green">PC</span>
-            </a>
+            </Link>
 
             <p>Твій ПК. Твої правила.</p>
           </div>
@@ -34,38 +34,52 @@ export default function Footer() {
             <h3>НАВІГАЦІЯ</h3>
 
             {navigation.map((link) => (
-              <a key={link.href} href={link.href}>
+              <Link key={link.href} to={link.href}>
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
-          <div className="footer-column">
+          <nav className="footer-column" aria-label="Інформація">
             <h3>ІНФОРМАЦІЯ</h3>
 
             {information.map((item) => (
-              <span key={item}>{item}</span>
+              <Link key={item.href} to={item.href}>
+                {item.name}
+              </Link>
             ))}
-          </div>
+          </nav>
 
-          <div className="footer-column">
+          <nav className="footer-column" aria-label="Контакти">
             <h3>КОНТАКТИ</h3>
-            <p>
-              Контактні дані та посилання на соцмережі
-              додамо перед запуском магазину.
-            </p>
-          </div>
+            <Link to="/contacts#contact-form">Email</Link>
+            <Link to="/contacts#socials">Telegram</Link>
+            <Link to="/contacts#socials">Instagram</Link>
+          </nav>
 
         </div>
 
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} MATRIXPC. Всі права захищені.</p>
 
-          <a href="#home">
-            Повернутися нагору ↑
-          </a>
+          <div className="footer-social" aria-label="Соціальні мережі">
+            <Link to="/contacts#socials" aria-label="Instagram MATRIXPC">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" />
+              </svg>
+            </Link>
+            <Link to="/contacts#socials" aria-label="Telegram MATRIXPC">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m21 3-7.2 18-3.7-7.1L3 10.2 21 3Z" />
+                <path d="m10.1 13.9 4.8-4.8" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
   );
 }
+

@@ -23,6 +23,10 @@ import RegisterPage from './pages/RegisterPage';
 import AccountPage from './pages/AccountPage';
 import CartPage from './pages/CartPage';
 import FavoritesPage from './pages/FavoritesPage';
+import AboutPage from './pages/AboutPage';
+import DeliveryPage from './pages/DeliveryPage';
+import WarrantyPage from './pages/WarrantyPage';
+import ContactsPage from './pages/ContactsPage';
 
 import './App.css';
 
@@ -113,6 +117,14 @@ export default function App() {
 
           <Route path="/favorites" element={<FavoritesPage />} />
 
+          <Route path="/about" element={<AboutPage />} />
+
+          <Route path="/delivery" element={<DeliveryPage />} />
+
+          <Route path="/warranty" element={<WarrantyPage />} />
+
+          <Route path="/contacts" element={<ContactsPage />} />
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
 
@@ -121,3 +133,4 @@ export default function App() {
     </ShopProvider>
   );
 }
+
