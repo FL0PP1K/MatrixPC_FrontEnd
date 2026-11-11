@@ -1,9 +1,12 @@
+
+import { useEffect } from 'react';
 import {
   BrowserRouter,
   Routes,
   Route,
   Link,
   Navigate,
+  useLocation,
 } from 'react-router-dom';
 
 import { ShopProvider } from './context/ShopContext';
@@ -20,8 +23,36 @@ import RegisterPage from './pages/RegisterPage';
 import AccountPage from './pages/AccountPage';
 import CartPage from './pages/CartPage';
 import FavoritesPage from './pages/FavoritesPage';
+import AboutPage from './pages/AboutPage';
+import DeliveryPage from './pages/DeliveryPage';
+import WarrantyPage from './pages/WarrantyPage';
+import ContactsPage from './pages/ContactsPage';
 
 import './App.css';
+
+// Прокручування до потрібної секції сторінки
+function ScrollToHash() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash || pathname === '/cart') return;
+
+    const element = document.getElementById(
+      decodeURIComponent(hash.slice(1))
+    );
+
+    if (element) {
+      requestAnimationFrame(() => {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      });
+    }
+  }, [pathname, hash]);
+
+  return null;
+}
 
 // Захищений маршрут
 function ProtectedRoute({ children }) {
@@ -53,10 +84,13 @@ function NotFoundPage() {
   );
 }
 
+// Головний компонент застосунку
 export default function App() {
   return (
     <ShopProvider>
       <BrowserRouter>
+        <ScrollToHash />
+
         <Header />
 
         <Routes>
@@ -83,6 +117,14 @@ export default function App() {
 
           <Route path="/favorites" element={<FavoritesPage />} />
 
+          <Route path="/about" element={<AboutPage />} />
+
+          <Route path="/delivery" element={<DeliveryPage />} />
+
+          <Route path="/warranty" element={<WarrantyPage />} />
+
+          <Route path="/contacts" element={<ContactsPage />} />
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
 
@@ -91,3 +133,4 @@ export default function App() {
     </ShopProvider>
   );
 }
+
