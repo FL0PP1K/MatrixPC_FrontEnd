@@ -30,6 +30,7 @@ import WarrantyPage from './pages/WarrantyPage';
 import ContactsPage from './pages/ContactsPage';
 
 import './App.css';
+import './design-system.css';
 
 // Прокручування до потрібної секції сторінки
 function ScrollToHash() {

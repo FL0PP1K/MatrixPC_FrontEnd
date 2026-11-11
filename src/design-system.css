@@ -1,0 +1,473 @@
+:root {
+  color-scheme: dark;
+  --mpc-bg: #070a0d;
+  --mpc-surface: #111820;
+  --mpc-surface-deep: #0b1117;
+  --mpc-surface-soft: #0d1217;
+  --mpc-border: #25313a;
+  --mpc-text: #f5f7fa;
+  --mpc-muted: #81909e;
+  --mpc-green: #2ee679;
+  --mpc-green-hover: #22d86c;
+  --mpc-danger: #ff6868;
+}
+
+html,
+body {
+  background: var(--mpc-bg);
+}
+
+body {
+  color: var(--mpc-text);
+  font-size: 16px;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+}
+
+::selection {
+  background: rgba(46, 230, 121, 0.28);
+  color: var(--mpc-text);
+}
+
+a {
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+/* Shared focus treatment */
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--mpc-green);
+  outline-offset: 3px;
+}
+
+/* Header */
+.header {
+  height: 88px;
+  background: var(--mpc-bg);
+  border-bottom-color: var(--mpc-border);
+}
+
+.header-container {
+  width: min(calc(100% - 48px), 1440px);
+}
+
+.header .logo {
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+
+.header .logo-green,
+.header .nav-link:hover,
+.header .nav-link.active {
+  color: var(--mpc-green);
+}
+
+.header .nav-menu {
+  gap: clamp(20px, 2.2vw, 34px);
+}
+
+.header .nav-link {
+  font-size: 16px;
+}
+
+.header .header-actions {
+  gap: 10px;
+}
+
+.header .header-icon-btn,
+.header .mobile-menu-btn {
+  background: var(--mpc-surface);
+  border-color: var(--mpc-border);
+  border-radius: 8px;
+}
+
+.header .header-icon-btn:hover,
+.header .mobile-menu-btn:hover {
+  border-color: var(--mpc-green);
+}
+
+.header .header-build-btn {
+  min-height: 48px;
+  background: var(--mpc-green);
+  border-radius: 8px;
+  color: #06100a;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.header .header-build-btn:hover {
+  background: var(--mpc-green-hover);
+}
+
+.header .header-search-panel {
+  background: var(--mpc-surface);
+  border-color: var(--mpc-border);
+}
+
+.header .header-search-panel input {
+  background: var(--mpc-surface-deep);
+  border-color: var(--mpc-border);
+  border-radius: 8px;
+}
+
+/* Homepage hero */
+.hero {
+  min-height: min(760px, calc(100svh - 88px));
+  padding: clamp(52px, 6vw, 88px) 24px;
+  background: var(--mpc-bg);
+}
+
+.hero-container {
+  width: 100%;
+  max-width: 1440px;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(32px, 4vw, 60px);
+}
+
+.hero-content {
+  max-width: 680px;
+}
+
+.hero-subtitle {
+  color: var(--mpc-green);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+
+.hero-title {
+  font-size: clamp(48px, 5vw, 76px);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.hero-description {
+  max-width: 620px;
+  color: var(--mpc-muted);
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.6;
+}
+
+.hero-btn-primary,
+.hero-btn-secondary {
+  min-height: 50px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.hero-btn-primary {
+  background: var(--mpc-green);
+  color: #06100a;
+}
+
+.hero-btn-primary:hover {
+  background: var(--mpc-green-hover);
+}
+
+.hero-btn-secondary {
+  background: var(--mpc-surface-deep);
+  border-color: var(--mpc-border);
+}
+
+.hero-btn-secondary:hover {
+  border-color: var(--mpc-green);
+}
+
+.hero-visuals {
+  min-height: clamp(380px, 38vw, 540px);
+  padding: 24px;
+  overflow: hidden;
+  background: var(--mpc-surface-deep);
+  border: 1px solid var(--mpc-border);
+  border-radius: 14px;
+}
+
+.hero-visuals::before {
+  opacity: 0.12;
+  filter: blur(100px);
+}
+
+.hero-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.spec-card {
+  left: 18px;
+  bottom: 18px;
+  padding: 16px 20px;
+  background: rgba(17, 24, 32, 0.96);
+  border-color: var(--mpc-border);
+  border-radius: 12px;
+}
+
+.spec-header,
+.status-dot {
+  color: var(--mpc-green);
+}
+
+/* Homepage sections and shared cards */
+.components-section,
+.popular-section,
+.builds-section {
+  padding: clamp(60px, 6.2vw, 88px) 24px;
+}
+
+.components-section {
+  background: var(--mpc-surface-soft);
+}
+
+.popular-section,
+.builds-section {
+  background: var(--mpc-bg);
+}
+
+.components-section .section-title,
+.popular-section .section-title,
+.builds-title {
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.components-section .section-subtitle,
+.popular-section .section-subtitle,
+.builds-subtitle {
+  color: var(--mpc-muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.component-card,
+.product-card,
+.build-card {
+  background: var(--mpc-surface);
+  border-color: var(--mpc-border);
+  border-radius: 12px;
+}
+
+.component-card:hover,
+.product-card:hover,
+.build-card:hover {
+  border-color: var(--mpc-green);
+}
+
+.card-img-wrapper,
+.product-image,
+.build-card-image {
+  background: var(--mpc-surface-deep);
+  border-radius: 10px;
+}
+
+.component-card:focus-visible,
+.favorite-btn:focus-visible,
+.cart-btn:focus-visible,
+.builds-section button:focus-visible {
+  outline: 2px solid var(--mpc-green);
+  outline-offset: 3px;
+}
+
+.component-name,
+.product-name,
+.build-card-title {
+  color: var(--mpc-text);
+}
+
+.component-link,
+.product-details-link,
+.product-stock,
+.popular-cart-count {
+  color: var(--mpc-green);
+}
+
+.favorite-btn {
+  background: var(--mpc-surface);
+  border-color: var(--mpc-border);
+  border-radius: 8px;
+}
+
+.favorite-btn:hover,
+.favorite-btn.is-favorite {
+  color: var(--mpc-green);
+  border-color: var(--mpc-green);
+}
+
+.product-card,
+.build-card {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.cart-btn,
+.build-card-button,
+.build-modal-button {
+  background: var(--mpc-green);
+  border-radius: 8px;
+  color: #06100a;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.cart-btn:hover:not(:disabled),
+.build-card-button:hover,
+.build-modal-button:hover {
+  background: var(--mpc-green-hover);
+}
+
+.build-modal,
+.build-modal-close {
+  background: var(--mpc-surface);
+  border-color: var(--mpc-border);
+  border-radius: 12px;
+}
+
+/* Footer */
+.footer {
+  background: var(--mpc-surface-soft);
+  border-top-color: var(--mpc-border);
+  padding: 58px 24px 24px;
+}
+
+.footer-grid {
+  gap: clamp(28px, 4vw, 56px);
+  margin-bottom: 56px;
+}
+
+.footer-logo-green,
+.footer-column a:hover,
+.footer-social a:hover,
+.footer-bottom a:hover {
+  color: var(--mpc-green);
+}
+
+.footer-brand p {
+  color: var(--mpc-muted);
+  font-size: 15px;
+}
+
+.footer-column h3 {
+  font-size: 15px;
+  letter-spacing: 0.01em;
+}
+
+.footer-column a {
+  color: var(--mpc-muted);
+  font-size: 15px;
+}
+
+.footer-bottom {
+  border-top-color: var(--mpc-border);
+}
+
+.footer-bottom p,
+.footer-bottom a {
+  color: var(--mpc-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 1100px) {
+  .header .nav-menu {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: auto;
+    padding: 68px 20px;
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .hero-content {
+    max-width: 760px;
+  }
+
+  .hero-visuals {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 650px) {
+  .header-container {
+    width: calc(100% - 24px);
+  }
+
+  .header .logo {
+    font-size: 21px;
+  }
+
+  .hero {
+    padding: 48px 16px 60px;
+  }
+
+  .hero-title {
+    font-size: clamp(38px, 10vw, 52px);
+  }
+
+  .hero-description {
+    font-size: 15px;
+  }
+
+  .hero-buttons {
+    gap: 10px;
+  }
+
+  .hero-btn-primary,
+  .hero-btn-secondary {
+    flex: 1 1 auto;
+    padding: 0 16px;
+    font-size: 12px;
+  }
+
+  .hero-visuals {
+    min-height: 300px;
+    padding: 16px;
+  }
+
+  .spec-card {
+    left: 10px;
+    bottom: 10px;
+    padding: 11px 14px;
+  }
+
+  .spec-title {
+    font-size: 14px;
+  }
+
+  .spec-details {
+    font-size: 12px;
+  }
+
+  .spec-price {
+    font-size: 18px;
+  }
+
+  .components-section,
+  .popular-section,
+  .builds-section {
+    padding: 58px 16px;
+  }
+
+  .footer {
+    padding: 48px 16px 22px;
+  }
+}
