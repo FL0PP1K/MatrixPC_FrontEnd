@@ -35,7 +35,10 @@ function ScrollToHash() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (!hash || pathname === '/cart') return;
+    if (!hash || pathname === '/cart') {
+      window.scrollTo(0, 0);
+      return;
+    }
 
     const element = document.getElementById(
       decodeURIComponent(hash.slice(1))
@@ -48,6 +51,8 @@ function ScrollToHash() {
           block: 'start',
         });
       });
+    } else {
+      window.scrollTo(0, 0);
     }
   }, [pathname, hash]);
 

@@ -100,18 +100,19 @@ export default function ContactsPage() {
           <aside className="contacts-aside">
             <InfoCard className="support-card" title="ПІДТРИМКА MATRIXPC">
               <div className="info-card-icon"><HeadsetIcon /></div>
-              <p className="support-line">Електронна пошта — уточнюється</p>
-              <p className="support-line">Телефон — уточнюється</p>
+              <p className="support-line"><a href="mailto:matrixpc.infoua@gmail.com">matrixpc.infoua@gmail.com</a></p>
+              <p className="support-line"><a href="tel:+3801234567890">+380 123 456 7890</a></p>
               <dl className="info-data-rows">
-                <div className="info-data-row"><dt>Години підтримки</dt><dd>Уточнюються</dd></div>
-                <div className="info-data-row"><dt>Адреса</dt><dd>Не додана, потребує підтвердження</dd></div>
+                <div className="info-data-row"><dt>Години підтримки</dt><dd>Щодня, 24/7</dd></div>
+                <div className="info-data-row"><dt>Адреса</dt><dd>м. Коломия, Івано-Франківська область</dd></div>
               </dl>
             </InfoCard>
 
             <InfoCard className="social-card" title="СОЦІАЛЬНІ МЕРЕЖІ" >
               <div id="socials" className="social-placeholder-rows">
-                <div className="info-data-row"><span>Telegram</span><span>Посилання ще не додано</span></div>
-                <div className="info-data-row"><span>Instagram</span><span>Посилання ще не додано</span></div>
+                <div className="info-data-row"><span>Telegram</span><a href="https://t.me/Ch_Mikli_17" target="_blank" rel="noreferrer">@Ch_Mikli_17</a></div>
+                <div className="info-data-row"><span>Instagram</span><a href="https://www.instagram.com/m.chobaniuk/" target="_blank" rel="noreferrer">@m.chobaniuk</a></div>
+                <div className="info-data-row"><span>Threads</span><a href="https://www.threads.com/@m.chobaniuk_?xmt=AQG0Zz7pYVPSfhpLo7rv0lIOcQF-ZHlhSkzcT-Iulr-Lv2A" target="_blank" rel="noreferrer">Профіль Threads</a></div>
               </div>
             </InfoCard>
 
