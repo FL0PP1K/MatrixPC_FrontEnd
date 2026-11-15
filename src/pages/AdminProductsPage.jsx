@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useShop } from '../context/ShopContext';
 import './AdminProductsPage.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
@@ -42,6 +43,7 @@ function normalizeProduct(product) {
 
 export default function AdminProductsPage() {
   const { user, token, authLoading } = useAuth();
+  const { refreshProducts } = useShop();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState('');
@@ -150,6 +152,7 @@ export default function AdminProductsPage() {
         body: JSON.stringify(payload),
       });
       await loadData();
+      await refreshProducts();
       setShowForm(false);
       setEditingId(null);
       setForm(emptyForm);
@@ -170,6 +173,7 @@ export default function AdminProductsPage() {
       setError('');
       await apiRequest(`/products/${id}`, { token, method: 'DELETE' });
       await loadData();
+      await refreshProducts();
     } catch (err) {
       setError(err.message);
     }
