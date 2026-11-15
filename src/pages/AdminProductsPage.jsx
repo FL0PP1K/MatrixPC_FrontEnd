@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './AdminProductsPage.css';
 
 const initialProducts = [
@@ -9,6 +9,7 @@ const initialProducts = [
     category: 'Процесори',
     price: 4999,
     stock: 12,
+    image: '',
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ const initialProducts = [
     category: 'Відеокарти',
     price: 13999,
     stock: 5,
+    image: '',
   },
   {
     id: 3,
@@ -23,6 +25,7 @@ const initialProducts = [
     category: 'Оперативна пам’ять',
     price: 1899,
     stock: 2,
+    image: '',
   },
 ];
 
@@ -31,6 +34,7 @@ const emptyForm = {
   category: '',
   price: '',
   stock: '',
+  image: '',
 };
 
 export default function AdminProductsPage() {
@@ -39,6 +43,16 @@ export default function AdminProductsPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+
+  useEffect(() => {
+    return () => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(search.toLowerCase())
@@ -47,6 +61,8 @@ export default function AdminProductsPage() {
   function handleAdd() {
     setEditingId(null);
     setForm(emptyForm);
+    setImageFile(null);
+    setImagePreview('');
     setShowForm(true);
   }
 
@@ -58,8 +74,11 @@ export default function AdminProductsPage() {
       category: product.category,
       price: product.price,
       stock: product.stock,
+      image: product.image || '',
     });
 
+    setImageFile(null);
+    setImagePreview('');
     setShowForm(true);
   }
 
@@ -72,6 +91,29 @@ export default function AdminProductsPage() {
     }));
   }
 
+  function handleImageChange(event) {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      alert('Вибери зображення JPG, PNG або WebP');
+      event.target.value = '';
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Максимальний розмір зображення — 5 МБ');
+      event.target.value = '';
+      return;
+    }
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  }
+
   function handleSave(event) {
     event.preventDefault();
 
@@ -80,6 +122,9 @@ export default function AdminProductsPage() {
       category: form.category.trim(),
       price: Number(form.price),
       stock: Number(form.stock),
+      image: imageFile
+        ? imagePreview
+        : form.image,
     };
 
     if (editingId !== null) {
@@ -102,6 +147,9 @@ export default function AdminProductsPage() {
     setShowForm(false);
     setEditingId(null);
     setForm(emptyForm);
+    setImageFile(null);
+    // Не очищаємо imagePreview тут, поки його
+    // використовує доданий товар у таблиці.
   }
 
   function handleDelete(id) {
@@ -112,6 +160,12 @@ export default function AdminProductsPage() {
     setProducts((previous) =>
       previous.filter((product) => product.id !== id)
     );
+  }
+
+  function handleCancel() {
+    setShowForm(false);
+    setImageFile(null);
+    setImagePreview('');
   }
 
   return (
@@ -143,6 +197,7 @@ export default function AdminProductsPage() {
             <thead>
               <tr>
                 <th>ID</th>
+                <th>Фото</th>
                 <th>Назва товару</th>
                 <th>Категорія</th>
                 <th>Ціна</th>
@@ -155,6 +210,21 @@ export default function AdminProductsPage() {
               {filteredProducts.map((product) => (
                 <tr key={product.id}>
                   <td>#{product.id}</td>
+
+                  <td>
+                    {product.image ? (
+                      <img
+                        className="admin-product-thumbnail"
+                        src={product.image}
+                        alt={product.name}
+                      />
+                    ) : (
+                      <div className="admin-product-no-image">
+                        Нема фото
+                      </div>
+                    )}
+                  </td>
+
                   <td>{product.name}</td>
                   <td>{product.category}</td>
                   <td>{product.price.toLocaleString('uk-UA')} ₴</td>
@@ -162,9 +232,7 @@ export default function AdminProductsPage() {
 
                   <td>
                     <div className="admin-products-actions">
-                      <button
-                        onClick={() => handleEdit(product)}
-                      >
+                      <button onClick={() => handleEdit(product)}>
                         Редагувати
                       </button>
 
@@ -181,7 +249,7 @@ export default function AdminProductsPage() {
 
               {filteredProducts.length === 0 && (
                 <tr>
-                  <td colSpan="6">Товарів не знайдено</td>
+                  <td colSpan="7">Товарів не знайдено</td>
                 </tr>
               )}
             </tbody>
@@ -247,10 +315,28 @@ export default function AdminProductsPage() {
               />
             </label>
 
+            <label>
+              Зображення товару
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleImageChange}
+              />
+            </label>
+
+            {(imagePreview || form.image) && (
+              <div className="admin-product-image-preview">
+                <img
+                  src={imagePreview || form.image}
+                  alt="Попередній перегляд товару"
+                />
+              </div>
+            )}
+
             <div className="admin-form-actions">
               <button
                 type="button"
-                onClick={() => setShowForm(false)}
+                onClick={handleCancel}
               >
                 Скасувати
               </button>

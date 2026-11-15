@@ -188,3 +188,55 @@
     background: #2EE679;
     color: #111820;
 }
+
+/* Фото товару в таблиці */
+
+.admin-product-thumbnail {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    background: #FFFFFF;
+    border-radius: 8px;
+}
+
+/* Якщо фото немає */
+
+.admin-product-no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    color: #8B98A7;
+    background: #17212B;
+    border: 1px solid #34424F;
+    border-radius: 8px;
+    font-size: 10px;
+    text-align: center;
+}
+
+/* Попередній перегляд фото */
+
+.admin-product-image-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background: #17212B;
+    border: 1px solid #34424F;
+    border-radius: 8px;
+}
+
+.admin-product-image-preview img {
+    max-width: 100%;
+    max-height: 160px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+/* Прокручування довгої форми */
+
+.admin-product-form {
+    max-height: 90vh;
+    overflow-y: auto;
+}
