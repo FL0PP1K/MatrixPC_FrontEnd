@@ -46,36 +46,24 @@ export function ShopProvider({ children }) {
     return Array.isArray(saved) ? saved : [];
   });
 
-  // Завантаження товарів із Backend
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadProducts() {
-      try {
-        setProductsLoading(true);
-        setProductsError("");
-        const data = await getProducts();
-        if (isMounted) {
-          setProducts(data);
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.error("Products loading error:", error);
-          setProductsError(error.message);
-        }
-      } finally {
-        if (isMounted) {
-          setProductsLoading(false);
-        }
-      }
+  // Load catalog data and expose refresh for admin mutations.
+  const refreshProducts = useCallback(async () => {
+    try {
+      setProductsLoading(true);
+      setProductsError("");
+      const data = await getProducts();
+      setProducts(data);
+    } catch (error) {
+      console.error("Products loading error:", error);
+      setProductsError(error.message);
+    } finally {
+      setProductsLoading(false);
     }
-
-    loadProducts();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
+
+  useEffect(() => {
+    refreshProducts();
+  }, [refreshProducts]);
 
   // Поєднання товарів із бд та тимчасових локальних товарів
   const availableProducts = products;
@@ -189,6 +177,7 @@ export function ShopProvider({ children }) {
       products: availableProducts,
       productsLoading,
       productsError,
+      refreshProducts,
 
       cart,
       cartItems,
@@ -210,6 +199,7 @@ export function ShopProvider({ children }) {
       availableProducts,
       productsLoading,
       productsError,
+      refreshProducts,
       cart,
       cartItems,
       cartCount,
