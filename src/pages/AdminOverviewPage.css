@@ -1,0 +1,79 @@
+/* Заголовок адмінпанелі */
+
+.admin-overview {
+    color: #F5F7FA;
+}
+
+.admin-overview-header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.admin-overview-header p {
+    margin-top: 10px;
+    color: #8B98A7;
+    font-size: 14px;
+}
+
+/* Статистика */
+
+.admin-overview-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.admin-overview-card {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 24px;
+    background: #111820;
+    border: 1px solid #25313A;
+    border-radius: 10px;
+}
+
+.admin-overview-card span {
+    color: #8B98A7;
+    font-size: 13px;
+}
+
+.admin-overview-card strong {
+    color: #2EE679;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+/* Інформаційний блок */
+
+.admin-overview-content {
+    margin-top: 30px;
+    padding: 24px;
+    background: #111820;
+    border: 1px solid #25313A;
+    border-radius: 10px;
+}
+
+.admin-overview-content h2 {
+    margin: 0 0 15px;
+    font-size: 18px;
+}
+
+.admin-overview-content p {
+    color: #8B98A7;
+    font-size: 14px;
+}
+
+@media (max-width: 1000px) {
+    .admin-overview-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-overview-stats {
+        grid-template-columns: 1fr;
+    }
+}

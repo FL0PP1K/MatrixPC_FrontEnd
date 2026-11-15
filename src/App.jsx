@@ -29,6 +29,9 @@ import DeliveryPage from './pages/DeliveryPage';
 import WarrantyPage from './pages/WarrantyPage';
 import ContactsPage from './pages/ContactsPage';
 
+import AdminLayout from './pages/AdminLayout';
+import AdminOverviewPage from './pages/AdminOverviewPage';
+
 import './App.css';
 import './design-system.css';
 import './page-design.css';
@@ -122,7 +125,15 @@ export default function App() {
           />
 
           <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/favorites" element={<FavoritesPage />} />
 
@@ -134,6 +145,12 @@ export default function App() {
 
           <Route path="/contacts" element={<ContactsPage />} />
 
+          {/* Адмінпанель */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminOverviewPage />} />
+          </Route>
+
+          {/* Сторінка 404 */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
 
@@ -142,4 +159,3 @@ export default function App() {
     </ShopProvider>
   );
 }
-
