@@ -1,14 +1,6 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || '/api';
 
-// Відповідність категорій Backend категоріям Frontend
-const categoryMap = {
-  'graphics-cards': 'gpu',
-  processors: 'cpu',
-  ram: 'ram',
-  ssd: 'ssd',
-};
-
 // Тимчасове зображення, поки не додані фотографії товарів
 const fallbackImage = `data:image/svg+xml,${encodeURIComponent(`
   <svg xmlns="http://www.w3.org/2000/svg" width="640" height="480">
@@ -24,7 +16,7 @@ function mapProduct(product, index) {
   return {
     id: product.id,
     name: product.name,
-    category: categoryMap[product.category?.slug] || 'all',
+    category: product.category?.slug || 'all',
     manufacturer:
       product.manufacturer || product.name.split(' ')[0],
     specs:
