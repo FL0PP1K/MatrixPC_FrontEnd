@@ -1,24 +1,41 @@
-
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import {
+  createCategory,
+  deleteCategory,
+  getAdminCategories,
+  updateCategory,
+} from '../services/adminApi';
 import './AdminCategoriesPage.css';
 
-const initialCategories = [
-  { id: 1, name: 'Процесори', slug: 'processors' },
-  { id: 2, name: 'Відеокарти', slug: 'graphics-cards' },
-  { id: 3, name: 'Материнські плати', slug: 'motherboards' },
-  { id: 4, name: 'Оперативна пам’ять', slug: 'ram' },
-  { id: 5, name: 'SSD накопичувачі', slug: 'ssd' },
-  { id: 6, name: 'Блоки живлення', slug: 'power-supplies' },
-  { id: 7, name: 'Корпуси', slug: 'cases' },
-  { id: 8, name: 'Охолодження', slug: 'cooling' },
-];
+const emptyForm = { name: '', slug: '' };
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState(initialCategories);
+  const { token } = useAuth();
+  const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ name: '', slug: '' });
+  const [form, setForm] = useState(emptyForm);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
+
+  const loadCategories = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await getAdminCategories();
+      setCategories(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err.message || 'Не вдалося завантажити категорії');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { loadCategories(); }, [loadCategories]);
 
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -26,81 +43,80 @@ export default function AdminCategoriesPage() {
   );
 
   function handleAdd() {
+    setError('');
+    setNotice('');
     setEditingId(null);
-    setForm({ name: '', slug: '' });
+    setForm(emptyForm);
     setShowForm(true);
   }
 
   function handleEdit(category) {
+    setError('');
+    setNotice('');
     setEditingId(category.id);
-    setForm({
-      name: category.name,
-      slug: category.slug,
-    });
+    setForm({ name: category.name, slug: category.slug });
     setShowForm(true);
   }
 
   function handleChange(event) {
     const { name, value } = event.target;
-
-    setForm((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
+    setForm((previous) => ({ ...previous, [name]: value }));
   }
 
-  function handleSave(event) {
+  async function handleSave(event) {
     event.preventDefault();
-
-    const name = form.name.trim();
-    const slug = form.slug.trim().toLowerCase();
-
-    if (!name || !slug) {
+    if (!token) {
+      setError('Сесія адміністратора відсутня. Увійдіть повторно.');
       return;
     }
 
-    const slugExists = categories.some(
-      (category) =>
-        category.slug === slug && category.id !== editingId
-    );
-
-    if (slugExists) {
-      alert('Категорія з таким slug уже існує');
+    const payload = {
+      name: form.name.trim(),
+      slug: form.slug.trim().toLowerCase(),
+    };
+    if (!payload.name || !payload.slug) {
+      setError('Вкажіть назву та slug категорії.');
       return;
     }
 
-    if (editingId !== null) {
-      setCategories((previous) =>
-        previous.map((category) =>
-          category.id === editingId
-            ? { ...category, name, slug }
-            : category
-        )
-      );
-    } else {
-      setCategories((previous) => [
-        ...previous,
-        {
-          id: Date.now(),
-          name,
-          slug,
-        },
-      ]);
+    setSaving(true);
+    setError('');
+    setNotice('');
+    try {
+      if (editingId === null) {
+        await createCategory(token, payload);
+        setNotice('Категорію створено.');
+      } else {
+        await updateCategory(token, editingId, payload);
+        setNotice('Категорію оновлено.');
+      }
+      setShowForm(false);
+      setEditingId(null);
+      setForm(emptyForm);
+      await loadCategories();
+    } catch (err) {
+      setError(err.message || 'Не вдалося зберегти категорію');
+    } finally {
+      setSaving(false);
     }
-
-    setShowForm(false);
-    setEditingId(null);
-    setForm({ name: '', slug: '' });
   }
 
-  function handleDelete(id) {
-    if (!window.confirm('Видалити цю категорію?')) {
+  async function handleDelete(category) {
+    if (!window.confirm(`Видалити категорію «${category.name}»?`)) return;
+    if (!token) {
+      setError('Сесія адміністратора відсутня. Увійдіть повторно.');
       return;
     }
 
-    setCategories((previous) =>
-      previous.filter((category) => category.id !== id)
-    );
+    setError('');
+    setNotice('');
+    try {
+      await deleteCategory(token, category.id);
+      setNotice('Категорію видалено.');
+      await loadCategories();
+    } catch (err) {
+      setError(err.message || 'Не вдалося видалити категорію');
+    }
   }
 
   return (
@@ -110,64 +126,43 @@ export default function AdminCategoriesPage() {
           <h1>КЕРУВАННЯ КАТЕГОРІЯМИ</h1>
           <p>Створення та редагування категорій MatrixPC</p>
         </div>
-
-        <button
-          className="admin-category-add"
-          onClick={handleAdd}
-        >
+        <button className="admin-category-add" onClick={handleAdd}>
           + Додати категорію
         </button>
       </div>
 
+      {error && <p className="admin-error" role="alert">{error}</p>}
+      {notice && <p className="admin-success" role="status">{notice}</p>}
+
       <div className="admin-categories-panel">
         <input
           className="admin-categories-search"
-          type="text"
+          type="search"
           placeholder="Пошук категорій..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
-
         <div className="admin-categories-table-wrap">
           <table className="admin-categories-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Назва категорії</th>
-                <th>Slug</th>
-                <th>Дії</th>
-              </tr>
-            </thead>
-
+            <thead><tr><th>ID</th><th>Назва категорії</th><th>Slug</th><th>Дії</th></tr></thead>
             <tbody>
-              {filteredCategories.map((category) => (
+              {loading ? (
+                <tr><td colSpan="4">Завантаження категорій…</td></tr>
+              ) : filteredCategories.map((category) => (
                 <tr key={category.id}>
                   <td>#{category.id}</td>
                   <td>{category.name}</td>
                   <td>{category.slug}</td>
                   <td>
                     <div className="admin-categories-actions">
-                      <button
-                        onClick={() => handleEdit(category)}
-                      >
-                        Редагувати
-                      </button>
-
-                      <button
-                        className="admin-category-delete"
-                        onClick={() => handleDelete(category.id)}
-                      >
-                        Видалити
-                      </button>
+                      <button onClick={() => handleEdit(category)}>Редагувати</button>
+                      <button className="admin-category-delete" onClick={() => handleDelete(category)}>Видалити</button>
                     </div>
                   </td>
                 </tr>
               ))}
-
-              {filteredCategories.length === 0 && (
-                <tr>
-                  <td colSpan="4">Категорій не знайдено</td>
-                </tr>
+              {!loading && filteredCategories.length === 0 && (
+                <tr><td colSpan="4">Категорій не знайдено</td></tr>
               )}
             </tbody>
           </table>
@@ -176,53 +171,20 @@ export default function AdminCategoriesPage() {
 
       {showForm && (
         <div className="admin-modal-overlay">
-          <form
-            className="admin-category-form"
-            onSubmit={handleSave}
-          >
-            <h2>
-              {editingId !== null
-                ? 'Редагування категорії'
-                : 'Додавання категорії'}
-            </h2>
-
+          <form className="admin-category-form" onSubmit={handleSave}>
+            <h2>{editingId !== null ? 'Редагування категорії' : 'Додавання категорії'}</h2>
             <label>
               Назва категорії
-              <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Наприклад, Процесори"
-                required
-              />
+              <input name="name" value={form.name} onChange={handleChange} placeholder="Наприклад, Процесори" required maxLength="100" />
             </label>
-
             <label>
               Slug
-              <input
-                name="slug"
-                value={form.slug}
-                onChange={handleChange}
-                placeholder="Наприклад, processors"
-                pattern="[a-z0-9-]+"
-                title="Латинські маленькі літери, цифри та дефіс"
-                required
-              />
+              <input name="slug" value={form.slug} onChange={handleChange} placeholder="Наприклад, processors" pattern="[a-z0-9-]+" title="Латинські маленькі літери, цифри та дефіс" required maxLength="100" />
             </label>
-
             <div className="admin-category-form-actions">
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-              >
-                Скасувати
-              </button>
-
-              <button
-                type="submit"
-                className="admin-category-add"
-              >
-                Зберегти
+              <button type="button" onClick={() => setShowForm(false)} disabled={saving}>Скасувати</button>
+              <button type="submit" className="admin-category-add" disabled={saving}>
+                {saving ? 'Збереження…' : 'Зберегти'}
               </button>
             </div>
           </form>
