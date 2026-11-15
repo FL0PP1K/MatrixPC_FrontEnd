@@ -31,6 +31,8 @@ import ContactsPage from './pages/ContactsPage';
 
 import AdminLayout from './pages/AdminLayout';
 import AdminOverviewPage from './pages/AdminOverviewPage';
+import AdminProductsPage from './pages/AdminProductsPage';
+import AdminCategoriesPage from './pages/AdminCategoriesPage';
 
 import './App.css';
 import './design-system.css';
@@ -147,8 +149,10 @@ export default function App() {
 
           {/* Адмінпанель */}
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminOverviewPage />} />
-          </Route>
+  <Route index element={<AdminOverviewPage />} />
+  <Route path="products" element={<AdminProductsPage />} />
+  <Route path="categories" element={<AdminCategoriesPage />} />
+</Route>
 
           {/* Сторінка 404 */}
           <Route path="*" element={<NotFoundPage />} />
