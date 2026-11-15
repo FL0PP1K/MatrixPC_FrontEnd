@@ -33,6 +33,7 @@ import AdminLayout from './pages/AdminLayout';
 import AdminOverviewPage from './pages/AdminOverviewPage';
 import AdminProductsPage from './pages/AdminProductsPage';
 import AdminCategoriesPage from './pages/AdminCategoriesPage';
+import AdminOrdersPage from './pages/AdminOrdersPage';
 
 import './App.css';
 import './design-system.css';
@@ -152,6 +153,7 @@ export default function App() {
   <Route index element={<AdminOverviewPage />} />
   <Route path="products" element={<AdminProductsPage />} />
   <Route path="categories" element={<AdminCategoriesPage />} />
+  <Route path="orders" element={<AdminOrdersPage />} />
 </Route>
 
           {/* Сторінка 404 */}
