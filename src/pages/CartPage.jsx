@@ -18,8 +18,6 @@ export default function CartPage() {
   } = useShop();
 
   const [expandedBuilds, setExpandedBuilds] = useState([]);
-  const [promoCode, setPromoCode] = useState("");
-  const [promoError, setPromoError] = useState("");
 
   const formatPrice = (price) => `${Number(price).toLocaleString("uk-UA")} ₴`;
 
@@ -31,14 +29,6 @@ export default function CartPage() {
     );
   };
 
-  const handlePromoSubmit = (event) => {
-    event.preventDefault();
-    setPromoError(
-      promoCode.trim()
-        ? "Промокод недійсний. Знижку не застосовано."
-        : "Введіть промокод.",
-    );
-  };
 
   return (
     <main className="cart-page">
@@ -89,7 +79,7 @@ export default function CartPage() {
                       </Link>
                       <p className="cart-item-specs">{item.specs}</p>
                       <p className="cart-item-status">
-                        В наявності · статус із каталогу потребує підтвердження
+                        Наявність і кількість буде перевірено під час оформлення.
                       </p>
 
                       {Array.isArray(item.components) &&
@@ -197,12 +187,8 @@ export default function CartPage() {
                   <span>{formatPrice(cartTotal)}</span>
                 </div>
                 <div className="cart-summary-row">
-                  <span>Знижка</span>
-                  <span>0 ₴</span>
-                </div>
-                <div className="cart-summary-row">
                   <span>Доставка</span>
-                  <span>Уточнюється</span>
+                  <span>За тарифом перевізника</span>
                 </div>
                 <div className="cart-summary-divider" />
                 <p className="cart-total-label">Загалом за товари</p>
@@ -210,36 +196,11 @@ export default function CartPage() {
                   {formatPrice(cartTotal)}
                 </strong>
                 <p className="cart-summary-note">
-                  Доставка розраховується при оформленні та не включена.
-                  Остаточну суму ще не визначено.
+                  Доставка оплачується окремо за тарифом Укрпошти або Нової пошти. Строк — орієнтовно до 4 днів.
                 </p>
                 <button type="button" className="cart-checkout-button" onClick={() => navigate(isAuthenticated ? "/checkout" : "/login")}>
                   {isAuthenticated ? "ОФОРМИТИ ЗАМОВЛЕННЯ" : "УВІЙТИ ДЛЯ ОФОРМЛЕННЯ"}
                 </button>
-              </aside>
-
-              <aside className="cart-promo">
-                <h2>ПРОМОКОД</h2>
-                <form onSubmit={handlePromoSubmit}>
-                  <label htmlFor="cart-promo-input">Введи промокод</label>
-                  <input
-                    id="cart-promo-input"
-                    type="text"
-                    value={promoCode}
-                    onChange={(event) => {
-                      setPromoCode(event.target.value);
-                      setPromoError("");
-                    }}
-                    placeholder="DEMO2026"
-                    className={promoError ? "cart-promo-invalid" : ""}
-                  />
-                  {promoError && (
-                    <p className="cart-promo-error" role="status">
-                      {promoError}
-                    </p>
-                  )}
-                  <button type="submit">ЗАСТОСУВАТИ</button>
-                </form>
               </aside>
             </div>
           </div>
@@ -265,8 +226,7 @@ export default function CartPage() {
               </div>
               <h2>ТВІЙ КОШИК ПОКИ ПОРОЖНІЙ</h2>
               <p>
-                Тут з'являться товари, які ти додаси. Почни з готової збірки або
-                обери комплектуючі для власного ПК.
+                Додай комплектуючі з каталогу або створи власну конфігурацію ПК.
               </p>
               <div className="cart-empty-actions">
                 <Link to="/catalog" className="cart-primary-button">
@@ -279,10 +239,10 @@ export default function CartPage() {
             </div>
 
             <div className="cart-links">
-              <Link to="/" className="cart-link-card">
-                <h3>ГОТОВІ ПК</h3>
-                <p>Порівняй MATRIX START, MATRIX GAMING і MATRIX ULTRA.</p>
-                <span>Переглянути збірки →</span>
+              <Link to="/#assembly" className="cart-link-card">
+                <h3>ПІДБІР ПК</h3>
+                <p>Обери комплектуючі відповідно до своїх задач і бюджету.</p>
+                <span>Перейти до конфігуратора →</span>
               </Link>
               <Link to="/catalog" className="cart-link-card">
                 <h3>КОМПЛЕКТУЮЧІ</h3>
