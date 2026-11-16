@@ -17,7 +17,7 @@ export default function Hero() {
           </h1>
 
           <p className="hero-description">
-            Комплектуючі та готові ПК для ігор, роботи й навчання.
+            Комплектуючі для ігор, роботи й навчання.
             <br />
             Допоможемо підібрати оптимальну конфігурацію
             під твій бюджет.
@@ -37,26 +37,26 @@ export default function Hero() {
         <div className="hero-visuals">
           <img
             src="/image/PC_ULTRA.png"
-            alt="Ігровий комп'ютер MATRIX ULTRA"
+            alt="Персональний комп’ютер MATRIXPC"
             className="hero-image"
           />
 
           <div className="spec-card">
             <div className="spec-header">
               <span className="status-dot"></span>
-              MATRIX ULTRA
+              ПІДБІР КОНФІГУРАЦІЇ
             </div>
 
             <div className="spec-title">
-              RTX 5090 • Ryzen 9
+              Комплектуючі з каталогу
             </div>
 
             <div className="spec-details">
-              64 GB RAM • 2 TB SSD
+              Під твої задачі та бюджет
             </div>
 
             <div className="spec-price">
-              від 129 999 ₴
+              Ціна залежить від обраних товарів
             </div>
           </div>
         </div>
