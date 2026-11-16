@@ -182,12 +182,12 @@ const isComplete =
   };
   
   const getProductErrors = (categoryId, product) => {
-    const testSelected = {
+    const candidateSelection = {
       ...selected,
       [categoryId]: product
     };
 
-    return checkCompatibility(testSelected);
+    return checkCompatibility(candidateSelection);
   };
 
   const confirmSelection = () => {
@@ -351,7 +351,7 @@ const isComplete =
           </div>
         </div>
         {productsLoading && (
-          <p className="configurator-demo-note" role="status">Завантажуємо каталог комплектуючих…</p>
+          <p className="configurator-note" role="status">Завантажуємо каталог комплектуючих…</p>
         )}
         {productsError && (
           <p className="compatibility-warning" role="alert">
@@ -370,9 +370,9 @@ const isComplete =
           </div>
         )}
         {!productsLoading && !productsError && categoriesWithInventory.length > 0 && (
-          <p className="configurator-demo-note">
+          <p className="configurator-note">
             У каталозі є товари в наявності для {categoriesWithInventory.length} із {categories.length} категорій.
-            Автоматична перевірка сумісності недоступна, бо каталог не передає технічні характеристики компонентів.
+            Перевірка сумісності спирається на характеристики, додані до карток товарів. Якщо даних бракує, узгодь сумісність із консультантом перед оформленням.
             Під час замовлення бекенд перевірить актуальну наявність і ціну кожного товару.
           </p>
         )}
@@ -415,7 +415,7 @@ const isComplete =
           </div>
         </div>
 
-        <p className="configurator-demo-note">
+        <p className="configurator-note">
           У кошик додаються реальні товари з каталогу; наявність і остаточну суму бекенд перевіряє під час оформлення.
         </p>
       </div>
