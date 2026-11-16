@@ -36,12 +36,12 @@ function formatSpecifications(specifications) {
   if (!specifications || typeof specifications !== 'object' || Array.isArray(specifications)) return '';
   return Object.entries(specifications)
     .map(([name, value]) => `${name}: ${value}`)
-    .join('\\n');
+    .join(String.fromCharCode(10));
 }
 
 function parseSpecifications(input) {
   const specifications = {};
-  const lines = input.split(/\\r?\\n/).map((line) => line.trim()).filter(Boolean);
+  const lines = input.split(String.fromCharCode(10)).map((line) => line.replace(/\r$/, '')).map((line) => line.trim()).filter(Boolean);
   if (lines.length > 30) throw new Error('Можна вказати не більше 30 характеристик.');
   for (const line of lines) {
     const separator = line.indexOf(':');
@@ -353,7 +353,7 @@ export default function AdminProductsPage() {
                 maxLength="12000"
                 value={form.specificationsText}
                 onChange={handleChange}
-                placeholder={"Сокет: AM5\\nКількість ядер: 6\\nОбсяг пам’яті: 32 GB"}
+                placeholder={"Сокет: AM5\nКількість ядер: 6\nОбсяг пам’яті: 32 GB"}
               />
               <small>Одна характеристика на рядок у форматі «Назва: значення».</small>
             </label>
