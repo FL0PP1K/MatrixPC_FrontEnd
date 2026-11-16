@@ -22,7 +22,7 @@ export default function PopularProducts() {
       <div className="popular-container">
         <div className="section-header">
           <h2 className="section-title">
-            ПОПУЛЯРНІ ТОВАРИ
+            КОМПЛЕКТУЮЧІ З КАТАЛОГУ
           </h2>
 
           <p className="section-subtitle">
