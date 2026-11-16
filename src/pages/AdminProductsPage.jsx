@@ -11,6 +11,8 @@ const emptyForm = {
   price: '',
   stock: '',
   imageUrl: '',
+  description: '',
+  specificationsText: '',
 };
 
 async function apiRequest(path, { token, ...options } = {}) {
@@ -28,6 +30,30 @@ async function apiRequest(path, { token, ...options } = {}) {
     throw new Error(result?.message || `Помилка запиту (${response.status})`);
   }
   return result.data;
+}
+
+function formatSpecifications(specifications) {
+  if (!specifications || typeof specifications !== 'object' || Array.isArray(specifications)) return '';
+  return Object.entries(specifications)
+    .map(([name, value]) => `${name}: ${value}`)
+    .join('\\n');
+}
+
+function parseSpecifications(input) {
+  const specifications = {};
+  const lines = input.split(/\\r?\\n/).map((line) => line.trim()).filter(Boolean);
+  if (lines.length > 30) throw new Error('Можна вказати не більше 30 характеристик.');
+  for (const line of lines) {
+    const separator = line.indexOf(':');
+    if (separator < 1) throw new Error(`Додай двокрапку у рядку «${line}».`);
+    const name = line.slice(0, separator).trim();
+    const value = line.slice(separator + 1).trim();
+    if (!name || !value || name.length > 80 || value.length > 300) {
+      throw new Error('Назва характеристики має бути до 80 символів, значення — до 300.');
+    }
+    specifications[name] = value;
+  }
+  return specifications;
 }
 
 function normalizeProduct(product) {
@@ -95,6 +121,8 @@ export default function AdminProductsPage() {
       price: String(product.price),
       stock: String(product.stock),
       imageUrl: product.imageUrl || '',
+      description: product.description || '',
+      specificationsText: formatSpecifications(product.specifications),
     });
     setShowForm(true);
   }
@@ -128,12 +156,22 @@ export default function AdminProductsPage() {
       return;
     }
 
+    let specifications;
+    try {
+      specifications = parseSpecifications(form.specificationsText);
+    } catch (err) {
+      setError(err.message);
+      return;
+    }
+
     const payload = {
       name,
       categoryId: form.categoryId,
       price,
       stock,
       imageUrl: form.imageUrl.trim() || null,
+      description: form.description.trim() || null,
+      specifications,
     };
 
     // Backend вимагає унікальні slug і SKU для нового товару.
@@ -294,6 +332,31 @@ export default function AdminProductsPage() {
                 <img src={form.imageUrl} alt="Попередній перегляд товару" />
               </div>
             )}
+
+            <label>
+              Опис товару
+              <textarea
+                name="description"
+                rows="3"
+                maxLength="1500"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="Коротко опиши призначення та особливості товару"
+              />
+            </label>
+
+            <label>
+              Основні характеристики
+              <textarea
+                name="specificationsText"
+                rows="6"
+                maxLength="12000"
+                value={form.specificationsText}
+                onChange={handleChange}
+                placeholder={"Сокет: AM5\\nКількість ядер: 6\\nОбсяг пам’яті: 32 GB"}
+              />
+              <small>Одна характеристика на рядок у форматі «Назва: значення».</small>
+            </label>
 
             <div className="admin-form-actions">
               <button type="button" onClick={handleCancel} disabled={saving}>Скасувати</button>
