@@ -240,3 +240,26 @@
     max-height: 90vh;
     overflow-y: auto;
 }
+
+.admin-product-form textarea {
+    width: 100%;
+    min-height: 96px;
+    padding: 12px;
+    background: #17212B;
+    color: #F5F7FA;
+    border: 1px solid #34424F;
+    border-radius: 8px;
+    font: inherit;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.admin-product-form textarea:focus {
+    outline: none;
+    border-color: #2EE679;
+}
+
+.admin-product-form small {
+    color: #8B98A7;
+    line-height: 1.4;
+}
