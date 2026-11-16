@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const navigation = [
   { name: 'Головна', href: '/#home' },
   { name: 'Комплектуючі', href: '/#components' },
-  { name: 'Готові збірки', href: '/#builds' },
+  { name: 'Підбір ПК', href: '/#assembly' },
   { name: 'Конфігуратор ПК', href: '/#assembly' },
 ];
 
