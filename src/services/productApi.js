@@ -1,7 +1,7 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || '/api';
 
-// Тимчасове зображення, поки не додані фотографії товарів
+// Єдине нейтральне зображення для товарів без фото
 const fallbackImage = `data:image/svg+xml,${encodeURIComponent(`
   <svg xmlns="http://www.w3.org/2000/svg" width="640" height="480">
     <rect width="100%" height="100%" fill="#111820"/>
@@ -13,22 +13,30 @@ const fallbackImage = `data:image/svg+xml,${encodeURIComponent(`
 
 // Перетворення товару Backend у формат Frontend
 function mapProduct(product, index) {
+  const specifications = product.specifications &&
+    typeof product.specifications === 'object' &&
+    !Array.isArray(product.specifications)
+    ? product.specifications
+    : {};
+  const specs = Object.entries(specifications)
+    .slice(0, 3)
+    .map(([name, value]) => `${name}: ${value}`)
+    .join(' • ');
+
   return {
     id: product.id,
     name: product.name,
     category: product.category?.slug || 'all',
-    manufacturer:
-      product.manufacturer || product.name.split(' ')[0],
-    specs:
-      product.specs ||
-      product.description ||
-      'Характеристики уточнюються',
+    manufacturer: product.manufacturer || product.name.split(' ')[0],
+    specs: specs || product.description || '',
+    specifications,
     price: Number(product.price),
     image: product.imageUrl || fallbackImage,
     inStock: product.stock > 0,
+    stock: Number(product.stock),
     popularity: index + 1,
     sku: product.sku,
-    description: product.description,
+    description: product.description || '',
     categoryName: product.category?.name || 'Комплектуючі',
   };
 }
