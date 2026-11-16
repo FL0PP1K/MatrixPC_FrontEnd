@@ -17,8 +17,6 @@ function loadCart() {
 export default function Cart() {
   const [items, setItems] = useState(loadCart);
   const [expandedBuilds, setExpandedBuilds] = useState([]);
-  const [promoCode, setPromoCode] = useState('');
-  const [promoError, setPromoError] = useState('');
 
   useEffect(() => {
     try {
@@ -66,12 +64,6 @@ export default function Cart() {
     (sum, item) => sum + item.price * item.quantity, 0
   );
 
-  const handlePromoSubmit = event => {
-    event.preventDefault();
-    setPromoError(promoCode.trim()
-      ? 'Промокод недійсний. Знижку не застосовано.'
-      : 'Введіть промокод.');
-  };
 
   return (
     <section className="cart-page">
@@ -103,7 +95,7 @@ export default function Cart() {
                     <div className="cart-item-info">
                       <h3>{item.name}</h3>
                       <p className="cart-item-specs">{item.specs}</p>
-                      <p className="cart-item-status">В наявності · статус із каталогу потребує підтвердження</p>
+                      <p className="cart-item-status">Наявність і кількість буде перевірено під час оформлення.</p>
 
                       {Array.isArray(item.components) && item.components.length > 0 && (
                         <div className="cart-build-details">
@@ -172,11 +164,6 @@ export default function Cart() {
                   ОЧИСТИТИ КОШИК
                 </button>
               </div>
-
-              <div className="cart-demo-note">
-                <span aria-hidden="true">ⓘ</span>
-                <p>ДЕМО · Ціни та наявність товарів потребують підтвердження перед оформленням.</p>
-              </div>
             </div>
 
             <div className="cart-right">
@@ -191,44 +178,18 @@ export default function Cart() {
                   <span>{formatPrice(totalPrice)}</span>
                 </div>
                 <div className="cart-summary-row">
-                  <span>Знижка</span>
-                  <span>0 ₴</span>
-                </div>
-                <div className="cart-summary-row">
                   <span>Доставка</span>
-                  <span>Уточнюється</span>
+                  <span>За тарифом перевізника</span>
                 </div>
                 <div className="cart-summary-divider" />
                 <p className="cart-total-label">Загалом за товари</p>
                 <strong className="cart-summary-price">{formatPrice(totalPrice)}</strong>
                 <p className="cart-summary-note">
-                  Доставка розраховується при оформленні та не включена.
-                  Остаточну суму ще не визначено.
+                  Доставка оплачується окремо за тарифом обраного перевізника. Строк — орієнтовно до 4 днів.
                 </p>
-                <button type="button" className="cart-checkout-button" disabled>
+                <a href="/checkout" className="cart-checkout-button">
                   ОФОРМИТИ ЗАМОВЛЕННЯ
-                </button>
-              </aside>
-
-              <aside className="cart-promo">
-                <h2>ПРОМОКОД</h2>
-                <form onSubmit={handlePromoSubmit}>
-                  <label htmlFor="cart-promo-input">Введи промокод</label>
-                  <input
-                    id="cart-promo-input"
-                    type="text"
-                    value={promoCode}
-                    onChange={event => {
-                      setPromoCode(event.target.value);
-                      setPromoError('');
-                    }}
-                    placeholder="DEMO2026"
-                    className={promoError ? 'cart-promo-invalid' : ''}
-                  />
-                  {promoError && <p className="cart-promo-error" role="status">{promoError}</p>}
-                  <button type="submit">ЗАСТОСУВАТИ</button>
-                </form>
-                <p className="cart-promo-note">Демонстраційний приклад поля промокоду, не чинна акція.</p>
+                </a>
               </aside>
             </div>
           </div>
@@ -246,8 +207,7 @@ export default function Cart() {
               </div>
               <h2>ТВІЙ КОШИК ПОКИ ПОРОЖНІЙ</h2>
               <p>
-                Тут з'являться товари, які ти додаси. Почни з готової збірки
-                або обери комплектуючі для власного ПК.
+                Додай комплектуючі з каталогу або створи власну конфігурацію ПК.
               </p>
               <div className="cart-empty-actions">
                 <a href="/#components" className="cart-primary-button">ПЕРЕГЛЯНУТИ КАТАЛОГ</a>
@@ -256,10 +216,10 @@ export default function Cart() {
             </div>
 
             <div className="cart-links">
-              <a href="/#builds" className="cart-link-card">
-                <h3>ГОТОВІ ПК</h3>
-                <p>Порівняй MATRIX START, MATRIX GAMING і MATRIX ULTRA.</p>
-                <span>Переглянути збірки →</span>
+              <a href="/#assembly" className="cart-link-card">
+                <h3>ПІДБІР ПК</h3>
+                <p>Обери комплектуючі відповідно до своїх задач і бюджету.</p>
+                <span>Перейти до конфігуратора →</span>
               </a>
               <a href="/#components" className="cart-link-card">
                 <h3>КОМПЛЕКТУЮЧІ</h3>
