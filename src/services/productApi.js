@@ -13,7 +13,7 @@ const fallbackImage = `data:image/svg+xml,${encodeURIComponent(`
 
 const normalizeSpecificationLabel = (label) => String(label).toLowerCase()
   .replace(/[’']/g, '')
-  .replace(/[\\s_-]+/g, '');
+  .replace(/[\s_-]+/g, '');
 
 const readSpecificationValue = (specifications, ...aliases) => {
   const accepted = new Set(aliases.map(normalizeSpecificationLabel));
@@ -24,7 +24,7 @@ const readSpecificationValue = (specifications, ...aliases) => {
 };
 
 const readSpecificationNumber = (specifications, ...aliases) => {
-  const match = readSpecificationValue(specifications, ...aliases).match(/-?\\d+(?:[.,]\\d+)?/);
+  const match = readSpecificationValue(specifications, ...aliases).match(/-?\d+(?:[.,]\d+)?/);
   if (!match) return undefined;
   const value = Number(match[0].replace(',', '.'));
   return Number.isFinite(value) ? value : undefined;
