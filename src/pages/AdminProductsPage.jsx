@@ -355,7 +355,7 @@ export default function AdminProductsPage() {
                 onChange={handleChange}
                 placeholder={"Сокет: AM5\nКількість ядер: 6\nОбсяг пам’яті: 32 GB"}
               />
-              <small>Одна характеристика на рядок у форматі «Назва: значення».</small>
+              <small>Одна характеристика на рядок «Назва: значення». Наприклад: Сокет: AM5, Тип пам’яті: DDR5, Форм-фактор: ATX, Потужність БЖ: 650 Вт.</small>
             </label>
 
             <div className="admin-form-actions">
