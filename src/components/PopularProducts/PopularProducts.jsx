@@ -26,8 +26,7 @@ export default function PopularProducts() {
           </h2>
 
           <p className="section-subtitle">
-            Комплектуючі, які найчастіше обирають
-            наші клієнти.
+            Добірка комплектуючих із каталогу MATRIXPC.
           </p>
 
           <p className="popular-cart-count" role="status">
