@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react';
 import {
   categories,
-  options,
   formatPrice,
 } from './configuratorData';
 
 import './Configurator.css';
 import { checkCompatibility } from './compatibility';
+import { useShop } from '../../context/ShopContext';
 export default function Configurator() {
+  const { products, productsLoading, productsError, addToCart: addCatalogProduct } = useShop();
+  const options = Object.fromEntries(categories.map((category) => [
+    category.id,
+    products
+      .filter((product) => product.category === category.id)
+      .map((product) => ({ ...product, price: Number(product.price) })),
+  ]));
+  const categoriesWithInventory = categories.filter((category) =>
+    options[category.id]?.some((product) => product.inStock),
+  );
   const [selected, setSelected] = useState({});
   const [activeCategory, setActiveCategory] = useState(null);
   const [pendingId, setPendingId] = useState(null);
@@ -94,61 +104,25 @@ export default function Configurator() {
   );
 const compatibilityErrors = checkCompatibility(selected);
 const isComplete =
-    selectedCount === categories.length &&
+    categoriesWithInventory.length > 0 &&
+    selectedCount === categoriesWithInventory.length &&
     compatibilityErrors.length === 0;
     // ДОДАЄ КОМПЛЕКТУЮЧІ ДО КОШИКУ
-  const addToCart = () => {
+  const addBuildToCart = () => {
     if (!isComplete) {
-      setSavedMessage('Спочатку заверши сумісну збірку.');
+      setSavedMessage('Обери комплектуючі, які є в наявності, та перевір сумісність.');
       return;
     }
 
-    const components = categories.map(category => ({
-      category: category.name,
-      id: selected[category.id].id,
-      name: selected[category.id].name,
-      price: selected[category.id].price
-    }));
-
-    const buildId = 'custom-' + categories
-      .map(category => `${category.id}:${selected[category.id].id}`)
-      .join('|');
-
-    const cartItem = {
-      id: buildId,
-      name: 'ВЛАСНА ЗБІРКА ПК',
-      specs: components.slice(0, 3).map(item => item.name).join(' • ') +
-        ` • ще ${components.length - 3} комплектуючих`,
-      price: total,
-      quantity: 1,
-      image: '/image/PC_Case 1.png',
-      components
-    };
-
-    try {
-      const savedCart = JSON.parse(
-        localStorage.getItem('matrixpc-cart') || '[]'
-      );
-
-      const cart = Array.isArray(savedCart) ? savedCart : [];
-
-      const existingItem = cart.find(item => item.id === buildId);
-
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        cart.push(cartItem);
-      }
-
-      localStorage.setItem('matrixpc-cart', JSON.stringify(cart));
-      // Оновлення лічильника зразу
-      window.dispatchEvent(new Event('matrixpc-cart-updated'));
-      setSavedMessage('Збірку додано до кошика!');
-      setAddedToCart(true);
-    } catch (error) {
-      console.error('Помилка додавання збірки:', error);
-      setSavedMessage('Не вдалося додати збірку до кошика.');
+    const chosenProducts = categoriesWithInventory.map((category) => selected[category.id]);
+    if (chosenProducts.some((product) => !product?.id || !product.inStock)) {
+      setSavedMessage('Одна з позицій більше не доступна. Онови сторінку та збірку.');
+      return;
     }
+
+    chosenProducts.forEach((product) => addCatalogProduct(product.id));
+    setSavedMessage('Комплектуючі збірки додано до кошика для оформлення.');
+    setAddedToCart(true);
   };
 
   const openPicker = (id) => {
@@ -242,6 +216,8 @@ const isComplete =
           type="button"
           className={`config-choice ${item ? 'chosen' : ''}`}
           onClick={() => openPicker(category.id)}
+          disabled={productsLoading || !options[category.id]?.some((product) => product.inStock)}
+          title={!options[category.id]?.some((product) => product.inStock) ? 'Немає товарів цієї категорії в наявності в каталозі' : undefined}
         >
           <span className="config-choice-icon">
             {item ? '✓' : '+'}
@@ -260,7 +236,7 @@ const isComplete =
           </span>
 
           <span className="config-choice-action">
-            {item ? 'Змінити' : 'Обрати'}
+            {item ? 'Змінити' : options[category.id]?.some((product) => product.inStock) ? 'Обрати' : 'Немає в наявності'}
           </span>
         </button>
 
@@ -285,7 +261,7 @@ const isComplete =
   );
 
   const filteredOptions = activeCategory
-    ? options[activeCategory].filter((item) =>
+    ? (options[activeCategory] || []).filter((item) =>
         item.name.toLowerCase().includes(search.toLowerCase())
       )
     : [];
@@ -365,7 +341,7 @@ const isComplete =
         <div className="configurator-summary">
           <div>
             <span>Обрано комплектуючих</span>
-            <strong>{selectedCount} / 9</strong>
+            <strong>{selectedCount} / {categoriesWithInventory.length}</strong>
           </div>
 
           <div>
@@ -401,7 +377,7 @@ const isComplete =
         </div>
 
         <p className="configurator-demo-note">
-          Демонстраційні товари та ціни.
+          У кошик додаються реальні товари з каталогу; наявність і остаточну суму бекенд перевіряє під час оформлення.
         </p>
       </div>
       {activeCategory && (
@@ -484,10 +460,12 @@ const isComplete =
                     <button
                       type="button"
                       className="config-select-button"
-                      disabled={isIncompatible}
+                      disabled={isIncompatible || !item.inStock}
                       onClick={() => setPendingId(item.id)}
                     >
-                      {isIncompatible
+                      {!item.inStock
+                        ? 'НЕМАЄ В НАЯВНОСТІ'
+                        : isIncompatible
                         ? 'НЕСУМІСНО'
                         : pendingId === item.id
                           ? 'ОБРАНО'
@@ -579,7 +557,7 @@ const isComplete =
               <button
                 type="button"
                 className="config-save-button"
-                onClick={addToCart}
+                onClick={addBuildToCart}
                 disabled={!isComplete}
               >
                 ДОДАТИ В КОШИК
