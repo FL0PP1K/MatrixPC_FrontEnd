@@ -120,13 +120,20 @@ const isComplete =
     compatibilityErrors.length === 0;
     // ДОДАЄ КОМПЛЕКТУЮЧІ ДО КОШИКУ
   const addBuildToCart = () => {
+    if (productsLoading || productsError) {
+      setSavedMessage('Каталог недоступний. Онови сторінку та спробуй ще раз.');
+      return;
+    }
     if (!isComplete) {
       setSavedMessage('Обери комплектуючі, які є в наявності, та перевір сумісність.');
       return;
     }
 
-    const chosenProducts = categoriesWithInventory.map((category) => selected[category.id]);
-    if (chosenProducts.some((product) => !product?.id || !product.inStock)) {
+    const chosenProducts = categoriesWithInventory.map((category) => {
+      const selectedId = selected[category.id]?.id;
+      return products.find((product) => product.id === selectedId && product.inStock);
+    });
+    if (chosenProducts.some((product) => !product?.id)) {
       setSavedMessage('Одна з позицій більше не доступна. Онови сторінку та збірку.');
       return;
     }
@@ -318,9 +325,11 @@ const isComplete =
               disabled={productsLoading || !options.case?.some((product) => product.inStock)}
               title={!options.case?.some((product) => product.inStock) ? 'Немає корпусів у наявності в каталозі' : undefined}
             >
-              {selected.case
-                ? 'ЗМІНИТИ КОРПУС'
-                : '+ ОБРАТИ КОРПУС'}
+              {!options.case?.some((product) => product.inStock)
+                ? 'КОРПУСУ НЕМАЄ В НАЯВНОСТІ'
+                : selected.case
+                  ? 'ЗМІНИТИ КОРПУС'
+                  : '+ ОБРАТИ КОРПУС'}
             </button>
             
             {selected.case && (
