@@ -71,8 +71,7 @@ function mapProduct(product, index) {
   return {
     id: product.id,
     name: product.name,
-    category: ({ 'graphics-cards': 'gpu', processors: 'cpu', ram: 'ram', ssd: 'ssd' })[product.category?.slug] || 'all',
-    categorySlug: product.category?.slug || '',
+    category: product.category?.slug || 'all',
     manufacturer: product.manufacturer || product.name.split(' ')[0],
     specs: specs || product.description || '',
     specifications,
