@@ -58,6 +58,7 @@ export default function ProductPage() {
 
   // Назва категорії надходить із Backend
   const categoryName = product.categoryName || "Комплектуючі";
+  const specificationEntries = Object.entries(product.specifications || {});
 
   const favorite = isFavorite(product.id);
   const inCart = isInCart(product.id);
@@ -114,12 +115,27 @@ export default function ProductPage() {
 
           <div className="product-detail-divider" />
 
-          <div className="product-detail-specs">
-            <h2>Основні характеристики</h2>
-            <p>{product.specs}</p>
-          </div>
+          {product.description && (
+            <>
+              <div className="product-detail-specs">
+                <h2>Про товар</h2>
+                <p>{product.description}</p>
+              </div>
+              <div className="product-detail-divider" />
+            </>
+          )}
 
-          <div className="product-detail-divider" />
+          {specificationEntries.length > 0 && (
+            <>
+              <div className="product-detail-specs">
+                <h2>Основні характеристики</h2>
+                {specificationEntries.map(([label, value]) => (
+                  <SpecRow key={label} label={label} value={value} />
+                ))}
+              </div>
+              <div className="product-detail-divider" />
+            </>
+          )}
 
           <div className="product-purchase">
             <div className="product-detail-price">
@@ -167,7 +183,10 @@ export default function ProductPage() {
 
         <SpecRow label="Назва" value={product.name} />
         <SpecRow label="Виробник" value={product.manufacturer} />
-        <SpecRow label="Основні характеристики" value={product.specs} />
+        {product.description && <SpecRow label="Опис" value={product.description} />}
+        {specificationEntries.map(([label, value]) => (
+          <SpecRow key={label} label={label} value={value} />
+        ))}
         <SpecRow
           label="Наявність"
           value={product.inStock ? "В наявності" : "Немає в наявності"}

@@ -29,6 +29,12 @@ import DeliveryPage from './pages/DeliveryPage';
 import WarrantyPage from './pages/WarrantyPage';
 import ContactsPage from './pages/ContactsPage';
 
+import AdminLayout from './pages/AdminLayout';
+import AdminOverviewPage from './pages/AdminOverviewPage';
+import AdminProductsPage from './pages/AdminProductsPage';
+import AdminCategoriesPage from './pages/AdminCategoriesPage';
+import AdminOrdersPage from './pages/AdminOrdersPage';
+
 import './App.css';
 import './design-system.css';
 import './page-design.css';
@@ -81,6 +87,29 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
+ // Захист адмін-панелі
+ function AdminRoute({ children }) {
+  const { user, authLoading, isAuthenticated } = useAuth();
+
+  if (authLoading) {
+    return (
+      <main className="page-content">
+        <h1>Перевірка авторизації...</h1>
+      </main>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.role !== 'ADMIN') {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+}
+
 // Сторінка 404
 function NotFoundPage() {
   return (
@@ -122,7 +151,15 @@ export default function App() {
           />
 
           <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/favorites" element={<FavoritesPage />} />
 
@@ -134,6 +171,22 @@ export default function App() {
 
           <Route path="/contacts" element={<ContactsPage />} />
 
+          {/* Адмінпанель */}
+          <Route
+  path="/admin"
+  element={
+    <AdminRoute>
+      <AdminLayout />
+    </AdminRoute>
+  }
+>
+  <Route index element={<AdminOverviewPage />} />
+  <Route path="products" element={<AdminProductsPage />} />
+  <Route path="categories" element={<AdminCategoriesPage />} />
+  <Route path="orders" element={<AdminOrdersPage />} />
+</Route>
+
+          {/* Сторінка 404 */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
 
@@ -142,4 +195,3 @@ export default function App() {
     </ShopProvider>
   );
 }
-

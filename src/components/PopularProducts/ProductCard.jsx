@@ -45,9 +45,11 @@ export default function ProductCard({
         </Link>
       </h3>
 
-      <p className="product-specs">
-        {product.specs}
-      </p>
+      {product.specs && (
+        <p className="product-specs">
+          {product.specs}
+        </p>
+      )}
 
       <p className="product-stock">
         {product.inStock === false

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useShop } from '../../context/ShopContext';
+import { useAuth } from '../../context/AuthContext';
 
 import './Header.css';
 
@@ -28,6 +29,8 @@ export default function Header() {
   const location = useLocation();
 
   const { cartCount = 0, favoriteItems = [] } = useShop();
+  const { user, authLoading } = useAuth();
+  const isAdmin = !authLoading && user?.role === 'ADMIN';
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -222,7 +225,17 @@ export default function Header() {
               </span>
             )}
           </Link>
-
+          {/* Адмін-панель */}
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="header-build-btn"
+              onClick={closeMenu}
+              style={{ textDecoration: 'none' }}
+            >
+              АДМІН-ПАНЕЛЬ
+            </Link>
+          )}
           {/* Зібрати ПК */}
           <a
             href="/#assembly"

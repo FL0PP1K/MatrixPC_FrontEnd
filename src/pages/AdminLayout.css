@@ -1,0 +1,115 @@
+
+/* Основна структура адмінпанелі */
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #070A0D;
+    color: #F5F7FA;
+}
+
+/* Бокове меню */
+
+.admin-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    flex-shrink: 0;
+    padding: 30px 20px;
+    background: #111820;
+    border-right: 1px solid #25313A;
+}
+
+.admin-sidebar-title {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.admin-sidebar-title span {
+    color: #2EE679;
+}
+
+.admin-sidebar-subtitle {
+    margin: 12px 0 35px;
+    color: #8B98A7;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.admin-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Пункти меню */
+
+.admin-nav-link {
+    display: block;
+    padding: 14px 16px;
+    background: transparent;
+    border-radius: 8px;
+    color: #8B98A7;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.admin-nav-link:hover {
+    background: #1C2730;
+    color: #F5F7FA;
+}
+
+.admin-nav-link.active {
+    background: #173A2A;
+    color: #2EE679;
+}
+
+/* Повернення на головну */
+
+.admin-back-link {
+    display: block;
+    margin-top: auto;
+    padding: 20px 0 0;
+    color: #8B98A7;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.admin-back-link:hover {
+    color: #2EE679;
+}
+
+/* Вміст сторінки */
+
+.admin-main {
+    flex: 1;
+    min-width: 0;
+    padding: 35px;
+}
+
+@media (max-width: 750px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .admin-sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .admin-back-link {
+        margin-top: 15px;
+    }
+
+    .admin-main {
+        padding: 20px;
+    }
+}
