@@ -13,7 +13,7 @@ export default function Configurator() {
     gpu: ['graphics-cards', 'gpu'],
     cpu: ['processors', 'cpu'],
     motherboard: ['motherboards', 'motherboard'],
-    cooler: ['cooling', 'coolers', 'cooler'],
+    cooler: ['cpu-cooler', 'cooling', 'coolers', 'cooler'],
     case: ['cases', 'case'],
     ram: ['ram'],
     ssd: ['ssd', 'storage'],

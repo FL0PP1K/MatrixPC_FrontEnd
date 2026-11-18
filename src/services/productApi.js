@@ -103,7 +103,7 @@ function mapProduct(product, index) {
     ),
     maxGpuLengthMm: readSpecificationNumber(specifications, 'maxGpuLengthMm', 'максимальна довжина відеокарти'),
     maxCoolerHeightMm: readSpecificationNumber(specifications, 'maxCoolerHeightMm', 'максимальна висота кулера'),
-    supportedSockets: readSpecificationList(specifications, 'supportedSockets', 'підтримувані сокети', 'сумісні сокети'),
+    supportedSockets: readSpecificationList(specifications, 'supportedSockets', 'підтримувані сокети', 'сумісні сокети', 'сокети'),
     heightMm: readSpecificationNumber(specifications, 'heightMm', 'висота кулера'),
     radiatorMm: readSpecificationNumber(specifications, 'radiatorMm', 'розмір радіатора', 'радіатор'),
     type: coolerType,
