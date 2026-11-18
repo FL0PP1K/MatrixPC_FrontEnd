@@ -23,7 +23,7 @@ export default function Configurator() {
   const options = Object.fromEntries(categories.map((category) => [
     category.id,
     products
-      .filter((product) => categorySlugs[category.id]?.includes(product.categorySlug || product.category))
+      .filter((product) => categorySlugs[category.id]?.includes(product.category))
       .map((product) => ({ ...product, price: Number(product.price) })),
   ]));
   const categoriesWithInventory = categories.filter((category) =>
